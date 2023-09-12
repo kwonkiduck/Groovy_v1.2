@@ -4,22 +4,28 @@
 
     <insert id="inputChatRoom" parameterType="map">
         INSERT INTO CHTT_ROOM
-        VALUES (
-                   CHTT_ROOM_SEQ.NEXTVAL,
-                   #{chttRoomNm},
-                   #{chttRoomTy},
-                   #{chttRoomNmpr},
-                   SYSDATE
-               )
+        VALUES (CHTT_ROOM_SEQ.NEXTVAL,
+                #{chttRoomNm},
+                #{chttRoomTy},
+                #{chttRoomNmpr},
+                SYSDATE)
     </insert>
 
     <insert id="inputChatMember" parameterType="String">
         INSERT INTO CHTT_MBR
-        VALUES (
-                   CHTT_ROOM_SEQ.CURRVAL,
-                   #{chttMbrEmplId}
-               )
+        VALUES (CHTT_ROOM_SEQ.CURRVAL,
+                #{chttMbrEmplId})
     </insert>
+
+    <select id="checkDuplication" parameterType="map" resultType="integer">
+        SELECT COUNT(*) AS EXISTING_CNT
+        FROM CHTT_MBR CM1
+                 INNER JOIN CHTT_MBR CM2 ON CM1.CHTT_ROOM_NO = CM2.CHTT_ROOM_NO
+                 INNER JOIN CHTT_ROOM CR ON CM1.CHTT_ROOM_NO = CR.CHTT_ROOM_NO
+        WHERE CM1.CHTT_MBR_EMPL_ID = #{emplId1}
+          AND CM2.CHTT_MBR_EMPL_ID = #{emplId2}
+          AND CR.CHTT_ROOM_TY = '0'
+    </select>
 
     <select id="loadChatRooms" parameterType="String" resultType="chatRoomVO">
         SELECT
@@ -36,12 +42,12 @@
                         FROM CHTT_MBR CM
                         WHERE CM.CHTT_ROOM_NO = cr.CHTT_ROOM_NO
                           AND CM.CHTT_MBR_EMPL_ID != #{emplId}
-            )
-        )
-        ELSE 'ThumbnailForMultiChatRoom.png'
-        END AS CHTT_ROOM_THUMBNAIL,
-        COALESCE(c.CHTT_CN, '(채팅 내역이 없습니다)') AS LATEST_CHTT_CN,
-        COALESCE(c.CHTT_INPUT_DATE, cr.CHTT_ROOM_CREAT_DE) AS LATEST_INPUT_DATE
+                    )
+                )
+                ELSE 'ThumbnailForMultiChatRoom.png'
+                END AS CHTT_ROOM_THUMBNAIL,
+            COALESCE(c.CHTT_CN, '(채팅 내역이 없습니다)') AS LATEST_CHTT_CN,
+            COALESCE(c.CHTT_INPUT_DATE, cr.CHTT_ROOM_CREAT_DE) AS LATEST_INPUT_DATE
         FROM CHTT_ROOM cr
                  LEFT JOIN (
             SELECT
@@ -80,7 +86,7 @@
                C.CHTT_CN,
                C.CHTT_INPUT_DATE
         FROM CHTT C
-            JOIN EMPL E ON C.CHTT_MBR_EMPL_ID = E.EMPL_ID
+                 JOIN EMPL E ON C.CHTT_MBR_EMPL_ID = E.EMPL_ID
         WHERE C.CHTT_ROOM_NO = #{chttRoomNo}
         ORDER BY CHTT_INPUT_DATE
     </select>

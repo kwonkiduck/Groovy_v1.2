@@ -3,11 +3,14 @@ package kr.co.groovy.chat;
 import kr.co.groovy.vo.ChatRoomVO;
 import kr.co.groovy.vo.ChatVO;
 import kr.co.groovy.vo.EmployeeVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ChatService {
 
@@ -27,6 +30,10 @@ public class ChatService {
 
     public int inputChatMember(String emplId) {
         return chatMapper.inputChatMember(emplId);
+    }
+
+    public int checkDuplication(Map<String, String> mbrData) {
+        return chatMapper.checkDuplication(mbrData);
     }
 
     public List<ChatRoomVO> loadChatRooms(String emplId) {

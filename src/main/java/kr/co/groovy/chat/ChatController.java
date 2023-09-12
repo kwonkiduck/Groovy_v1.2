@@ -44,7 +44,7 @@ public class ChatController {
 
     @PostMapping("/createRoom")
     @ResponseBody
-    public void createRoom(@RequestBody List<EmployeeVO> roomMemList, Principal principal) {
+    public int createRoom(@RequestBody List<EmployeeVO> roomMemList, Principal principal) {
         String hostEmplId = principal.getName();
         EmployeeVO hostEmpl = employeeService.loadEmp(hostEmplId);
 
@@ -52,26 +52,43 @@ public class ChatController {
 
         int chttRoomNmpr = roomMemList.size();
 
+        int checkDuplication = 0;
+        int result = 0;
+
         String chttRoomTy = null;
         String chttRoomNm = null;
         if (chttRoomNmpr == 2) {
             chttRoomTy = "0";
             chttRoomNm = roomMemList.stream().map(EmployeeVO::getEmplNm).collect(Collectors.joining(", "));
+
+            Map<String, String> mbrData = new HashMap<>();
+            int count = 1;
+            for (EmployeeVO employeeVO : roomMemList) {
+                String chttMbrEmplId = employeeVO.getEmplId();
+                mbrData.put("emplId" + count, chttMbrEmplId);
+                count++;
+            }
+            checkDuplication = chatService.checkDuplication(mbrData);
+
         } else if (chttRoomNmpr > 2) {
             chttRoomTy = "1";
             chttRoomNm = hostEmpl.getEmplNm() + " 외 " + (chttRoomNmpr - 1) + "인";
         }
 
-        Map<String, Object> roomData = new HashMap<>();
-        roomData.put("chttRoomNm", chttRoomNm);
-        roomData.put("chttRoomTy", chttRoomTy);
-        roomData.put("chttRoomNmpr", chttRoomNmpr);
-        chatService.inputChatRoom(roomData);
-
-        for (EmployeeVO employeeVO : roomMemList) {
-            String chttMbrEmplId = employeeVO.getEmplId();
-            chatService.inputChatMember(chttMbrEmplId);
+        if(checkDuplication == 0) {
+            Map<String, Object> roomData = new HashMap<>();
+            roomData.put("chttRoomNm", chttRoomNm);
+            roomData.put("chttRoomTy", chttRoomTy);
+            roomData.put("chttRoomNmpr", chttRoomNmpr);
+            result = chatService.inputChatRoom(roomData);
+            if (result == 1) {
+                for (EmployeeVO employeeVO : roomMemList) {
+                    String chttMbrEmplId = employeeVO.getEmplId();
+                    result = chatService.inputChatMember(chttMbrEmplId);
+                }
+            }
         }
+        return result;
     }
 
     @PostMapping("/inputMessage")

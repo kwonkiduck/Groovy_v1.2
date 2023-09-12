@@ -13,9 +13,11 @@ public interface ChatMapper {
 
     List<EmployeeVO> loadEmpListForChat(String emplId);
 
-    int inputChatRoom(Map<String, Object> data);
+    int inputChatRoom(Map<String, Object> roomData);
 
     int inputChatMember(String emplId);
+
+    int checkDuplication(Map<String, String> mbrData);
 
     List<ChatRoomVO> loadChatRooms(String emplId);
 

@@ -41,6 +41,7 @@
 
 <h1>채팅창</h1>
 <div id="chatRoom">
+    <button type="button" id="inviteBtn">초대</button>
     <div id="msgArea">
 
     </div>
@@ -151,11 +152,19 @@
 
         $("#chatRoomList").on("click", ".rooms", function() {
             let selectedRoom = $(this);
-            chttRoomNo = selectedRoom.find("input").val();
+            let chttRoomNo = selectedRoom.find("input").val();
+            let chttRoomTy = selectedRoom.data("chttRoomTy"); // chttRoomTy 값을 가져옴
 
             currentRoomNo = chttRoomNo;
 
             enterRoom(currentRoomNo);
+
+            if (chttRoomTy == '1') {
+                $("#inviteBtn").show();
+            } else {
+                $("#inviteBtn").hide();
+            }
+
         });
 
         function subscribeToChatRoom(chttRoomNo) {
@@ -267,9 +276,13 @@
                 type: "post",
                 data: JSON.stringify(roomMemList),
                 contentType: "application/json;charset:utf-8",
-                success: function () {
+                success: function (result) {
                     loadRoomList();
-                    alert("채팅방 개설 성공");
+                    if(result == 1) {
+                        alert("채팅방 개설 성공");
+                    } else {
+                        alert("이미 존재하는 1:1 채팅방입니다")
+                    }
                 },
                 error: function (request, status, error) {
                     alert("채팅방 개설 실패")
@@ -317,7 +330,7 @@
 
             code = "";
             $.each(chatRoomList, function (idx, obj) {
-                code += `<button class="rooms" id="chatRoom\${obj.chttRoomNo}">
+                code += `<button class="rooms" id="chatRoom\${obj.chttRoomNo}" data-chttRoomTy="\${obj.chttRoomTy}">
             <img src="/uploads/profile/\${obj.chttRoomThumbnail}" alt="\${obj.chttRoomThumbnail}"/>
             <p>\${obj.chttRoomNm}</p>
             <p id="latestChttCn">\${obj.latestChttCn}</p>
