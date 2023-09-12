@@ -1,10 +1,10 @@
 package kr.co.groovy.chat;
 
+import kr.co.groovy.vo.ChatMemberVO;
 import kr.co.groovy.vo.ChatRoomVO;
 import kr.co.groovy.vo.ChatVO;
 import kr.co.groovy.vo.EmployeeVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +46,18 @@ public class ChatService {
 
     public List<ChatVO> loadRoomMessages(int chttRoomNo) {
         return chatMapper.loadRoomMessages(chttRoomNo);
+    }
+
+    List<String> loadRoomMembers(int chttRoomNo) {
+        return chatMapper.loadRoomMembers(chttRoomNo);
+    }
+
+    int inviteEmpl(ChatMemberVO chatMemberVO) {
+        return chatMapper.inviteEmpl(chatMemberVO);
+    }
+
+    int modifyRoomNm(ChatRoomVO chatRoomVO) {
+        return chatMapper.modifyRoomNm(chatRoomVO);
     }
 
 }

@@ -1,6 +1,7 @@
 package kr.co.groovy.chat;
 
 import kr.co.groovy.employee.EmployeeService;
+import kr.co.groovy.vo.ChatMemberVO;
 import kr.co.groovy.vo.ChatRoomVO;
 import kr.co.groovy.vo.ChatVO;
 import kr.co.groovy.vo.EmployeeVO;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,8 +32,8 @@ public class ChatController {
     @GetMapping("")
     public String chat(Model model, Principal principal) {
         String emplId = principal.getName();
-        List<EmployeeVO> empListForChat = chatService.loadEmpListForChat(emplId);
-        model.addAttribute("empListForChat", empListForChat);
+        List<EmployeeVO> emplListForChat = chatService.loadEmpListForChat(emplId);
+        model.addAttribute("emplListForChat", emplListForChat);
         return "chat/chat";
     }
 
@@ -101,5 +104,41 @@ public class ChatController {
     @ResponseBody
     public List<ChatVO> loadRoomMessages(@PathVariable int chttRoomNo) {
         return chatService.loadRoomMessages(chttRoomNo);
+    }
+
+    @PostMapping("/inviteEmpls")
+    @ResponseBody
+    public int inviteEmpls(@RequestBody Map<String, Object> newMem) {
+        int chttRoomNo = Integer.parseInt(newMem.get("chttRoomNo").toString());
+        String chttRoomNm = (String) newMem.get("chttRoomNm");
+        List<String> newMemIdList = (List<String>) newMem.get("employees");
+        int newMemCnt = newMemIdList.size();
+        int result = 0;
+        for(String emplId : newMemIdList) {
+            ChatMemberVO chatMemberVO = new ChatMemberVO();
+            chatMemberVO.setChttRoomNo(chttRoomNo);
+            chatMemberVO.setChttMbrEmplId(emplId);
+            result = chatService.inviteEmpl(chatMemberVO);
+        }
+        if(result == 1) {
+            Pattern pattern = Pattern.compile("\\d+");
+            Matcher matcher = pattern.matcher(chttRoomNm);
+            while(matcher.find()) {
+                int currentNum = Integer.parseInt(matcher.group());
+                int newNum = currentNum + newMemCnt;
+                String newName = chttRoomNm.replace(Integer.toString(currentNum), Integer.toString(newNum));
+                ChatRoomVO chatRoomVO = new ChatRoomVO();
+                chatRoomVO.setChttRoomNo(chttRoomNo);
+                chatRoomVO.setChttRoomNm(newName);
+                result = chatService.modifyRoomNm(chatRoomVO);
+            }
+        }
+        return result;
+    }
+
+    @GetMapping("/loadRoomMembers/{chttRoomNo}")
+    @ResponseBody
+    public List<String> loadRoomMembers(@PathVariable int chttRoomNo) {
+        return chatService.loadRoomMembers(chttRoomNo);
     }
 }
