@@ -5,11 +5,9 @@ import kr.co.groovy.enums.Department;
 import kr.co.groovy.enums.SanctionFormat;
 import kr.co.groovy.enums.SanctionProgress;
 import kr.co.groovy.utils.ParamMap;
-import kr.co.groovy.vo.ReferenceVO;
-import kr.co.groovy.vo.SanctionFormatVO;
-import kr.co.groovy.vo.SanctionLineVO;
-import kr.co.groovy.vo.SanctionVO;
+import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,7 +29,20 @@ public class SanctionService {
     }
 
 
-    public void approve(@RequestBody Map<String, Object> request) {
+    public void approve(String elctrnSanctnemplId) {
+        mapper.approve(elctrnSanctnemplId);
+    }
+
+    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn) {
+        mapper.reject(elctrnSanctnemplId, sanctnLineReturnResn);
+    }
+
+    public void collect(String elctrnSanctnEtprCode) {
+        mapper.collect(elctrnSanctnEtprCode);
+    }
+
+
+    public void startApprove(@RequestBody Map<String, Object> request) {
         try {
             String approvalType = (String) request.get("approvalType");
             String methodName = (String) request.get("methodName");
@@ -59,8 +70,8 @@ public class SanctionService {
         return mapper.getStatus(elctrnSanctnDrftEmplId, commonCodeSanctProgrs);
     }
 
-    List<SanctionLineVO> loadAwaiting(String progrsCode, String emplId) {
-        List<SanctionLineVO> list = mapper.loadAwaiting(progrsCode, emplId);
+    List<SanctionLineVO> loadAwaiting(String emplId) {
+        List<SanctionLineVO> list = mapper.loadAwaiting(emplId);
         for (SanctionLineVO vo : list) {
             vo.setCommonCodeSanctProgrs(SanctionProgress.valueOf(vo.getCommonCodeSanctProgrs()).label());
         }
@@ -153,6 +164,15 @@ public class SanctionService {
         vo.setCommonCodeClsf(ClassOfPosition.valueOf(vo.getCommonCodeClsf()).label());
         return vo;
     }
+
+    UploadFileVO loadSanctionFile(String elctrnSanctnEtprCode) {
+        return mapper.loadSanctionFile(elctrnSanctnEtprCode);
+    }
+
+    List<EmployeeVO> loadAllLine(String depCode, String emplId) {
+        return mapper.loadAllLine(depCode, emplId);
+    }
+
 
 }
 

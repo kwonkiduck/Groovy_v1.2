@@ -178,7 +178,7 @@
                 }
             };
             $.ajax({
-                url: `/sanction/approve`,
+                url: `/sanction/startApprove`,
                 type: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json",

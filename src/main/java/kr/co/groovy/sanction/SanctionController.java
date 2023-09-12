@@ -27,7 +27,7 @@ public class SanctionController {
     CommonService commonService;
 
 
-    public SanctionController(SanctionService service, CommonService commonService,WebApplicationContext context) {
+    public SanctionController(SanctionService service, CommonService commonService, WebApplicationContext context) {
         this.service = service;
         this.commonService = commonService;
     }
@@ -40,8 +40,26 @@ public class SanctionController {
 
     @PostMapping("/approve")
     @ResponseBody
-    public void approve(@RequestBody Map<String, Object> request) {
-        service.approve(request);
+    public void approve(String elctrnSanctnemplId) {
+        service.approve(elctrnSanctnemplId);
+    }
+
+    @PostMapping("/reject")
+    @ResponseBody
+    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn) {
+        service.reject(elctrnSanctnemplId, sanctnLineReturnResn);
+    }
+
+    @PostMapping("/collect")
+    @ResponseBody
+    public void collect(String elctrnSanctnEtprCode) {
+        service.collect(elctrnSanctnEtprCode);
+    }
+
+    @PostMapping("/startApprove")
+    @ResponseBody
+    public void startApprove(@RequestBody Map<String, Object> request) {
+        service.startApprove(request);
     }
 
 
@@ -49,10 +67,15 @@ public class SanctionController {
     public String loadSanction(@PathVariable String sanctionNo, Model model) {
         List<SanctionLineVO> lineList = service.loadLine(sanctionNo);
         List<ReferenceVO> refrnList = service.loadRefrn(sanctionNo);
-        SanctionVO vo = service.loadSanction(sanctionNo);
+        SanctionVO sanction = service.loadSanction(sanctionNo);
+        UploadFileVO file = service.loadSanctionFile(sanctionNo);
+
         model.addAttribute("lineList", lineList);
         model.addAttribute("refrnList", refrnList);
-        model.addAttribute("sanction", vo);
+        model.addAttribute("sanction", sanction);
+        if (file != null) {
+            model.addAttribute("file", file);
+        }
         return "sanction/template/read";
     }
 
@@ -77,40 +100,6 @@ public class SanctionController {
     }
 
 
-
-
-
-
-    // 구현할 거 ----------------------------------------------------------------------------------------------------------------
-
-//    @GetMapping("/approve/{SANCTN015}")
-//    public void approve(Map<String, Object> parameters, @PathVariable String SANCTN015) {
-//        // 결재 승인 로직 추가
-//        // 파라미터에서 결재자 정보 추출 및 승인 처리
-//        String approver = (String) parameters.get("approver");
-//
-//        // 최종 승인 시 추가 로직
-//        if (isFinalApproval(parameters)) {
-//        }
-//    }
-
-    @GetMapping("/reject/{SANCTN014}")
-    public void reject(Map<String, Object> parameters, @PathVariable String SANCTN014) {
-        // 결재 반려/거설 로직 추가
-        // 파라미터에서 결재자 정보 추출 및 반려 처리
-        String approver = (String) parameters.get("approver");
-
-        // 순서 확인 로직 추가
-        if (isFinalApproval(parameters)) {
-        }
-    }
-
-    private boolean isFinalApproval(Map<String, Object> parameters) {
-        return false;
-    }
-
-
-
     // --------------------------------------------------------------------------------------------------------------------
     @GetMapping("/getStatus")
     @ResponseBody
@@ -118,13 +107,15 @@ public class SanctionController {
                             @RequestParam("commonCodeSanctProgrs") String commonCodeSanctProgrs) {
         return String.valueOf(service.getStatus(elctrnSanctnDrftEmplId, commonCodeSanctProgrs));
     }
-    @GetMapping("/loadOrgChart")
+
+    @GetMapping("/loadAllLine")
     @ResponseBody
-    public List<EmployeeVO> loadOrgChart(ModelAndView mav) {
+    public List<EmployeeVO> loadAllLine(@RequestParam("emplId")String emplId, ModelAndView mav) {
+        log.info( "loadLine" + emplId);
         List<String> departmentCodes = Arrays.asList("DEPT010", "DEPT011", "DEPT012", "DEPT013", "DEPT014", "DEPT015");
         List<EmployeeVO> allEmployees = new ArrayList<>();
         for (String deptCode : departmentCodes) {
-            List<EmployeeVO> deptEmployees = commonService.loadOrgChart(deptCode);
+            List<EmployeeVO> deptEmployees = service.loadAllLine(deptCode, emplId);
             for (EmployeeVO vo : deptEmployees) {
                 vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
                 vo.setCommonCodeClsf(ClassOfPosition.valueOf(vo.getCommonCodeClsf()).label());
@@ -154,9 +145,10 @@ public class SanctionController {
 
     @GetMapping("/loadAwaiting")
     @ResponseBody
-    public List<SanctionLineVO> loadAwaiting(String progrsCode, String emplId) {
-        return service.loadAwaiting(progrsCode, emplId);
+    public List<SanctionLineVO> loadAwaiting(String emplId) {
+        return service.loadAwaiting(emplId);
     }
+
 
 }
 
