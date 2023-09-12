@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.memo.MemoMapper">
+
+<select id="getMemo" resultType="memoVO">
+	SELECT 
+		MEMO_SN, 
+		MEMO_EMPL_ID, 
+		MEMO_SJ, 
+		MEMO_CN, 
+		MEMO_WRTNG_DATE, 
+		COMMON_CODE_FIXING_AT, 
+		COMMON_CODE_BKMK_AT 
+	FROM
+	MEMO
+</select>
+
+<select id="getOneMemo" parameterType="int" resultType="memoVO">
+	SELECT 
+		MEMO_SN, 
+		MEMO_EMPL_ID, 
+		MEMO_SJ, 
+		MEMO_CN, 
+		MEMO_WRTNG_DATE, 
+		COMMON_CODE_FIXING_AT, 
+		COMMON_CODE_BKMK_AT 
+	FROM 
+		MEMO
+	WHERE 
+		MEMO_SN=#{memoSn}
+</select>
+
+<insert id="inputMemo" parameterType="memoVO">
+	INSERT INTO
+		MEMO(MEMO_SN, 
+			 MEMO_EMPL_ID, 
+			 MEMO_SJ, 
+			 MEMO_CN, 
+			 MEMO_WRTNG_DATE, 
+			 COMMON_CODE_FIXING_AT, 
+			 COMMON_CODE_BKMK_AT)
+	VALUES(MEMO_SN.NEXTVAL, 
+		   #{memoEmplId}, 
+		   #{memoSj}, 
+		   #{memoCn}, 
+		   sysdate, 
+		   'MEMO011', 
+		   'MEMO021')
+</insert>
+
+<update id="modifyMemo" parameterType="memoVO">
+	UPDATE MEMO
+	SET 
+		MEMO_SJ = #{memoSj},
+		MEMO_CN = #{memoCn}, 
+		MEMO_WRTNG_DATE = #{memoWrtngDate},
+		COMMON_CODE_FIXING_AT = #{commonCodeFixingAt},
+		COMMON_CODE_BKMK_AT = #{commonCodeBkmkAt}
+	WHERE 
+		MEMO_SN = #{memoSn}
+</update>
+
+<delete id="deleteMemo" parameterType="int">
+	DELETE FROM 
+		MEMO 
+	WHERE 
+		MEMO_SN = #{data}
+</delete>
+</mapper>

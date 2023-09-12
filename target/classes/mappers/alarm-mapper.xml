@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.alarm.AlarmMapper">
+    <insert id="insertAlarm" parameterType="alarmVO">
+        INSERT INTO NTCN (
+            NTCN_SN,
+            NTCN_EMPL_ID,
+            NTCN_CN,
+            NTCN_URL,
+            NTCN_DATE,
+            COMMON_CODE_NTCN_KIND)
+        VALUES (
+                   #{ntcnSn},
+                   #{ntcnEmplId},
+                   #{ntcnCn},
+                   #{ntcnUrl},
+                   sysdate,
+                   #{commonCodeNtcnKind})
+    </insert>
+
+    <delete id="deleteAlarm" parameterType="alarmVO">
+        DELETE
+        FROM NTCN
+        WHERE NTCN_EMPL_ID = #{ntcnEmplId}
+          AND NTCN_SN = #{ntcnSn}
+    </delete>
+
+    <select id="getAlarmList" parameterType="String" resultType="alarmVO">
+        SELECT NTCN_CN,
+               NTCN_URL,
+               COMMON_CODE_NTCN_KIND
+        FROM NTCN
+        WHERE NTCN_EMPL_ID = #{ntcnEmplId}
+        ORDER BY NTCN_DATE DESC
+    </select>
+
+    <select id="getMaxAlarm" resultType="int">
+        SELECT MAX(NTCN_SN)
+        FROM NTCN
+    </select>
+</mapper>
+

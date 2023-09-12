@@ -1,21 +1,95 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
     #myGrid {width: 100%; height: calc((360 / 1080) * 100vh);}
+    #table {width: 100%; height: calc((360 / 1080) * 100vh);}
+    #empl {display: block; width: 100; height: 100%; text-align: center;}
+    #pay {display: block;}
 </style>
 <h1 class="tab">기본 급여 및 공제 관리</h1>
 <br /><br />
 
 <h2>급여 기본 설정</h2>
 <button id="saveSalary">저장하기</button>
+<form action="manageSalarySis.jsp" method="post">
+    <table border="1" id="table">
+    	<thead id="deptName">
+    		<tr>
+    			<th></th>
+    			<th></th>
+    			<th></th>
+    			<th></th>
+    			<th></th>
+    			<th></th>
+    		</tr>
+    	</thead>
+			<tr>
+				<td id="empl"></td>
+				<td><input type="text" id="pay" name=""/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+			<tr>
+				<td id="empl"></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+			<tr>
+				<td id="empl"></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+			<tr>
+				<td id="empl"></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+			<tr>	
+				<td id="empl"></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+			<tr>	
+				<td id="empl"></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+			<tr>
+				<td id="empl"></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+				<td><input type="text" id="pay"/></td>
+			</tr>
+	</table>
+</form>
 <div id="myGrid" class="ag-theme-alpine" ></div>
 
 <br /><hr /><br />
 <h2>공제 기본 설정</h2>
 <form action="">
     <button id="saveSis">저장하기</button>
-    <table border=" 1" >
+    <table border="1" >
         <tr>
             <th>국민연금</th>
             <td>요율</td>
@@ -76,72 +150,20 @@
     </table>
 </form>
 <script>
-    let saveList = [];
-    function getAllData() {
-        const rowData = gridOptions.api.forEachNode((obj,idx)=>{
-            saveList.push( obj.data);
-        });
-    }
-    function saveDataToServer() {
-        getAllData();
-        const url = undefined;/* 매핑 url 쓰셈*/
-        const requestData = JSON.stringify({ saveList });
-        ajaxFn(url,requestData);
-    }
-    function ajaxFn(url,item){
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: requestData = item,
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to save data');
-                }
-            })
-            .then((data) => {
-                console.log('Server response:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
+	const deptName = document.querySelector("#deptName");
+    deptName = function fAjax(){
+        let xhr = new XMLHttpRequest();
+        xhr.open("get", "/admin/hrt/manageSalarySis", true);
+        xhr.onreadystatechange = function(){
+            if (xhr.readyState == 4 && xhr.status == 200){
+            	const dept = JSON.parse(xhr.responseText);
+                console.log("값이 json으로 들어오니? ", dept);
+            }
+            document.addEventListener("DOMContentLoaded", function() {
+                fAjax();
             });
-    }
-    const saveSalary = document.getElementById('saveSalary');
-    saveSalary.addEventListener('click', () => {
-        saveDataToServer();
-    });
-
-
-    /*그냥 확인하라고 넣음*/
-    const columnDefs = [
-        { headerName: '(만원)', field: 'category' },
-        { field: "DEPT010",  headerName:"인사팀",editable: true},
-        { field: "DEPT011",  headerName:"회계팀",editable: true},
-        { field: "DEPT012", headerName:"영업팀",editable: true},
-        { field: "DEPT013", headerName:"홍보팀",editable: true},
-        { field: "DEPT014", headerName:"총무팀",editable: true}
-    ];
-    let rowData = [
-        { DEPT010: 5,DEPT011: 1,DEPT012:10, DEPT013:50, DEPT014:100,category:"사원"},
-        { DEPT010: 5,DEPT011: 1,DEPT012:10, DEPT013:50, DEPT014:100,category:"대리"},
-        { DEPT010: 5,DEPT011: 1,DEPT012:10, DEPT013:50, DEPT014:100,category:"과장"},
-        { DEPT010: 5,DEPT011: 1,DEPT012:10, DEPT013:50, DEPT014:100,category:"차장"},
-        { DEPT010: 5,DEPT011: 1,DEPT012:10, DEPT013:50, DEPT014:100,category:"팀장"},
-        { DEPT010: 5,DEPT011: 1,DEPT012:10, DEPT013:50, DEPT014:100,category:"부장"}
-    ];
-
-    const gridOptions = {
-        columnDefs: columnDefs,
-        rowData: rowData,
-    };
-    /* 실제 불러올 때 -> ajax가 있고 foreach로 불러오는거 있음 선택하셈 */
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const gridDiv = document.querySelector('#myGrid');
-        new agGrid.Grid(gridDiv, gridOptions);
-    });
+        }
+        xhr.send();
+    }																																																			
+/* 실제 불러올 때 -> ajax가 있고 foreach로 불러오는거 있음 선택하셈 */
 </script>

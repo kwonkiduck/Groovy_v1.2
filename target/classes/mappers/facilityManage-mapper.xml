@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.facility.manage.FacilityManageMapper">
+
+<!-- 시설 예약 현황 조회 -->
+<select id="getAllReservedRooms" resultType="facilityVO">
+	SELECT 
+	    ROW_NUMBER() OVER(ORDER BY FCLTY_RESVE_SN DESC) AS FCLTY_RESVE_SN,
+	    TO_CHAR(FCLTY_RESVE_BEGIN_TIME, 'YYYY-MM-DD') AS FCLTY_RESVE_BEGIN_DATE,
+	    TO_CHAR(FCLTY_RESVE_END_TIME, 'YYYY-MM-DD') AS FCLTY_RESVE_END_DATE,
+	    FCLTY_RESVE_REQUST_MATTER,
+	    FCLTY_RESVE_EMPL_ID,
+	    COMMON_CODE_RESVE_AT,
+	    COMMON_CODE_FCLTY_KIND
+	FROM FCLTY_RESVE
+</select>
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.facility.FacilityMapper">
+    <insert id="inputRestReservation" parameterType="facilityVO">
+        insert into FCLTY_RESVE( fclty_resve_sn
+                               , fclty_resve_begin_time
+                               , fclty_resve_end_time
+                               , fclty_resve_requst_matter
+                               , fclty_resve_empl_id
+                               , common_code_resve_at
+                               , common_code_fclty_kind)
+        values ( FCLTY_RESVE_SEQ.nextval
+               , #{fcltyResveBeginTime}
+               , #{fcltyResveEndTime}
+               , #{fcltyResveRequstMatter}
+               , #{fcltyResveEmplId}
+               , #{commonCodeResveAt}
+               , #{commonCodeFcltyKind})
+    </insert>
+
+    <delete id="deleteReservedByFcltyResveSn" parameterType="int">
+        delete
+        from FCLTY_RESVE
+        where FCLTY_RESVE_SN = #{fcltyResveSn}
+    </delete>
+
+    <select id="getRooms" resultType="facilityVO" parameterType="String">
+        select (COMMON_CODE_FCLTY_KIND, FCLTY_PSNCPA)
+        from fclty
+        where COMMON_CODE_FCLTY_KIND like #{commonCodeFcltyKind}
+    </select>
+
+    <select id="getReservedRoomsByFcltyKind" resultType="facilityVO" parameterType="String">
+        select f.COMMON_CODE_FCLTY_KIND
+             , f.FCLTY_PSNCPA
+             , fr.FCLTY_RESVE_SN
+             , fr.FCLTY_RESVE_BEGIN_TIME
+             , fr.FCLTY_RESVE_END_TIME
+             , fr.FCLTY_RESVE_REQUST_MATTER
+             , fr.FCLTY_RESVE_EMPL_ID
+             , fr.COMMON_CODE_RESVE_AT
+        from FCLTY f
+                 inner join FCLTY_RESVE fr on f.COMMON_CODE_FCLTY_KIND = fr.COMMON_CODE_FCLTY_KIND
+        where TRUNC(fr.FCLTY_RESVE_BEGIN_TIME) = TRUNC(sysdate)
+          and f.COMMON_CODE_FCLTY_KIND = #{commonCodeFcltyKind}
+    </select>
+
+    <select id="getReservedRoomByFcltyResveEmplId" resultType="facilityVO" parameterType="Map">
+        select f.COMMON_CODE_FCLTY_KIND
+             , fr.FCLTY_RESVE_SN
+             , fr.FCLTY_RESVE_BEGIN_TIME
+             , fr.FCLTY_RESVE_END_TIME
+             , fr.FCLTY_RESVE_EMPL_ID
+             , fr.COMMON_CODE_RESVE_AT
+             , fr.FCLTY_RESVE_REQUST_MATTER
+        from FCLTY f
+                 inner join FCLTY_RESVE fr on f.COMMON_CODE_FCLTY_KIND = fr.COMMON_CODE_FCLTY_KIND
+        where TRUNC(fr.FCLTY_RESVE_BEGIN_TIME) = TRUNC(sysdate)
+          and fr.FCLTY_RESVE_EMPL_ID = #{fcltyResveEmplId}
+          and f.COMMON_CODE_FCLTY_KIND like #{fcltyKind}
+    </select>
+
+    <select id="getFixturesByFcltyKind" resultType="facilityVO" parameterType="String">
+        SELECT MAX(CASE WHEN FX.COMMON_CODE_FXTRS_KIND = 'FXTRS010' THEN FX.COMMON_CODE_FXTRS_KIND END) AS PROJECTOR,
+               MAX(CASE WHEN FX.COMMON_CODE_FXTRS_KIND = 'FXTRS011' THEN FX.COMMON_CODE_FXTRS_KIND END) AS WHITE_BOARD,
+               MAX(CASE WHEN FX.COMMON_CODE_FXTRS_KIND = 'FXTRS012' THEN FX.COMMON_CODE_FXTRS_KIND END) AS SCREEN,
+               MAX(CASE WHEN FX.COMMON_CODE_FXTRS_KIND = 'FXTRS013' THEN FX.COMMON_CODE_FXTRS_KIND END) AS EXTINGUISHER
+        FROM FXTRS FX
+                 INNER JOIN FCLTY FC ON FX.COMMON_CODE_FCLTY_KIND = FC.COMMON_CODE_FCLTY_KIND
+        WHERE FC.COMMON_CODE_FCLTY_KIND = #{commonCodeFcltyKind}
+    </select>
+
+
+</mapper>

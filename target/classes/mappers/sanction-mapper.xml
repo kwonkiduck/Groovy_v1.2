@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.sanction.SanctionMapper">
+    <select id="loadFormat" resultType="sanctionFormatVO">
+        SELECT COMMON_CODE_SANCTN_FORMAT,
+               FORMAT_SANCTN_KND,
+               FORMAT_SJ,
+               FORMAT_CN,
+               FORMAT_USE_AT
+        FROM SANCTN_FORMAT
+        WHERE COMMON_CODE_SANCTN_FORMAT = #{format}
+    </select>
+    <select id="getSeq" parameterType="String" resultType="String">
+        SELECT #{formatSanctnKnd} || '-' || TO_CHAR(SYSDATE, 'YYYY') || '-' || LPAD(
+                (SELECT TO_NUMBER(COUNT(*)) + 1
+                 FROM ELCTRN_SANCTN
+                 WHERE SUBSTR(ELCTRN_SANCTN_ETPR_CODE, 1, INSTR(ELCTRN_SANCTN_ETPR_CODE, '-') - 1) =
+                       #{formatSanctnKnd}),
+                4, '0'
+            ) AS elctrnSanctnEtprCode
+        FROM DUAL
+    </select>
+    <select id="getStatus" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM ELCTRN_SANCTN
+        WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
+          AND COMMON_CODE_SANCT_PROGRS = #{commonCodeSanctProgrs}
+    </select>
+    <!--기안 문서함(상신) 불러오기-->
+    <select id="loadRequest" parameterType="String" resultType="sanctionVO">
+        SELECT ELCTRN_SANCTN_ETPR_CODE,
+               ELCTRN_SANCTN_FORMAT_CODE,
+               ELCTRN_SANCTN_SJ,
+               ELCTRN_SANCTN_DC,
+               ELCTRN_SANCTN_DRFT_EMPL_ID,
+               ELCTRN_SANCTN_RECOM_DATE,
+               COMMON_CODE_SANCT_PROGRS
+        FROM ELCTRN_SANCTN
+        WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
+          AND COMMON_CODE_SANCT_PROGRS = 'SANCTN010'
+    </select>
+
+
+    <!--  결재 insert  -->
+    <insert id="inputSanction" parameterType="sanctionVO">
+        INSERT INTO ELCTRN_SANCTN( ELCTRN_SANCTN_ETPR_CODE
+                                 , ELCTRN_SANCTN_FORMAT_CODE
+                                 , ELCTRN_SANCTN_SJ
+                                 , ELCTRN_SANCTN_DC
+                                 , ELCTRN_SANCTN_DRFT_EMPL_ID
+                                 , ELCTRN_SANCTN_RECOM_DATE
+                                 , COMMON_CODE_SANCT_PROGRS)
+        VALUES (#{elctrnSanctnEtprCode},
+                #{elctrnSanctnFormatCode},
+                #{elctrnSanctnSj},
+                #{elctrnSanctnDc},
+                #{elctrnSanctnDrftEmplId},
+                SYSDATE,
+                #{commonCodeSanctProgrs})
+    </insert>
+    <insert id="inputLine" parameterType="sanctionLineVO">
+        INSERT INTO SANCTN_LINE( ELCTRN_SANCTN_ETPR_CODE
+                               , ELCTRN_SANCTNEMPL_ID
+                               , SANCTN_LINE_ORDR
+                               , COMMON_CODE_SANCT_PROGRS
+                               , ELCTRN_SANCTN_FINAL_AT)
+        VALUES (#{elctrnSanctnEtprCode},
+                #{elctrnSanctnemplId},
+                #{sanctnLineOrdr},
+                #{commonCodeSanctProgrs},
+                #{elctrnSanctnFinalAt})
+    </insert>
+    <insert id="inputRefrn" parameterType="referenceVO">
+        INSERT INTO SANCTN_REFRN( SANCTN_REFRN_EMPL_ID
+                                , ELCTRN_SANCTN_ETPR_CODE)
+        VALUES (#{sanctnRefrnEmplId},
+                #{elctrnSanctnEtprCode})
+    </insert>
+    <insert id="uploadFile" parameterType="uploadFileVO">
+        INSERT INTO UPLOAD_FILE( UPLOAD_FILE_SN
+                               , UPLOAD_FILE_ETPR_CODE
+                               , UPLOAD_FILE_ORGINL_NM
+                               , UPLOAD_FILE_STRE_NM
+                               , UPLOAD_FILE_SIZE,
+                                 UPLOAD_FILE_RGSDE)
+        VALUES (UPLOAD_FILE_SEQ.nextval,
+                #{sanctnEtprCode},
+                #{originalFileName},
+                #{newFileName},
+                #{fileSize},
+                sysdate)
+    </insert>
+    <!--  결재 insert  -->
+    <!--  결재선 포함 결재 문서 불러오기  -->
+    <select id="loadLine" parameterType="String" resultType="sanctionLineVO">
+        SELECT L.ELCTRN_SANCTN_ETPR_CODE
+             , L.ELCTRN_SANCTNEMPL_ID
+             , L.SANCTN_LINE_ORDR
+             , L.SANCTN_LINE_RETURN_RESN
+             , L.SANCTN_LINE_DATE
+             , L.COMMON_CODE_SANCT_PROGRS
+             , L.ELCTRN_SANCTN_FINAL_AT
+             , U.UPLOAD_FILE_STRE_NM
+             , E.EMPL_NM
+             , E.COMMON_CODE_DEPT
+             , E.COMMON_CODE_CLSF
+        FROM SANCTN_LINE L,
+             UPLOAD_FILE U,
+             SIGN S,
+             EMPL E
+        WHERE L.ELCTRN_SANCTNEMPL_ID = S.SIGN_EMPL_ID
+          AND S.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+          AND L.ELCTRN_SANCTNEMPL_ID = E.EMPL_ID
+          AND L.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
+    </select>
+    <select id="loadRefrn" parameterType="String" resultType="referenceVO">
+        SELECT R.SANCTN_REFRN_EMPL_ID
+             , R.ELCTRN_SANCTN_ETPR_CODE
+             , E.EMPL_NM
+             , E.COMMON_CODE_DEPT
+             , E.COMMON_CODE_CLSF
+        FROM SANCTN_REFRN R,
+             EMPL E
+        WHERE R.SANCTN_REFRN_EMPL_ID = E.EMPL_ID
+          AND R.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
+    </select>
+    <select id="loadSanction" parameterType="String" resultType="sanctionVO">
+        SELECT S.ELCTRN_SANCTN_ETPR_CODE
+             , S.ELCTRN_SANCTN_FORMAT_CODE
+             , S.ELCTRN_SANCTN_SJ
+             , S.ELCTRN_SANCTN_DC
+             , S.ELCTRN_SANCTN_DRFT_EMPL_ID
+             , S.ELCTRN_SANCTN_RECOM_DATE
+             , S.COMMON_CODE_SANCT_PROGRS
+             , E.EMPL_NM
+             , E.COMMON_CODE_CLSF
+             , E.COMMON_CODE_DEPT
+             , U.UPLOAD_FILE_STRE_NM
+        FROM ELCTRN_SANCTN S,
+             EMPL E,
+             UPLOAD_FILE U,
+             SIGN I
+        WHERE S.ELCTRN_SANCTN_DRFT_EMPL_ID = E.EMPL_ID
+          AND I.SIGN_EMPL_ID = E.EMPL_ID
+          AND I.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+          AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
+    </select>
+
+    <select id="loadAwaiting" parameterType="String" resultType="sanctionLineVO">
+        SELECT E.ELCTRN_SANCTN_ETPR_CODE,
+               E.ELCTRN_SANCTN_SJ,
+               P.EMPL_NM,
+               E.ELCTRN_SANCTN_RECOM_DATE,
+               L.SANCTN_LINE_ORDR,
+               L.COMMON_CODE_SANCT_PROGRS,
+               L.ELCTRN_SANCTN_FINAL_AT
+        FROM ELCTRN_SANCTN E,
+             SANCTN_LINE L,
+             EMPL P
+        WHERE E.ELCTRN_SANCTN_ETPR_CODE = L.ELCTRN_SANCTN_ETPR_CODE
+          AND E.ELCTRN_SANCTN_DRFT_EMPL_ID = P.EMPL_ID
+          AND L.COMMON_CODE_SANCT_PROGRS = #{progrsCode}
+          AND L.ELCTRN_SANCTNEMPL_ID = #{emplId}
+    </select>
+    <!--  loadAwaiting  loadUpcoming loadReference loadAcceptance-->
+
+</mapper>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.salary-mapper">
+	
+	<!-- 직급코드, 부서코드 등록 -->
+	<insert id="inputSalary" parameterType="kr.co.groovy.vo.AnslryVO">
+		INSERT INTO ANSLRY(ANSLRY_STDR_YEAR
+							,COMMON_CODE_DEPT_BSLRY
+							,COMMON_CODE_CLSF_ALLWNC)
+		VALUES(TO_CHAR(SYSDATE, 'YYYY')
+				,#{commonCodeDeptBslry}
+				,#{commonCodeClsfAllwnc})
+	</insert>
+
+	<!-- 급여 수정 -->
+	<update id="modifySalary" parameterType="int">
+		
+	</update>
+
+	<!-- 시간 외 수당 등록 -->
+	<insert id="inputOvertime" parameterType="int">
+
+	</insert>
+
+	<!-- 시간 외 수당 수정 -->
+	<update id="modifyOvertime" parameterType="int">
+
+	</update>
+
+</mapper>

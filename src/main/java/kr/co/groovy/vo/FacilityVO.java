@@ -22,5 +22,5 @@ public class FacilityVO {
     private String screen;
     private String whiteBoard;
     private String extinguisher;
-
+    private String fcltyName;
 }
