@@ -66,7 +66,8 @@
         const title = "${template.formatSj}";
         let content;
         let file = $('#sanctionFile')[0].files[0];
-        let vacationId = opener.$("#vacationId").text()
+        let vacationId = opener.$("#vacationId").text();
+
 
         $(document).ready(function () {
             $("#sanctionNo").html(etprCode);
