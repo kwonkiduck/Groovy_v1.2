@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.commute.CommuteMapper">
+
+    <select id="getCommute" parameterType="String" resultType="commuteVO">
+        SELECT
+            DCLZ_WORK_DE,
+            DCLZ_EMPL_ID,
+            DCLZ_ATTEND_TM,
+            DCLZ_LVFFC_TM,
+            DCLZ_DAIL_WORK_TIME,
+            DCLZ_WIK_WORK_TIME,
+            COMMON_CODE_LABOR_STTUS
+        FROM DCLZ
+        WHERE TO_CHAR(DCLZ_WORK_DE, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+          AND DCLZ_EMPL_ID = #{dclzEmplId}
+    </select>
+
+    <select id="getMaxWeeklyWorkTime" parameterType="String" resultType="int">
+        SELECT COALESCE(MAX(DCLZ_WIK_WORK_TIME), 0) AS MAX_WEEKLY_WORK_TIME
+        FROM (
+                 SELECT DCLZ_EMPL_ID,
+                        DCLZ_WORK_DE,
+                        DCLZ_WIK_WORK_TIME
+                 FROM DCLZ
+                 WHERE DCLZ_WORK_DE BETWEEN TRUNC(SYSDATE, 'IW')  AND TRUNC(SYSDATE, 'IW') + 4
+                   AND DCLZ_EMPL_ID = #{dclzEmplId}
+             )
+    </select>
+
+    <select id="getWeeklyAttendTime" parameterType="String" resultType="String">
+        SELECT to_char(DCLZ_ATTEND_TM, 'DY HH24:MI')
+        FROM DCLZ
+        WHERE DCLZ_WORK_DE BETWEEN TRUNC(SYSDATE, 'IW') AND TRUNC(SYSDATE, 'IW') + 4
+          AND DCLZ_EMPL_ID =  #{dclzEmplId}
+    </select>
+
+    <select id="getWeeklyLeaveTime" parameterType="String" resultType="String">
+        SELECT to_char(DCLZ_LVFFC_TM, 'DY HH24:MI')
+        FROM DCLZ
+        WHERE DCLZ_WORK_DE BETWEEN TRUNC(SYSDATE, 'IW') AND TRUNC(SYSDATE, 'IW') + 4
+          AND DCLZ_EMPL_ID = #{dclzEmplId}
+    </select>
+
+    <select id="getAllYear" parameterType="String" resultType="String">
+        SELECT DISTINCT TO_CHAR(DCLZ_WORK_DE, 'YYYY') AS WORK_YEAR
+        FROM DCLZ
+        where DCLZ_EMPL_ID = #{dclzEmplId}
+        ORDER BY WORK_YEAR
+    </select>
+
+    <select id="getAllMonth" parameterType="String" resultType="String">
+        SELECT DISTINCT TO_CHAR(DCLZ_WORK_DE, 'MM') AS WORK_MONTH
+        FROM DCLZ
+        where TO_CHAR(DCLZ_WORK_DE, 'YYYY') = #{year} and DCLZ_EMPL_ID = #{dclzEmplId}
+        ORDER BY WORK_MONTH
+    </select>
+
+    <select id="getCommuteByYearMonth" parameterType="String" resultType="commuteVO">
+        SELECT
+            DCLZ_WORK_DE,
+            DCLZ_DAIL_WORK_TIME,
+            COMMON_CODE_LABOR_STTUS
+        FROM
+            DCLZ
+        WHERE
+            TO_CHAR(DCLZ_WORK_DE, 'YYYY') = #{year}
+          AND TO_CHAR(DCLZ_WORK_DE, 'MM') = #{month}
+          AND DCLZ_EMPL_ID = #{dclzEmplId}
+    </select>
+
+    <select id="getAttend" parameterType="String" resultType="commuteVO">
+        SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD')            as DCLZ_WORK_DE,
+               #{dclzEmplId}                               as DCLZ_EMPL_ID,
+               TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') as DCLZ_ATTEND_TM,
+               '2000-01-01 00:00:00' as DCLZ_LVFFC_TM,
+               CASE
+                   WHEN TO_CHAR(SYSDATE, 'DY', 'NLS_DATE_LANGUAGE=AMERICAN') = 'MON' THEN
+                       (SELECT DCLZ_WIK_WORK_TIME
+                        FROM DCLZ
+                        WHERE DCLZ_EMPL_ID = #{dclzEmplId}
+                          AND DCLZ_WORK_DE = TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'), 'YYYY-MM-DD'))
+                   ELSE
+                       NVL((SELECT DCLZ_WIK_WORK_TIME
+                            FROM DCLZ
+                            WHERE DCLZ_EMPL_ID = #{dclzEmplId}
+                              AND DCLZ_WORK_DE = TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'), 'YYYY-MM-DD')),0)
+                   END                                   as DCLZ_WIK_WORK_TIME,
+               'LABOR_STTUS015'                          as COMMON_CODE_LABOR_STTUS
+        FROM DUAL
+    </select>
+
+    <insert id="insertAttend" parameterType="commuteVO">
+        INSERT INTO DCLZ (
+            DCLZ_WORK_DE,
+            DCLZ_EMPL_ID,
+            DCLZ_ATTEND_TM,
+            DCLZ_LVFFC_TM,
+            DCLZ_WIK_WORK_TIME,
+            COMMON_CODE_LABOR_STTUS
+        ) values
+              (
+                  to_date(#{dclzWorkDe}, 'yyyy-mm-dd'),
+                  #{dclzEmplId},
+                  to_date(#{dclzAttendTm}, 'yyyy-mm-dd hh24:mi:ss'),
+                  to_date(#{dclzLvffcTm}, 'yyyy-mm-dd hh24:mi:ss'),
+                  #{dclzWikWorkTime},
+                  #{commonCodeLaborSttus}
+                )
+    </insert>
+
+    <update id="updateCommute" parameterType="String">
+        UPDATE DCLZ
+        SET
+            DCLZ_LVFFC_TM = SYSDATE,
+            DCLZ_WIK_WORK_TIME =
+                CASE
+                    WHEN ROUND((SYSDATE - DCLZ_ATTEND_TM) * 24 * 60) >= 480
+                        THEN DCLZ_WIK_WORK_TIME + ROUND((SYSDATE - DCLZ_ATTEND_TM) * 24 * 60) - 60
+                    ELSE DCLZ_WIK_WORK_TIME + ROUND((SYSDATE - DCLZ_ATTEND_TM) * 24 * 60)
+                    END
+                ,
+            COMMON_CODE_LABOR_STTUS =
+                CASE
+                    WHEN TO_CHAR(SYSDATE, 'HH24:MI:SS') <![CDATA[<]]> '18:00:00'
+                        THEN 'LABOR_STTUS015'
+                    WHEN TO_CHAR(SYSDATE, 'HH24:MI:SS') >= '18:00:00' AND TO_CHAR(DCLZ_ATTEND_TM, 'HH24:MI:SS') <![CDATA[<]]> '09:01:00'
+                        THEN 'LABOR_STTUS010'
+                    WHEN TO_CHAR(SYSDATE, 'HH24:MI:SS') > '18:00:00' AND TO_CHAR(DCLZ_ATTEND_TM, 'HH24:MI:SS') >= '09:01:00'
+                        THEN 'LABOR_STTUS012'
+                    ELSE ''
+                    END,
+            DCLZ_DAIL_WORK_TIME =
+                CASE
+                    WHEN ROUND((SYSDATE - DCLZ_ATTEND_TM) * 24 * 60) >= 480
+                        THEN ROUND((SYSDATE - DCLZ_ATTEND_TM) * 24 * 60) - 60
+                    ELSE ROUND((SYSDATE - DCLZ_ATTEND_TM) * 24 * 60)
+                    END
+        WHERE
+            DCLZ_EMPL_ID = #{dclzEMplId}
+          AND TRUNC(DCLZ_ATTEND_TM) = TRUNC(SYSDATE)
+    </update>
+</mapper>

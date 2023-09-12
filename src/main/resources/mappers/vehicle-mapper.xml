@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.facility.FacilityMapper">
+    <insert id="inputVehicleReservation" parameterType="vehicleVO">
+        insert into VHCLE_RESVE( vhcle_resve_no
+                               , vhcle_resve_begin_time
+                               , vhcle_resve_end_time
+                               , vhcle_no
+                               , vhcle_resve_empl_id
+                               , common_code_resve_at)
+        values ( VHCLE_RESVE_SEQ.nextval
+               , #{vhcleResveBeginTime}
+               , #{vhcleResveEndTime}
+               , #{vhcleNo}
+               , #{vhcleResveEmplId}
+               , #{commonCodeResveAt})
+    </insert>
+    <delete id="deleteReservedByVhcleResveNo" parameterType="int">
+        delete
+        from vhcle_resve
+        where vhcle_resve_no = #{vhcleResveNo}
+    </delete>
+
+    <select id="getVehicles" resultType="vehicleVO">
+        select (VHCLE_NO, VHCLE_VHCTY, VHCLE_PSNCPA, COMMON_CODE_HIPASS_ASN_AT)
+        from VHCLE
+    </select>
+    <select id="getReservedVehicleByVhcleNo" resultType="vehicleVO" parameterType="String">
+        select v.VHCLE_NO,
+               v.VHCLE_VHCTY,
+               v.VHCLE_PSNCPA,
+               v.COMMON_CODE_HIPASS_ASN_AT,
+               vr.VHCLE_RESVE_NO,
+               vr.VHCLE_RESVE_BEGIN_TIME,
+               vr.VHCLE_RESVE_END_TIME,
+               vr.VHCLE_RESVE_EMPL_ID,
+               vr.COMMON_CODE_RESVE_AT
+        from VHCLE v
+                 full outer join VHCLE_RESVE vr on v.VHCLE_NO = vr.VHCLE_NO
+        where TRUNC(vr.VHCLE_RESVE_BEGIN_TIME) = TRUNC(sysdate)
+          and v.VHCLE_NO = #{vhcleNo}
+        order by VHCLE_RESVE_NO desc
+    </select>
+    <select id="getReservedVehicleByEmplId" resultType="vehicleVO" parameterType="String">
+        select vhcle_resve_no
+             , vhcle_resve_begin_time
+             , vhcle_resve_end_time
+             , vhcle_no
+             , vhcle_resve_empl_id
+             , common_code_resve_at
+        from VHCLE_RESVE
+        where VHCLE_RESVE_EMPL_ID = #{vhcleResveEmplId}
+          and TRUNC(VHCLE_RESVE_BEGIN_TIME) = TRUNC(sysdate)
+    </select>
+</mapper>

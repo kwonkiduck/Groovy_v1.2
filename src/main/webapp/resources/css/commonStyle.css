@@ -1,0 +1,167 @@
+@import "reset.css";
+/* root */
+:root {
+    --color-main: #5796F3;
+    --color-stroke : #EDF1F5;
+    --color-bg-grey : #F9FAFB;
+    --color-bg-sky : #F5FAFF;
+    --color-white : #fff;
+    --color-font-high : #191F28;
+    --color-font-md : #6B7684;
+    --color-font-row : #C8CDD4;
+    --clay-card:35px 35px 68px 0px rgba(241, 244, 248, 0.52), -4px -4px 16px 0px rgba(232, 243, 255, 0.60) inset, 0px 11px 28px 0px #FFF inset;
+    --clay-btn: 35px 35px 68px 0px rgba(191, 210, 230, 0.30), -4px -4px 16px 0px rgba(68, 118, 211, 0.94) inset, 0px 11px 28px 0px rgba(190, 213, 255, 0.55) inset;
+    --size-24 : 24px;
+    --size-32 : 32px;
+    --size-50 : 50%;
+    --font-size-9 : calc(9 * (100vw / var(--vw)));
+    --font-size-11 : calc(11 * (100vw / var(--vw)));
+    --font-size-14 : calc(14 * (100vw / var(--vw)));
+    --font-size-18 : calc(18 * (100vw / var(--vw)));
+    --font-size-24 : calc(24 * (100vw / var(--vw)));
+    --font-size-32 : calc(32 * (100vw / var(--vw)));
+    --font-size-36 : calc(36 * (100vw / var(--vw)));
+    --font-size: 8px;
+    --vw-12 : calc((12 / var(--vw)) * 100vw);
+    --vw-16 : calc((16 / var(--vw)) * 100vw);
+    --vw-18 : calc((18 / var(--vw)) * 100vw);
+    --vw-24 : calc((24 / var(--vw)) * 100vw);
+    --vw-32 : calc((32 / var(--vw)) * 100vw);
+    --vw-40 : calc((40 / var(--vw)) * 100vw);
+    --vw-48 : calc((48 / var(--vw)) * 100vw);
+    --vw-64 : calc((64 / var(--vw)) * 100vw);
+    --vh-8 : calc((8 / var(--vh)) * 100vh);
+    --vh-12 : calc((12 / var(--vh)) * 100vh);
+    --vh-16 : calc((16 / var(--vh)) * 100vh);
+    --vh-24 : calc((24 / var(--vh)) * 100vh);
+    --vh-32 : calc((32 / var(--vh)) * 100vh);
+    --vh-40 : calc((40 / var(--vh)) * 100vh);
+    --vh-48 : calc((48 / var(--vh)) * 100vh);
+    --vh-64 : calc((64 / var(--vh)) * 100vh);
+    --vw : 1920;
+    --vh : 1080;
+    --shadow-modal : 35px 35px 68px 0px rgba(203, 205, 207, 0.52), -4px -4px 16px 0px rgba(232, 243, 255, 0.60) inset, 0px 11px 28px 0px #FFF inset;
+}
+/* 뷰포트 설정 */
+/* ///// color ///// */
+/* background */
+.bg-main {background-color: var(--color-main);}
+.bg-grey {background-color: var(--color-bg-grey);}
+.bg-sky {background-color: var(--color-bg-sky);}
+.bg-wht {background-color: var(--color-white);}
+
+/* stroke */
+.stroke {border-color: var(--color-stroke);}
+
+/* font */
+.color-font-high {color: var(--color-font-high);}
+.color-font-md {color: var(--color-font-md);}
+.color-font-row {color: var(--color-font-row);}
+
+/* ///// font ///// */
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-medium';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-semiBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-bold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+/* font-size */
+.font-9 {font-size: var(--font-size-9);}
+.font-11 {font-size: var(--font-size-11);}
+.font-14 {font-size: var(--font-size-14);}
+.font-18 {font-size: var(--font-size-18);}
+.font-24 {font-size: var(--font-size-24);}
+.font-32 {font-size: var(--font-size-32);}
+.font-36 {font-size: var(--font-size-36);;}
+
+/* font-weight */
+.font-reg {font-family: "Pretendard-Regular";}
+.font-md {font-family: "Pretendard-medium";}
+.font-sb {font-family: "Pretendard-semiBold";}
+.font-b {font-family: "Pretendard-bold";}
+
+
+/* ///// border-radius ///// */
+.border-radius-24 {border-radius: var(--size-24);}
+.border-radius-32 {border-radius: var(--size-32);}
+.border-radius-50 {border-radius: var(--size-50);}
+
+/* ///// card ///// */
+.card-df {background-color: var(--color-white); box-shadow: var(--clay-card)}
+
+/* ///// Button ///// */
+.btn-fill-lg {pointer: pointer;width: calc((516 / var(--vw)) * 100vw); height: var(--vh-64); background-color: var(--color-main); border-radius: var(--size-32); border: 1px solid var(--color-stroke); box-shadow: var(--clay-btn);  outline-color: var(--color-main);}
+.btn-fill-sm {cursor: pointer;width: calc((256 / var(--vw)) * 100vw); height: var(--vh-64); background-color: var(--color-main); border-radius: var(--size-32); border: 1px solid var(--color-stroke); box-shadow: var(--clay-btn);  outline-color: var(--color-main);}
+.btn-out-sm {cursor: pointer;width: calc((256 / var(--vw)) * 100vw); height: var(--vh-64); background-color: var(--color-white); border-radius: var(--size-32); border: 1px solid var(--color-stroke); box-shadow: var(--clay-card);  outline-color: var(--color-main);}
+.btn-free-white {cursor: pointer;background-color:  var(--color-white); border: 1px solid var(--color-stroke); border-radius: var(--size-32); box-shadow: var(--clay-card); outline-color: var(--color-main);}
+.btn-free-blue {cursor: pointer;background-color:  var(--color-main); border: 1px solid var(--color-stroke); border-radius: var(--size-32); box-shadow: var(--clay-btn); color: white; font-weight: 600;}
+.btn.active {background-color: var(--color-main); box-shadow: var(--clay-btn);}
+/* modal */
+.modal {background-color: var(--color-white); border-radius: var(--size-32); box-shadow: var(--shadow-modal); padding: var(--size-32);}
+
+/* checkBox */
+.checkboxWrap {display: flex;width: 100%; align-items: center; gap: 8px;}
+.checkBox {position: relative;-moz-appearance:none;-webkit-appearance:none;-o-appearance:none;width: calc((20 / var(--vw)) * 100vw); height: calc((20 / var(--vw)) * 100vw); outline: 1px solid var(--color-font-row); border-radius: 4px;}
+.checkBox::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+.checkBox:checked {background-color: var(--color-main);}
+.checkBox:checked::before {
+    background-image: url("../images/icon/check.svg");
+}
+.checkBoxLabel {font-size: var(--font-size-11);}
+/* tab */
+.tab {
+    font-size: var(--font-size-36);
+    color: var(--color-font-high);
+    font-weight: 600;
+}
+
+/* icon */
+.icon { width: var(--vw-24); height: var(--vw-24); background-size: cover; background-position: center; display: inline-block; vertical-align: middle;}
+.i-arr-bt{background-image: url("../images/icon/i-arr-bt.svg");}
+.i-arr-up{background-image: url("../images/icon/i-arr-up.svg");}
+.i-home {content:url("../images/icon/home.svg");}
+.i-job {content:url("../images/icon/job.svg");}
+.i-vacation {content:url("../images/icon/magic-star.svg");}
+.i-todo {content:url("../images/icon/todo.svg");}
+.i-sanction {content:url("../images/icon/document.svg");}
+.i-calendar {content:url("../images/icon/calendar.svg");}
+.i-community {content:url("../images/icon/group.svg");}
+.i-notice {content:url("../images/icon/board.svg");}
+.i-share {content:url("../images/icon/share.svg");}
+.i-org {content:url("../images/icon/profile-2user.svg");}
+.i-mail {content:url("../images/icon/mail-unread.svg");}
+.i-signOut {content:url("../images/icon/logout.svg");}
+
+
+.i-chat {content:url("../images/icon/send.svg");}
+.i-emp {content:url("../images/icon/idCard.svg");}
+.i-parking {content:url("../images/icon/parking.svg");}
+.i-building {content:url("../images/icon/building.svg");}
+.i-money {content:url("../images/icon/money.svg");}
+.i-card {content:url("../images/icon/card.svg");}

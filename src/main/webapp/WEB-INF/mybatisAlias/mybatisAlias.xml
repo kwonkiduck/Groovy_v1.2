@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="kr.co.groovy.vo.EmployeeVO" alias="employeeVO"/>
+        <typeAlias type="kr.co.groovy.vo.EmployeeAuthVO" alias="employeeAuthVO"/>
+        <typeAlias type="kr.co.groovy.vo.DietVO" alias="dietVO"/>
+        <typeAlias type="kr.co.groovy.vo.NoticeVO" alias="noticeVO"/>
+        <typeAlias type="kr.co.groovy.vo.VehicleVO" alias="vehicleVO"/>
+        <typeAlias type="kr.co.groovy.vo.NotificationVO" alias="notificationVO"/>
+        <typeAlias type="kr.co.groovy.vo.ChatRoomVO" alias="chatRoomVO"/>
+        <typeAlias type="kr.co.groovy.vo.ChatMemberVO" alias="chatMemberVO"/>
+        <typeAlias type="kr.co.groovy.vo.ChatVO" alias="chatVO"/>
+        <typeAlias type="kr.co.groovy.vo.UploadFileVO" alias="uploadFileVO"/>
+        <typeAlias type="kr.co.groovy.vo.SntncVO" alias="sntncVO"/>
+        <typeAlias type="kr.co.groovy.vo.CommuteVO" alias="commuteVO"/>
+        <typeAlias type="kr.co.groovy.vo.ScheduleVO" alias="scheduleVO"/>
+        <typeAlias type="kr.co.groovy.vo.FacilityVO" alias="facilityVO"/>
+        <typeAlias type="kr.co.groovy.vo.ConnectionLogVO" alias="connectionLogVO"/>
+        <typeAlias type="kr.co.groovy.vo.VacationVO" alias="vacationVO"/>
+        <typeAlias type="kr.co.groovy.vo.JobDiaryVO" alias="jobDiaryVO"/>
+        <typeAlias type="kr.co.groovy.vo.SanctionFormatVO" alias="sanctionFormatVO"/>
+        <typeAlias type="kr.co.groovy.vo.SanctionLineVO" alias="sanctionLineVO"/>
+        <typeAlias type="kr.co.groovy.vo.SanctionVO" alias="sanctionVO"/>
+        <typeAlias type="kr.co.groovy.vo.ReferenceVO" alias="referenceVO"/>
+        <typeAlias type="kr.co.groovy.vo.RecomendVO" alias="recomendVO"/>
+        <typeAlias type="kr.co.groovy.vo.AlarmVO" alias="alarmVO"/>
+        <typeAlias type="kr.co.groovy.vo.AnswerVO" alias="answerVO"/>
+        <typeAlias type="kr.co.groovy.vo.VacationUseVO" alias="vacationUseVO"/>
+        <typeAlias type="kr.co.groovy.vo.MemoVO" alias="memoVO"/>
+        <typeAlias type="kr.co.groovy.vo.EmailVO" alias="emailVO"/>
+    </typeAliases>
+</configuration>

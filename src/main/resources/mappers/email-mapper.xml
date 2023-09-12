@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.email.EmailMapper">
+    <insert id="inputReceivedEmails" parameterType="emailVO">
+        {call declare
+        begin
+            insert into EMAIL_FROM( email_etpr_code
+                                  , email_from_addr
+                                  , emai_from_sj
+                                  , email_from_cn
+                                  , email_from_cn_type
+                                  , email_from_send_date
+                                  , EMAIL_FROM_TMPR_STRE_AT)
+            values ( 'EMAIL-' || EMAIL_SEQ.nextval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
+                   , #{emailFromAddr}
+                   , #{emaiFromSj}
+                   , #{emailFromCn}
+                   , #{emailFromCnType}
+                   , #{emailFromSendDate}
+                   , #{emailFromTmprStreAt});
+
+            insert into EMAIL_TO( email_etpr_code
+                                , email_from_addr
+                                , email_to_addr
+                                , email_to_received_date
+                                , email_redng_at
+                                , email_imprtnc_at
+                                , email_delete_at)
+            SELECT ef.EMAIL_ETPR_CODE,
+                   ef.EMAIL_FROM_ADDR,
+                   #{emailToAddr},
+                   #{emailToReceivedDate},
+                   #{emailRedngAt},
+                   #{emailImprtncAt},
+                   #{emailDeleteAt}
+            FROM EMAIL_FROM ef
+            WHERE ef.EMAIL_ETPR_CODE = #{emailEtprCode}
+              AND ef.EMAIL_FROM_ADDR = #{emailFromAddr};
+
+            insert into EMAIL_CC( email_etpr_code
+                                , email_from_addr
+                                , email_cc_addr
+                                , email_to_received_date
+                                , email_redng_at
+                                , email_imprtnc_at
+                                , email_delete_at)
+            SELECT ef.EMAIL_ETPR_CODE,
+                   ef.EMAIL_FROM_ADDR,
+                   #{emailCcAddr},
+                   #{emailToReceivedDate},
+                   #{emailRedngAt},
+                   #{emailImprtncAt},
+                   #{emailDeleteAt}
+            FROM EMAIL_FROM ef
+            WHERE ef.EMAIL_ETPR_CODE = #{emailEtprCode}
+              AND ef.EMAIL_FROM_ADDR = #{emailFromAddr};
+        end}
+    </insert>
+</mapper>
+

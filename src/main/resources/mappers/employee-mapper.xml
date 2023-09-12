@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.employee.EmployeeMapper">
+    <resultMap type="employeeVO" id="employeeDetailMap">
+        <result property="emplId" column="EMPL_ID"/>
+        <result property="emplPassword" column="EMPL_PASSWORD"/>
+        <result property="emplNm" column="EMPL_NM"/>
+        <result property="emplTelno" column="EMPL_TELNO"/>
+        <result property="emplEmail" column="EMPL_EMAIL"/>
+        <result property="emplZip" column="EMPL_ZIP"/>
+        <result property="emplAdres" column="EMPL_ADRES"/>
+        <result property="emplDetailAdres" column="EMPL_DETAIL_ADRES"/>
+        <result property="emplEncpn" column="EMPL_ENCPN"/>
+        <result property="emplBrthdy" column="EMPL_BRTHDY"/>
+        <result property="enabled" column="ENABLED"/>
+        <result property="commonCodeDept" column="COMMON_CODE_DEPT"/>
+        <result property="commonCodeClsf" column="COMMON_CODE_CLSF"/>
+        <result property="commonCodeHffcSttus" column="COMMON_CODE_HFFC_STTUS"/>
+        <result property="commonCodeLastAcdmcr" column="COMMON_CODE_LAST_ACDMCR"/>
+        <result property="signPhotoFileStreNm" column="SIGN_FILE_NAME"/>
+        <result property="proflPhotoFileStreNm" column="PROFILE_FILE_NAME"/>
+        <collection property="employeeAuthVOList" resultMap="employeeAuthMap"/>
+    </resultMap>
+
+    <resultMap type="employeeAuthVO" id="employeeAuthMap">
+        <result property="authCode" column="AUTH_CODE"/>
+        <result property="authEmpId" column="AUTH_EMP_ID"/>
+    </resultMap>
+    <update id="initMacAddr" parameterType="String">
+        UPDATE EMPL
+        SET EMPL_MACADRS = #{emplMacadrs}
+        WHERE EMPL_ID = #{emplId}
+    </update>
+    <insert id="inputConectLog" parameterType="connectionLogVO">
+        INSERT INTO CONECT_LOG(EMPL_ID,
+                               CONECT_LOG_MACADRS,
+                               CONECT_LOG_IP,
+                               CONECT_LOG_DATE)
+        VALUES (#{emplId},
+                #{conectLogMacadrs},
+                #{conectLogIp},
+                sysdate)
+    </insert>
+    <select id="getNoticeAt" parameterType="String" resultType="notificationVO">
+        SELECT MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN010' THEN COMMON_CODE_NTCN_AT END) AS DUTY_REQUEST,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN011' THEN COMMON_CODE_NTCN_AT END) AS ANSWER,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN012' THEN COMMON_CODE_NTCN_AT END) AS TEAM_NOTICE,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN013' THEN COMMON_CODE_NTCN_AT END) AS COMPANY_NOTICE,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN014' THEN COMMON_CODE_NTCN_AT END) AS SCHEDULE,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN015' THEN COMMON_CODE_NTCN_AT END) AS NEW_CHATTING_ROOM,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN016' THEN COMMON_CODE_NTCN_AT END) AS EMAIL_RECEPTION,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN017' THEN COMMON_CODE_NTCN_AT END) AS ELECTRON_SANCTION_RECEPTION,
+               MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN018' THEN COMMON_CODE_NTCN_AT END) AS ELECTRON_SANCTION_RESULT
+        FROM NTCN_AT
+        WHERE NTCN_AT_EMPL_ID = #{emplId}
+    </select>
+    <update id="modifyNoticeAt" parameterType="map">
+        UPDATE NTCN_AT
+        SET COMMON_CODE_NTCN_AT =
+                CASE
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN010' THEN #{notificationVO.dutyRequest}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN011' THEN #{notificationVO.answer}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN012' THEN #{notificationVO.teamNotice}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN013' THEN #{notificationVO.companyNotice}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN014' THEN #{notificationVO.schedule}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN015' THEN #{notificationVO.newChattingRoom}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN016' THEN #{notificationVO.emailReception}
+                    WHEN COMMON_CODE_NTCN_KIND = 'NTCN017' THEN #{notificationVO.electronSanctionReception}
+                    ELSE COMMON_CODE_NTCN_AT
+                    END
+        WHERE COMMON_CODE_NTCN_KIND IN (
+                                        'NTCN010',
+                                        'NTCN011',
+                                        'NTCN012',
+                                        'NTCN013',
+                                        'NTCN014',
+                                        'NTCN015',
+                                        'NTCN016',
+                                        'NTCN017',
+                                        'NTCN018'
+            )
+          AND NTCN_AT_EMPL_ID = #{emplId}
+    </update>
+    <select id="signIn" parameterType="String" resultMap="employeeDetailMap">
+        SELECT A.EMPL_ID,
+               A.EMPL_PASSWORD,
+               A.EMPL_NM,
+               A.EMPL_TELNO,
+               A.EMPL_EMAIL,
+               A.EMPL_ZIP,
+               A.EMPL_ADRES,
+               A.EMPL_DETAIL_ADRES,
+               A.EMPL_ENCPN,
+               A.EMPL_BRTHDY,
+               A.ENABLED,
+               A.COMMON_CODE_DEPT,
+               A.COMMON_CODE_CLSF,
+               A.COMMON_CODE_HFFC_STTUS,
+               A.COMMON_CODE_LAST_ACDMCR,
+               B.AUTH_CODE,
+               B.AUTH_EMP_ID,
+               UF.UPLOAD_FILE_STRE_NM  AS PROFILE_FILE_NAME,
+               UF2.UPLOAD_FILE_STRE_NM AS SIGN_FILE_NAME
+        FROM EMPL A
+                 JOIN AUTH B ON A.EMPL_ID = B.AUTH_EMP_ID
+                 JOIN PROFL P ON A.EMPL_ID = P.PROFL_EMPL_ID
+                 JOIN UPLOAD_FILE UF ON P.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
+                 JOIN SIGN S ON B.AUTH_EMP_ID = S.SIGN_EMPL_ID
+                 JOIN UPLOAD_FILE UF2 ON S.SIGN_ETPR_CODE = UF2.UPLOAD_FILE_ETPR_CODE
+        WHERE A.EMPL_ID = #{emplId}
+    </select>
+
+
+    <update id="initPassword" parameterType="String">
+        {call declare
+        begin
+            UPDATE EMPL
+            SET EMPL_PASSWORD = #{emplPassword}
+            WHERE EMPL_ID = #{emplId};
+
+            UPDATE AUTH
+            SET AUTH_CODE = 'ROLE_EMP'
+            WHERE AUTH_EMP_ID = #{emplId};
+        end}
+    </update>
+    <select id="countEmp" resultType="int">
+        SELECT COUNT(*)
+        FROM EMPL
+    </select>
+    <insert id="inputEmp">
+        {call declare
+        begin
+            -- 회원 정보 입력
+            INSERT INTO EMPL
+            (EMPL_ID,
+             EMPL_PASSWORD,
+             EMPL_NM,
+             EMPL_TELNO,
+             EMPL_EMAIL,
+             EMPL_ZIP,
+             EMPL_ADRES,
+             EMPL_DETAIL_ADRES,
+             EMPL_ENCPN,
+             EMPL_BRTHDY,
+             ENABLED,
+             COMMON_CODE_DEPT,
+             COMMON_CODE_CLSF,
+             COMMON_CODE_HFFC_STTUS,
+             COMMON_CODE_LAST_ACDMCR)
+            VALUES (#{emplId},
+                    #{emplPassword},
+                    #{emplNm},
+                    #{emplTelno},
+                    #{emplEmail},
+                    #{emplZip},
+                    #{emplAdres},
+                    #{emplDetailAdres},
+                    #{emplEncpn},
+                    #{emplBrthdy},
+                    #{enabled},
+                    #{commonCodeDept},
+                    #{commonCodeClsf},
+                    #{commonCodeHffcSttus},
+                    #{commonCodeLastAcdmcr});
+            INSERT INTO AUTH(AUTH_CODE, AUTH_EMP_ID) VALUES ('ROLE_NEW', #{emplId});
+
+            INSERT INTO PROFL(PROFL_ETPR_CODE, PROFL_EMPL_ID)
+            VALUES ('PROFL-' || PROFL_SEQ.nextval || '-' || #{emplId}, #{emplId});
+
+            INSERT INTO SIGN(SIGN_ETPR_CODE, SIGN_EMPL_ID)
+            VALUES ('SIGN-' || SIGN_SEQ.nextval || '-' || #{emplId}, #{emplId});
+
+            INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN, UPLOAD_FILE_ETPR_CODE, UPLOAD_FILE_ORGINL_NM, UPLOAD_FILE_STRE_NM,
+                                    UPLOAD_FILE_SIZE,
+                                    UPLOAD_FILE_RGSDE)
+            VALUES (UPLOAD_FILE_SEQ.nextval,
+                    (SELECT PROFL_ETPR_CODE
+                     FROM PROFL
+                     WHERE PROFL_EMPL_ID = #{emplId}),
+                    'default', #{proflPhotoFileStreNm}, 0, sysdate);
+
+            INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN, UPLOAD_FILE_ETPR_CODE, UPLOAD_FILE_ORGINL_NM, UPLOAD_FILE_STRE_NM,
+                                    UPLOAD_FILE_SIZE,
+                                    UPLOAD_FILE_RGSDE)
+            VALUES (UPLOAD_FILE_SEQ.nextval,
+                    (SELECT SIGN_ETPR_CODE
+                     FROM SIGN
+                     WHERE SIGN_EMPL_ID = #{emplId}),
+                    'default', #{signPhotoFileStreNm}, 0, sysdate);
+
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN010', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN011', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN012', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN013', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN014', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN015', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN016', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN017', #{emplId}, 'NTCN_AT010');
+            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
+            VALUES ('NTCN018', #{emplId}, 'NTCN_AT010');
+        end}
+    </insert>
+    <select id="loadEmpList" resultType="employeeVO">
+        SELECT EMPL_ID,
+               EMPL_PASSWORD,
+               EMPL_NM,
+               EMPL_TELNO,
+               EMPL_EMAIL,
+               EMPL_ZIP,
+               EMPL_ADRES,
+               EMPL_DETAIL_ADRES,
+               EMPL_ENCPN,
+               EMPL_BRTHDY,
+               ENABLED,
+               COMMON_CODE_DEPT,
+               COMMON_CODE_CLSF,
+               COMMON_CODE_HFFC_STTUS,
+               COMMON_CODE_LAST_ACDMCR
+        FROM EMPL
+    </select>
+    <select id="loadEmp" parameterType="String" resultType="employeeVO">
+        SELECT EMPL_ID,
+               EMPL_PASSWORD,
+               EMPL_NM,
+               EMPL_TELNO,
+               EMPL_EMAIL,
+               EMPL_ZIP,
+               EMPL_ADRES,
+               EMPL_DETAIL_ADRES,
+               EMPL_ENCPN,
+               EMPL_BRTHDY,
+               ENABLED,
+               COMMON_CODE_DEPT,
+               COMMON_CODE_CLSF,
+               COMMON_CODE_HFFC_STTUS,
+               COMMON_CODE_LAST_ACDMCR
+        FROM EMPL
+        WHERE EMPL_ID = #{emplId}
+    </select>
+
+    <!--프로필 사진 추가-->
+    <select id="loadBirthday" resultType="employeeVO">
+        SELECT E.EMPL_NM,
+               E.EMPL_BRTHDY,
+               U.UPLOAD_FILE_STRE_NM AS PROFL_PHOTO_FILE_STRE_NM
+        FROM EMPL E,
+             PROFL P,
+             UPLOAD_FILE U
+        WHERE TO_CHAR(EMPL_BRTHDY, 'MM') = TO_CHAR(SYSDATE, 'MM')
+          AND E.EMPL_ID = P.PROFL_EMPL_ID
+          AND P.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+    </select>
+
+    <select id="findEmp" resultType="employeeVO">
+        SELECT *
+        FROM EMPL
+        WHERE 1 = 1
+          AND (
+                    COMMON_CODE_DEPT = #{depCode} AND
+                    EMPL.EMPL_NM LIKE '%' || #{emplNm} || '%'
+            )
+        ORDER BY #{sortBy} DESC
+    </select>
+    <select id="findById" parameterType="String" resultType="employeeVO">
+        SELECT *
+        FROM EMPL
+        WHERE EMPL_ID = #{emplId}
+    </select>
+    <update id="modifyProfile" parameterType="String">
+        UPDATE UPLOAD_FILE
+        SET UPLOAD_FILE_STRE_NM   = #{fileName},
+            UPLOAD_FILE_ORGINL_NM = #{originalFileName}
+        WHERE UPLOAD_FILE_ETPR_CODE = (SELECT P.PROFL_ETPR_CODE
+                                       FROM EMPL E
+                                                JOIN PROFL P ON E.EMPL_ID = P.PROFL_EMPL_ID
+                                       WHERE E.EMPL_ID = #{emplId})
+    </update>
+    <update id="modifyPassword" parameterType="String">
+        UPDATE EMPL
+        SET EMPL_PASSWORD = #{emplPassword}
+        WHERE EMPL_ID = #{emplId}
+    </update>
+
+    <update id="modifySign" parameterType="String">
+        UPDATE UPLOAD_FILE
+        SET UPLOAD_FILE_STRE_NM   = #{fileName},
+            UPLOAD_FILE_ORGINL_NM = #{originalFileName}
+        WHERE UPLOAD_FILE_ETPR_CODE = (SELECT S.SIGN_ETPR_CODE
+                                       FROM EMPL E
+                                                JOIN SIGN S ON E.EMPL_ID = S.SIGN_EMPL_ID
+                                       WHERE E.EMPL_ID = #{emplId})
+    </update>
+    <update id="modifyEmp" parameterType="employeeVO">
+        UPDATE EMPL
+        SET EMPL_NM                 = #{emplNm},
+            EMPL_PASSWORD           = #{emplPassword},
+            EMPL_TELNO              = #{emplTelno},
+            EMPL_ZIP                = #{emplZip},
+            EMPL_ADRES              = #{emplAdres},
+            EMPL_DETAIL_ADRES       = #{emplDetailAdres},
+            COMMON_CODE_LAST_ACDMCR = #{commonCodeLastAcdmcr},
+            COMMON_CODE_CLSF        = #{commonCodeClsf},
+            COMMON_CODE_DEPT        = #{commonCodeDept},
+            COMMON_CODE_HFFC_STTUS  = #{commonCodeHffcSttus}
+        WHERE EMPL_ID = #{emplId}
+    </update>
+    <select id="loadConnectionLog" parameterType="String" resultType="connectionLogVO">
+        SELECT C.EMPL_ID,
+               C.CONECT_LOG_MACADRS,
+               C.CONECT_LOG_IP,
+               C.CONECT_LOG_DATE,
+               E.EMPL_MACADRS
+        FROM CONECT_LOG C,
+             EMPL E
+        WHERE C.EMPL_ID = E.EMPL_ID
+          AND TO_CHAR(CONECT_LOG_DATE, 'yyyy-MM-dd') = #{today}
+    </select>
+</mapper>

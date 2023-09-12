@@ -1,0 +1,10 @@
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.container {
+    flex: 1;
+    padding: calc((93/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
+}
+

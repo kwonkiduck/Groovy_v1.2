@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.schedule.ScheduleMapper">
+	<select id="getSchedule" resultType="scheduleVO">
+		SELECT * FROM SCHDUL
+	</select>
+	
+	<select id="getOneSchedule" parameterType="int" resultType="scheduleVO">
+		SELECT * FROM SCHDUL WHERE SCHDUL_SN = #{schdulSn}
+	</select>
+	
+	<insert id="inputSchedule" parameterType="scheduleVO">
+		INSERT INTO
+		SCHDUL(SCHDUL_SN, SCHDUL_NM, SCHDUL_BEGIN_DATE, SCHDUL_CLOS_DATE)
+		VALUES(SCHDUL_SN.NEXTVAL, #{schdulNm}, #{schdulBeginDate}, #{schdulClosDate})
+	</insert>
+	
+	<update id="modifySchedule" parameterType="scheduleVO">
+		UPDATE SCHDUL
+		SET 
+		SCHDUL_NM = #{schdulNm},
+		SCHDUL_BEGIN_DATE = #{schdulBeginDate},
+		SCHDUL_CLOS_DATE = #{schdulClosDate}
+		WHERE SCHDUL_SN = #{schdulSn}
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="int">
+		DELETE FROM SCHDUL WHERE SCHDUL_SN = #{data}
+	</delete>
+
+
+</mapper>

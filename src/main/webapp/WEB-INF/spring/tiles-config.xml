@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <definition name="tiles-layout" template="/WEB-INF/views/tiles/index.jsp">
+        <put-attribute name="aside" value="/WEB-INF/views/tiles/aside.jsp"/>
+        <put-attribute name="floating" value="/WEB-INF/views/tiles/floating.jsp"/>
+        <put-attribute name="body" value=""/>
+    </definition>
+    <definition name="tiles-layout-manage" template="/WEB-INF/views/tilesManage/index.jsp">
+        <put-attribute name="aside" value="/WEB-INF/views/tilesManage/manageAside.jsp"/>
+        <put-attribute name="body" value=""/>
+    </definition>
+    <definition name="tiles-layout-normal" template="/WEB-INF/views/tiles/normal.jsp">
+        <put-attribute name="body" value=""/>
+    </definition>
+    <definition name="admin/*/*/*" extends="tiles-layout-manage">
+        <put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}/{3}.jsp"/>
+    </definition>
+    <definition name="*/*" extends="tiles-layout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp"/>
+    </definition>
+    <definition name="*/*/*" extends="tiles-layout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+    </definition>
+    <definition name="sanction/template/*" extends="tiles-layout-normal">
+        <put-attribute name="body" value="/WEB-INF/views/sanction/template/{1}.jsp"/>
+    </definition>
+
+</tiles-definitions>

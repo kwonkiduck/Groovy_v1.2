@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="#">
+    <table border="1" style="width: 100%">
+        <colgroup>
+            <col style="width: 15%;">
+            <col style="width: 35%;">
+            <col style="width: 15%;">
+            <col style="width: 35%;">
+        </colgroup>
+        <tr>
+            <td class="form-title">문서 종류</td>
+            <td><span id="sanctnCate">연차사용신청서</span></td>
+            <td class="form-title">문서 번호</td>
+            <td><span id="sanctionNo">${etprCode}</span></td>
+        </tr>
+        <tr>
+            <td class="form-title">기안 부서</td>
+            <td><span>인사팀</span></td>
+            <td class="form-title">기안자</td>
+            <td><span id="writer"></span></td>
+        </tr>
+        <tr>
+            <td class="form-title">기안 일자</td>
+            <td><span id="writeDate"></span></td>
+            <td class="form-title">완료 일자</td>
+            <td><span id="finishDate"></span></td>
+        </tr>
+        <tr>
+            <td class="form-title">휴가 구분</td>
+            <td colspan="3"><span id="vacationKind" style="width: 99%">${data.commonCodeYrycUseKind}</span></td>
+        </tr>
+        <tr>
+            <td class="form-title">휴가 종류</td>
+            <td colspan="3"><span id="vacationSe" style="width: 99%">${data.commonCodeYrycUseSe}</span></td>
+
+        </tr>
+        <tr>
+            <td class="form-title">시작 날짜</td>
+            <td>
+                <span id="startDay" style="width: 99%">${data.yrycUseDtlsBeginDate}</span></td>
+            <td class="form-title">종료 일자</td>
+            <td>
+                <span id="endDate" style="width: 99%">${data.yrycUseDtlsEndDate}</span></td>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-title">내용</td>
+            <td colspan="3"><span id="sanctionContent" style="width: 99%">${data.yrycUseDtlsRm}</span>
+        </tr>
+        <tr>
+            <td class="form-title">파일 첨부</td>
+            <td colspan="3"><input type="file" id="sanctionFile" style="width: 99%"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

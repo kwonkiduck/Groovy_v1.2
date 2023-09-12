@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.reservation.ReservationMapper">
+
+    <select id="getTodayReservedVehicles" resultType="vehicleVO">
+        select v.vhcle_no,
+               v.vhcle_vhcty,
+               v.vhcle_psncpa,
+               v.common_code_hipass_asn_at,
+               vr.vhcle_resve_no,
+               vr.vhcle_resve_begin_time,
+               vr.vhcle_resve_end_time,
+               vr.vhcle_no,
+               vr.vhcle_resve_empl_id,
+               (select e.empl_nm from empl e where e.empl_id = vr.vhcle_resve_empl_id) as vhcle_resve_empl_nm,
+               vr.common_code_resve_at
+        from vhcle v
+                 full outer join vhcle_resve vr on v.vhcle_no = vr.vhcle_no
+        where trunc(vr.vhcle_resve_begin_time) = trunc(sysdate)
+        order by vr.vhcle_resve_begin_time
+    </select>
+
+    <select id="getAllVehicles" resultType="vehicleVO">
+        select *
+        from VHCLE
+    </select>
+
+    <insert id="inputVehicle" parameterType="vehicleVO">
+        insert into VHCLE
+        values (#{vhcleNo}, #{vhcleVhcty}, #{vhclePsncpa}, #{commonCodeHipassAsnAt})
+    </insert>
+
+</mapper>
