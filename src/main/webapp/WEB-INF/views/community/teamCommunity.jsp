@@ -259,7 +259,7 @@
     </table>
     <br/>
     <hr/>
-    <h2>투표하기</h2>
+    <h2>투표하자</h2>
     <form action="#" method="post">
         <table>
             <tr>
