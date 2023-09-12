@@ -69,11 +69,12 @@
 
                 <tr data-idx="${sntncVO.sntncEtprCode}" class="post">
                     <td class="sntncEtprCode">${sntncVO.sntncEtprCode}</td>
-                    <td>
+                    <td class="postWriter">
                         <c:forEach var="employee" items="${employeeList}">
                             <c:if test="${employee.emplId == sntncVO.sntncWrtingEmplId}">
                                 <img src="/uploads/profile/${employee.proflPhotoFileStreNm}" width="50px;"/>
                                 ${employee.emplNm}
+                                <span class="postWriterInfo" data-id="${employee.emplId}" style="display: none"></span>
                             </c:if>
                         </c:forEach>
                     </td>
@@ -325,6 +326,7 @@
     let selectedFile = undefined;
     let num = 2;
     const emplId = "${CustomUser.employeeVO.emplId}";
+    const emplNm = "${CustomUser.employeeVO.emplNm}";
     let sntncEtprCode;
     function loadAnswerFn(sntncEtprCode,item){
     $.ajax({
@@ -459,6 +461,7 @@
     }
     })
     }
+
     /*  댓글 등록   */
     if(target.classList.contains("inputAnswer")){
     const answerCnt = item.querySelector(".answerCnt")
@@ -479,6 +482,51 @@
     answerCnt.innerText = data;
     answerContent.value = "";
     loadAnswerFn(sntncEtprCode,item);
+
+    //알림 보내기
+    $.get("/alarm/getMaxAlarm")
+    .then(function (maxNum) {
+    maxNum = parseInt(maxNum) + 1;
+    console.log("최대 알람 번호:", maxNum);
+
+    let postWriterId = target.closest("tr").querySelector(".postWriterInfo").getAttribute("data-id");
+    let url = '/teamCommunity';
+    let content = `<div class="alarmBox">
+    <a href="\${url}" class="aTag" data-seq="\${maxNum}">
+    <h1>[팀 커뮤니티]</h1>
+    <p>\${emplNm}님이 댓글을 등록하셨습니다.</p>
+    </a>
+    <button type="button" class="readBtn">읽음</button>
+    </div>`;
+    let alarmVO = {
+    "ntcnEmplId": postWriterId,
+    "ntcnSn": maxNum,
+    "ntcnUrl": url,
+    "ntcnCn": content,
+    "commonCodeNtcnKind": 'NTCN011'
+    };
+
+    //알림 생성 및 페이지 이동
+    $.ajax({
+    type: 'post',
+    url: '/alarm/insertAlarmTarget',
+    data: alarmVO,
+    success: function (rslt) {
+    console.log(rslt);
+    if (socket) {
+    //알람번호,카테고리,url,보낸사람이름,받는사람아이디
+    let msg = maxNum + ",answer," + url + "," + emplNm + "," + postWriterId;
+    socket.send(msg);
+    }
+    },
+    error: function (xhr) {
+    console.log(xhr.status);
+    }
+    });
+    })
+    .catch(function (error) {
+    console.log("최대 알람 번호 가져오기 오류:", error);
+    });
     },
     error: function(request, status, error){
     console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -486,6 +534,7 @@
     })
     }
     }
+
     /*  댓글 불러오기 */
     if(target.classList.contains("loadAnswer")){
     loadAnswerFn(sntncEtprCode,item);

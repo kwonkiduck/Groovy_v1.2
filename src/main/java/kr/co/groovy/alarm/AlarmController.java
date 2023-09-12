@@ -3,6 +3,8 @@ package kr.co.groovy.alarm;
 import kr.co.groovy.employee.EmployeeService;
 import kr.co.groovy.vo.AlarmVO;
 import kr.co.groovy.vo.EmployeeVO;
+import kr.co.groovy.vo.NotificationVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequestMapping("/alarm")
 public class AlarmController {
     final EmployeeService employeeService;
@@ -21,15 +24,29 @@ public class AlarmController {
         this.service = service;
     }
 
+    //전체한테 보내기
     @PostMapping("/insertAlarm")
     @ResponseBody
     public void insertAlarm(AlarmVO alarmVO) {
         List<EmployeeVO> emplList = employeeService.loadEmpList();
-        System.out.println("alarmVO = " + alarmVO);
         for (EmployeeVO employeeVO : emplList) {
-            alarmVO.setNtcnEmplId(employeeVO.getEmplId());
-            service.insertAlarm(alarmVO);
+            String emplId = employeeVO.getEmplId();
+            try {
+                NotificationVO noticeAt = employeeService.getNoticeAt(emplId);
+                System.out.println("**^^noticeAt = " + noticeAt);
+                if (noticeAt.getAnswer().equals("NTCN_AT010")) {
+                    alarmVO.setNtcnEmplId(emplId);
+                    service.insertAlarm(alarmVO);
+                }
+            } catch (NullPointerException e) { }
         }
+    }
+
+    //특정인에게 알람 보내기
+    @PostMapping("/insertAlarmTarget")
+    @ResponseBody
+    public void insertAlarmTarger(AlarmVO alarmVO) {
+        service.insertAlarm(alarmVO);
     }
 
     @GetMapping("/all")
