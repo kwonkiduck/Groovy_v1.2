@@ -14,4 +14,13 @@ public enum Department {
     public String label() {
         return label;
     }
+
+    public static String getValueByLabel(String label) {
+        for (Department department : values()) {
+            if (department.label().equals(label)) {
+                return department.name();
+            }
+        }
+        return null;
+    }
 }

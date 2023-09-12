@@ -55,7 +55,7 @@ public class AlarmHandler extends TextWebSocketHandler {
 
         if (msg!=null) {
             String[] msgs = msg.split(",");
-
+            //공지사항
             if (msgs!=null && msgs.length == 3) {
                 String seq = msgs[0];
                 String category = msgs[1];
@@ -77,7 +77,60 @@ public class AlarmHandler extends TextWebSocketHandler {
                             webSocketSession.sendMessage(new TextMessage(notificationHtml));
                         }
                     }
-                } //공지사항 알림 끝
+                }
+            }//공지사항 알림 끝
+
+            //팀 공지사항
+            if (msgs!=null && msgs.length == 4) {
+                String seq = msgs[0];
+                String category = msgs[1];
+                String url = msgs[2];
+                String sendName = msgs[3];
+                if (category.equals("teamNoti")) {
+                    for (WebSocketSession webSocketSession : sessions) {
+                        String userId = currentUserId(webSocketSession);
+                        NotificationVO noticeAt = service.getNoticeAt(userId);
+                        String teamNotice = noticeAt.getTeamNotice();
+
+                        if (webSocketSession.isOpen() && teamNotice.equals("NTCN_AT010")) {
+                            String notificationHtml = String.format(
+                                    "<a href=\"%s\" data-seq=\"%s\" id=\"fATag\">" +
+                                            "    <p>[팀 커뮤니티] %s님이 팀 공지사항을 등록하셨습니다.</p>" +
+                                            "</a>"
+                                    ,
+                                    url, seq, sendName
+                            );
+                            webSocketSession.sendMessage(new TextMessage(notificationHtml));
+                        }
+                    }
+                }
+            }//팀 공지사항 알림 끝
+
+            if (msgs!=null && msgs.length == 6) { //댓글
+                String seq = msgs[0];
+                String category = msgs[1];
+                String url = msgs[2];
+                String sendName = msgs[3];
+                String receiveId = msgs[4];
+                String subject = msgs[5];
+                WebSocketSession receiveSession = userSessionMap.get(receiveId);
+                NotificationVO noticeAt = service.getNoticeAt(currentUserId(receiveSession));
+                //댓글
+                if (category.equals("answer") && receiveSession != null && noticeAt.getAnswer().equals("NTCN_AT010")) {
+                    String notificationHtml = String.format(
+                            "<a href=\"%s\" class=\"aTag\" data-seq=\"%s\">" +
+                                    "<h1>[팀 커뮤니티]</h1>\n" +
+                                    "<p>[<span style=\"white-space: nowrap; " +
+                                    "   display: inline-block;\n" +
+                                    "  overflow: hidden;\n" +
+                                    "  text-overflow: ellipsis;\n" +
+                                    "  max-width: 15ch;\">%s</span>]에\n" +
+                                    " %s님이 댓글을 등록하셨습니다.</p>" +
+                                    "</a>",
+                            url, seq, subject, sendName
+                    );
+                    receiveSession.sendMessage(new TextMessage(notificationHtml));
+                }
             }
         }
     }
