@@ -18,7 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MailTest {
     @Test
-    public void 메일_읽기_IMAP() throws MessagingException, IOException {
+    public void mailReadImap() throws MessagingException, IOException {
         String host = "imap.daum.net"; // imap.groovy.co.kr
         String userEmail = "groovytest@daum.net"; // 사번@groovy.co.kr
         String password = "groovy402dditfinal"; // 사원비번
@@ -71,7 +71,7 @@ public class MailTest {
     }
 
     @Test
-    public void 메일_읽기_pop3() throws MessagingException, IOException {
+    public void mailReadPop3() throws MessagingException, IOException {
         List<EmailVO> list = new ArrayList<>();
         String userEmail = "groovytest@daum.net";
         String password = "groovy402dditfinal";
