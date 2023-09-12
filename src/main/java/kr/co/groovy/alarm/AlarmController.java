@@ -46,7 +46,10 @@ public class AlarmController {
     @PostMapping("/insertAlarmTarget")
     @ResponseBody
     public void insertAlarmTarger(AlarmVO alarmVO) {
-        service.insertAlarm(alarmVO);
+        NotificationVO noticeAt = employeeService.getNoticeAt(alarmVO.getNtcnEmplId());
+        if (noticeAt.getAnswer().equals("NTCN_AT010")) {
+            service.insertAlarm(alarmVO);
+        }
     }
 
     @GetMapping("/all")
