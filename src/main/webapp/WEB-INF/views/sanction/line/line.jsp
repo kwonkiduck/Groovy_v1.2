@@ -136,8 +136,6 @@
 
                 if (employee.commonCodeCrsf === '대표') {
                     $('#ceo .ceo > ul').append(employeeLi);
-                } else if (employee.commonCodeDept === '회계') {
-                    $('#at .depth2 > ul').append(employeeLi);
                 } else if (employee.commonCodeDept === '영업') {
                     $('#st .depth3 > ul').append(employeeLi);
                 } else if (employee.commonCodeDept === '홍보') {
@@ -146,6 +144,8 @@
                     $('#gat .depth5 > ul').append(employeeLi);
                 } else if (employee.commonCodeDept === '인사') {
                     $('#hrt .depth1 > ul').append(employeeLi);
+                } else if (employee.commonCodeDept === '회계') {
+                    $('#at .dept2 > ul').append(employeeLi);
                 }
 
             });
