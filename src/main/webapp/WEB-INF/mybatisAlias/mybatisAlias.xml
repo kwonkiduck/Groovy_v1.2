@@ -4,6 +4,7 @@
 <configuration>
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="jdbcTypeForNull" value="NULL"/>
     </settings>
     <typeAliases>
         <typeAlias type="kr.co.groovy.vo.EmployeeVO" alias="employeeVO"/>
@@ -33,5 +34,6 @@
         <typeAlias type="kr.co.groovy.vo.VacationUseVO" alias="vacationUseVO"/>
         <typeAlias type="kr.co.groovy.vo.MemoVO" alias="memoVO"/>
         <typeAlias type="kr.co.groovy.vo.EmailVO" alias="emailVO"/>
+        <typeAlias type="kr.co.groovy.vo.ClubVO" alias="clubVO"/>
     </typeAliases>
 </configuration>
