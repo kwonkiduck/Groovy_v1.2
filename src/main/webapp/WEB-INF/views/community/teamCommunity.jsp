@@ -346,6 +346,7 @@
             let num = 2;
             const emplId = "${CustomUser.employeeVO.emplId}";
             const emplNm = "${CustomUser.employeeVO.emplNm}";
+            const emplDept = "${CustomUser.employeeVO.commonCodeDept}";
             let sntncEtprCode;
 
             function loadAnswerFn(sntncEtprCode, item) {
@@ -511,14 +512,20 @@
                                             console.log("최대 알람 번호:", maxNum);
 
                                             let postWriterId = target.closest("tr").querySelector(".postWriterInfo").getAttribute("data-id");
+                                            let subject = target.closest("tr").querySelector(".sntncCn").innerText;
                                             let url = '/teamCommunity';
                                             let content = `<div class="alarmBox">
-    <a href="\${url}" class="aTag" data-seq="\${maxNum}">
-    <h1>[팀 커뮤니티]</h1>
-    <p>\${emplNm}님이 댓글을 등록하셨습니다.</p>
-    </a>
-    <button type="button" class="readBtn">읽음</button>
-    </div>`;
+                                                                <a href="\${url}" class="aTag" data-seq="\${maxNum}">
+                                                                    <h1>[팀 커뮤니티]</h1>
+                                                                    <p>[<span style="white-space: nowrap;
+                                                                      display: inline-block;
+                                                                      overflow: hidden;
+                                                                      text-overflow: ellipsis;
+                                                                      max-width: 15ch;">\${subject}</span>]에
+                                                                      \${emplNm}님이 댓글을 등록하셨습니다.</p>
+                                                                </a>
+                                                                <button type="button" class="readBtn">읽음</button>
+                                                            </div>`;
                                             let alarmVO = {
                                                 "ntcnEmplId": postWriterId,
                                                 "ntcnSn": maxNum,
@@ -536,7 +543,7 @@
                                                     console.log(rslt);
                                                     if (socket) {
                                                         //알람번호,카테고리,url,보낸사람이름,받는사람아이디
-                                                        let msg = maxNum + ",answer," + url + "," + emplNm + "," + postWriterId;
+                                                        let msg = maxNum + ",answer," + url + "," + emplNm + "," + postWriterId + "," + subject;
                                                         socket.send(msg);
                                                     }
                                                 },
@@ -576,8 +583,8 @@
                                 code +=
                                     `<button type="button" class="notimodifyBtn">수정</button>
                                     <button type="button" class="notideleteBtn">삭제</button>`
-                                                            }
-                                                            code += `
+                            }
+                            code += `
                                     <div class="accordion">
                                     <div class="accordion-item">
                                     <details>
@@ -653,6 +660,45 @@
                         notisntncCn.value = "";
                         document.querySelector("#modal-insert-notice").style.display = "none";
                         loadTeamNotiFnc();
+
+                        $.get("/alarm/getMaxAlarm")
+                            .then(function (maxNum) {
+                                maxNum = parseInt(maxNum) + 1;
+
+                                let url = '/teamCommunity';
+                                let content = `<div class="alarmBox">
+                                                    <a href="\${url}" class="aTag" data-seq="\${maxNum}">
+                                                    <h1>[팀 커뮤니티]</h1>
+                                                    <p>\${emplNm}님이 팀 공지사항을 등록하셨습니다.</p>
+                                                    </a>
+                                                    <button type="button" class="readBtn">읽음</button>
+                                                </div>`;
+                                let alarmVO = {
+                                    "ntcnSn": maxNum,
+                                    "ntcnUrl": url,
+                                    "ntcnCn": content,
+                                    "commonCodeNtcnKind": 'NTCN012',
+                                    "dept": emplDept
+                                };
+                                //알림 생성 및 페이지 이동
+                                $.ajax({
+                                    type: 'post',
+                                    url: '/alarm/insertAlarm',
+                                    data: alarmVO,
+                                    success: function () {
+                                        if (socket) {
+                                            let msg = maxNum + ",teamNoti," + url + "," + emplNm;
+                                            socket.send(msg);
+                                        }
+                                    },
+                                    error: function (xhr) {
+                                        console.log(xhr.status);
+                                    }
+                                });
+                            })
+                            .catch(function (error) {
+                                console.log("최대 알람 번호 가져오기 오류:", error);
+                            });
                     },
                     error: function (request, status, error) {
                         console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
