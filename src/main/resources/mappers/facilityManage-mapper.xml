@@ -6,8 +6,8 @@
 <select id="getAllReservedRooms" resultType="facilityVO">
 	SELECT 
 	    ROW_NUMBER() OVER(ORDER BY FCLTY_RESVE_SN DESC) AS FCLTY_RESVE_SN,
-	    TO_CHAR(FCLTY_RESVE_BEGIN_TIME, 'YYYY-MM-DD') AS FCLTY_RESVE_BEGIN_DATE,
-	    TO_CHAR(FCLTY_RESVE_END_TIME, 'YYYY-MM-DD') AS FCLTY_RESVE_END_DATE,
+	    FCLTY_RESVE_BEGIN_TIME, 
+	    FCLTY_RESVE_END_TIME,
 	    FCLTY_RESVE_REQUST_MATTER,
 	    FCLTY_RESVE_EMPL_ID,
 	    COMMON_CODE_RESVE_AT,
@@ -15,4 +15,15 @@
 	FROM FCLTY_RESVE
 </select>
 
+<!-- 시설 예약 순번 카운트 -->
+<select id="getReserveCount" resultType="int">
+	SELECT COUNT(FCLTY_RESVE_SN) AS FCLTY_RESVE_CN
+	FROM FCLTY_RESVE
+</select>
+
+<!-- 예약 삭제 -->
+<delete id="delReserve" parameterType="int">
+	DELETE  FROM FCLTY_RESVE 
+	WHERE FCLTY_RESVE_SN = #{fcltyResveSn}
+</delete>
 </mapper>

@@ -60,10 +60,14 @@ table tr td, table tr th {
 		<div class="header">
 			<h3>오늘 예약 현황</h3>
 			<p>
-				<a href="#" class="totalResve">0</a>건
+
+					<a href="#" class="totalResve">
+						<c:out value="${fcltyResveCn}"/>
+					</a>건
 			</p>
 			<a href="#">더보기</a>
 		</div>
+	<form class="delButton" data-fcltyResveSn="${room.fcltyResveSn}" action="/fmanage/room/delReserve/${room.fcltyResveSn}" method="post">
 		<div class="content">
 			<table border=1 style="width: 100%" id="allReservedRooms">
 				<thead>
@@ -86,13 +90,15 @@ table tr td, table tr th {
 							<td>${room.fcltyResveBeginTime}</td>
 							<td>${room.fcltyResveEndTime}</td>
 							<td>${room.fcltyResveEmplId}</td>
-							<td><button type="button">예약취소</button></td>
+							<td><button>예약취소</button></td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</form>
+</div>
+
 	<div class="card">
 		<div class="header">
 			<div class="titleWrap" style="display: block">
@@ -143,5 +149,23 @@ table tr td, table tr th {
 </div>
 
 <script type="text/javascript">
-	
+document.addEventListener("DOMContentLoaded", function() {
+    const delButtons = document.querySelectorAll(".delButton");
+    delButtons.forEach(function(delButton) {
+        delButton.addEventListener("click", function() {
+            const form = this.closest("form");
+            const fcltyResveSn = form.getAttribute("data-fcltyResveSn");
+            let xhr = new XMLHttpRequest();
+            xhr.open("post", `/fmanage/room/delReserve/${fcltyResveSn}`, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log("삭제가 되었니? " + xhr.responseText);
+                } else {
+                    console.log("삭제가 왜!!!!!!안되는데!!!!" + xhr.status);
+                }
+            };
+            xhr.send();
+        });
+    });
+});
 </script>

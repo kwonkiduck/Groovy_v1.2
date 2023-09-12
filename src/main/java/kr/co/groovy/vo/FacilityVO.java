@@ -23,4 +23,6 @@ public class FacilityVO {
     private String whiteBoard;
     private String extinguisher;
     private String fcltyName;
+    private int fcltyResveCn;
+   
 }
