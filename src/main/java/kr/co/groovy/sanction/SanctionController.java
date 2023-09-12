@@ -148,7 +148,11 @@ public class SanctionController {
     public List<SanctionLineVO> loadAwaiting(String emplId) {
         return service.loadAwaiting(emplId);
     }
-
+    @GetMapping("/loadReference")
+    @ResponseBody
+    public List<SanctionVO> loadReference(String emplId) {
+        return service.loadReference(emplId);
+    }
 
 }
 

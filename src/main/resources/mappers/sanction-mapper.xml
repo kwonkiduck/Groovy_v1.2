@@ -37,7 +37,7 @@
                COMMON_CODE_SANCT_PROGRS
         FROM ELCTRN_SANCTN
         WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
-          AND COMMON_CODE_SANCT_PROGRS = 'SANCTN010'
+        ORDER BY COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
     </select>
     <update id="approve" parameterType="String">
         UPDATE SANCTN_LINE
@@ -200,6 +200,19 @@
         WHERE E.COMMON_CODE_DEPT = #{depCode}
           AND EMPL_ID != #{emplId}
         ORDER BY TO_NUMBER(SUBSTR(E.COMMON_CODE_CLSF, 5)), E.EMPL_ENCPN ASC
+    </select>
+    <select id="loadReference" parameterType="String" resultType="sanctionVO">
+        SELECT E.ELCTRN_SANCTN_ETPR_CODE,
+               E.ELCTRN_SANCTN_SJ,
+               P.EMPL_NM,
+               E.ELCTRN_SANCTN_RECOM_DATE,
+               E.COMMON_CODE_SANCT_PROGRS
+        FROM SANCTN_REFRN R,
+             ELCTRN_SANCTN E,
+             EMPL P
+        WHERE E.ELCTRN_SANCTN_ETPR_CODE = R.ELCTRN_SANCTN_ETPR_CODE
+          AND P.EMPL_ID = E.ELCTRN_SANCTN_DRFT_EMPL_ID
+          AND SANCTN_REFRN_EMPL_ID =  #{emplId}
     </select>
 </mapper>
 

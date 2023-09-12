@@ -173,6 +173,12 @@ public class SanctionService {
         return mapper.loadAllLine(depCode, emplId);
     }
 
-
+    List<SanctionVO> loadReference(String emplId){
+        List<SanctionVO>list =  mapper.loadReference(emplId);
+        for (SanctionVO vo : list) {
+            vo.setCommonCodeSanctProgrs(SanctionProgress.valueOf(vo.getCommonCodeSanctProgrs()).label());
+        }
+        return list;
+    }
 }
 

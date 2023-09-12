@@ -46,5 +46,6 @@ public interface SanctionMapper {
     void collect(String elctrnSanctnEtprCode);
 
     List<EmployeeVO> loadAllLine(@Param("depCode") String depCode, @Param("emplId") String emplId);
+    List<SanctionVO> loadReference(String emplId);
 
 }

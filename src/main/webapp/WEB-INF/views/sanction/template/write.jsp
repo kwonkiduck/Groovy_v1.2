@@ -44,7 +44,10 @@
         <div class="formContent">
                 ${template.formatCn}
         </div>
-        <br/><br/>
+        <div>
+            <input type="file" id="sanctionFile" style="width: 99%"/>
+        </div>
+
         <button type="button" id="sanctionSubmit" disabled>결재 제출</button>
     </div>
 
