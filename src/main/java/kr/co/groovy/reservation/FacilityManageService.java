@@ -1,4 +1,4 @@
-package kr.co.groovy.facility.manage;
+package kr.co.groovy.reservation;
 
 import java.util.List;
 

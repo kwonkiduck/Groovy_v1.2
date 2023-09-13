@@ -1,4 +1,4 @@
-package kr.co.groovy.facility.manage;
+package kr.co.groovy.reservation;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface FacilityManageMapper {
     public int getReserveCount();
     
     //예약취소
-    public int delReserve(int fcltyResveSn);
+    public void delReserve(int fcltyResveSn);
 }	

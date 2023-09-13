@@ -109,8 +109,6 @@
                  JOIN UPLOAD_FILE UF2 ON S.SIGN_ETPR_CODE = UF2.UPLOAD_FILE_ETPR_CODE
         WHERE A.EMPL_ID = #{emplId}
     </select>
-
-
     <update id="initPassword" parameterType="String">
         {call declare
         begin
@@ -127,86 +125,38 @@
         SELECT COUNT(*)
         FROM EMPL
     </select>
-    <insert id="inputEmp">
-        {call declare
-        begin
-            -- 회원 정보 입력
-            INSERT INTO EMPL
-            (EMPL_ID,
-             EMPL_PASSWORD,
-             EMPL_NM,
-             EMPL_TELNO,
-             EMPL_EMAIL,
-             EMPL_ZIP,
-             EMPL_ADRES,
-             EMPL_DETAIL_ADRES,
-             EMPL_ENCPN,
-             EMPL_BRTHDY,
-             ENABLED,
-             COMMON_CODE_DEPT,
-             COMMON_CODE_CLSF,
-             COMMON_CODE_HFFC_STTUS,
-             COMMON_CODE_LAST_ACDMCR)
-            VALUES (#{emplId},
-                    #{emplPassword},
-                    #{emplNm},
-                    #{emplTelno},
-                    #{emplEmail},
-                    #{emplZip},
-                    #{emplAdres},
-                    #{emplDetailAdres},
-                    #{emplEncpn},
-                    #{emplBrthdy},
-                    #{enabled},
-                    #{commonCodeDept},
-                    #{commonCodeClsf},
-                    #{commonCodeHffcSttus},
-                    #{commonCodeLastAcdmcr});
-            INSERT INTO AUTH(AUTH_CODE, AUTH_EMP_ID) VALUES ('ROLE_NEW', #{emplId});
-
-            INSERT INTO PROFL(PROFL_ETPR_CODE, PROFL_EMPL_ID)
-            VALUES ('PROFL-' || PROFL_SEQ.nextval || '-' || #{emplId}, #{emplId});
-
-            INSERT INTO SIGN(SIGN_ETPR_CODE, SIGN_EMPL_ID)
-            VALUES ('SIGN-' || SIGN_SEQ.nextval || '-' || #{emplId}, #{emplId});
-
-            INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN, UPLOAD_FILE_ETPR_CODE, UPLOAD_FILE_ORGINL_NM, UPLOAD_FILE_STRE_NM,
-                                    UPLOAD_FILE_SIZE,
-                                    UPLOAD_FILE_RGSDE)
-            VALUES (UPLOAD_FILE_SEQ.nextval,
-                    (SELECT PROFL_ETPR_CODE
-                     FROM PROFL
-                     WHERE PROFL_EMPL_ID = #{emplId}),
-                    'default', #{proflPhotoFileStreNm}, 0, sysdate);
-
-            INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN, UPLOAD_FILE_ETPR_CODE, UPLOAD_FILE_ORGINL_NM, UPLOAD_FILE_STRE_NM,
-                                    UPLOAD_FILE_SIZE,
-                                    UPLOAD_FILE_RGSDE)
-            VALUES (UPLOAD_FILE_SEQ.nextval,
-                    (SELECT SIGN_ETPR_CODE
-                     FROM SIGN
-                     WHERE SIGN_EMPL_ID = #{emplId}),
-                    'default', #{signPhotoFileStreNm}, 0, sysdate);
-
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN010', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN011', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN012', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN013', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN014', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN015', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN016', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN017', #{emplId}, 'NTCN_AT010');
-            INSERT INTO NTCN_AT (COMMON_CODE_NTCN_KIND, NTCN_AT_EMPL_ID, COMMON_CODE_NTCN_AT)
-            VALUES ('NTCN018', #{emplId}, 'NTCN_AT010');
-        end}
+    <insert id="inputEmp" parameterType="employeeVO">
+        INSERT INTO EMPL
+        (EMPL_ID,
+         EMPL_PASSWORD,
+         EMPL_NM,
+         EMPL_TELNO,
+         EMPL_EMAIL,
+         EMPL_ZIP,
+         EMPL_ADRES,
+         EMPL_DETAIL_ADRES,
+         EMPL_ENCPN,
+         EMPL_BRTHDY,
+         ENABLED,
+         COMMON_CODE_DEPT,
+         COMMON_CODE_CLSF,
+         COMMON_CODE_HFFC_STTUS,
+         COMMON_CODE_LAST_ACDMCR)
+        VALUES (#{emplId},
+                #{emplPassword},
+                #{emplNm},
+                #{emplTelno},
+                #{emplEmail},
+                #{emplZip},
+                #{emplAdres},
+                #{emplDetailAdres},
+                #{emplEncpn},
+                #{emplBrthdy},
+                #{enabled},
+                #{commonCodeDept},
+                #{commonCodeClsf},
+                #{commonCodeHffcSttus},
+                #{commonCodeLastAcdmcr})
     </insert>
     <select id="loadEmpList" resultType="employeeVO">
         SELECT EMPL_ID,
@@ -245,8 +195,6 @@
         FROM EMPL
         WHERE EMPL_ID = #{emplId}
     </select>
-
-    <!--프로필 사진 추가-->
     <select id="loadBirthday" resultType="employeeVO">
         SELECT E.EMPL_NM,
                E.EMPL_BRTHDY,
@@ -258,9 +206,23 @@
           AND E.EMPL_ID = P.PROFL_EMPL_ID
           AND P.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
     </select>
-
     <select id="findEmp" resultType="employeeVO">
-        SELECT *
+        SELECT EMPL_ID
+             , EMPL_PASSWORD
+             , EMPL_NM
+             , EMPL_TELNO
+             , EMPL_EMAIL
+             , EMPL_ZIP
+             , EMPL_ADRES
+             , EMPL_DETAIL_ADRES
+             , EMPL_ENCPN
+             , EMPL_BRTHDY
+             , ENABLED
+             , COMMON_CODE_DEPT
+             , COMMON_CODE_CLSF
+             , COMMON_CODE_HFFC_STTUS
+             , COMMON_CODE_LAST_ACDMCR
+             , EMPL_MACADRS
         FROM EMPL
         WHERE 1 = 1
           AND (
@@ -269,11 +231,11 @@
             )
         ORDER BY #{sortBy} DESC
     </select>
-    <select id="findById" parameterType="String" resultType="employeeVO">
-        SELECT *
-        FROM EMPL
-        WHERE EMPL_ID = #{emplId}
-    </select>
+    <!--    <select id="findById" parameterType="String" resultType="employeeVO">-->
+    <!--        SELECT *-->
+    <!--        FROM EMPL-->
+    <!--        WHERE EMPL_ID = #{emplId}-->
+    <!--    </select>-->
     <update id="modifyProfile" parameterType="String">
         UPDATE UPLOAD_FILE
         SET UPLOAD_FILE_STRE_NM   = #{fileName},

@@ -60,14 +60,10 @@ table tr td, table tr th {
 		<div class="header">
 			<h3>오늘 예약 현황</h3>
 			<p>
-
-					<a href="#" class="totalResve">
-						<c:out value="${fcltyResveCn}"/>
-					</a>건
+				<a href="#" class="totalResve"><span id="countValue"></span>건</a>
 			</p>
 			<a href="#">더보기</a>
 		</div>
-	<form class="delButton" data-fcltyResveSn="${room.fcltyResveSn}" action="/fmanage/room/delReserve/${room.fcltyResveSn}" method="post">
 		<div class="content">
 			<table border=1 style="width: 100%" id="allReservedRooms">
 				<thead>
@@ -84,20 +80,20 @@ table tr td, table tr th {
 				<tbody>
 					<c:forEach items="${reservedRooms}" var="room">
 						<tr>
-							<td>${room.fcltyResveSn}</td>
+							<td id="fcltyResveSn">${room.fcltyResveSn}</td>
 							<td>${room.commonCodeFcltyKind}</td>
 							<td>${room.fcltyName}</td>
 							<td>${room.fcltyResveBeginTime}</td>
 							<td>${room.fcltyResveEndTime}</td>
 							<td>${room.fcltyResveEmplId}</td>
-							<td><button>예약취소</button></td>
+							<td><button class="deleteButton"
+									data-fcltyResveSn="${room.fcltyResveSn}">예약취소</button></td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 		</div>
-	</form>
-</div>
+	</div>
 
 	<div class="card">
 		<div class="header">
@@ -150,22 +146,37 @@ table tr td, table tr th {
 
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
-    const delButtons = document.querySelectorAll(".delButton");
-    delButtons.forEach(function(delButton) {
-        delButton.addEventListener("click", function() {
-            const form = this.closest("form");
-            const fcltyResveSn = form.getAttribute("data-fcltyResveSn");
-            let xhr = new XMLHttpRequest();
-            xhr.open("post", `/fmanage/room/delReserve/${fcltyResveSn}`, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log("삭제가 되었니? " + xhr.responseText);
-                } else {
-                    console.log("삭제가 왜!!!!!!안되는데!!!!" + xhr.status);
-                }
-            };
-            xhr.send();
+    const deleteButtons = document.querySelectorAll(".deleteButton");
+    deleteButtons.forEach(function(deleteButton) {
+        deleteButton.addEventListener("click", function() {
+            const fcltyResveSn = this.getAttribute("data-fcltyResveSn");
+            
+            // 값이 비어있으면 요청을 보내지 않도록 확인
+            if (fcltyResveSn) {
+                let xhr = new XMLHttpRequest();
+                const encodedFcltyResveSn = encodeURIComponent(fcltyResveSn);
+                xhr.open("GET", `/deleteReserved?fcltyResveSn=${encodedFcltyResveSn}`, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        console.log("삭제가 완료되었습니다. 상태 코드: " + xhr.responseText);
+                        // 여기에서 필요한 추가 작업을 수행할 수 있습니다.
+                    } else {
+                        console.log("삭제 요청이 실패했습니다. 상태 코드: " + xhr.status);
+                    }
+                };
+                xhr.send();
+            }
         });
     });
 });
+
+//모든 <td> 요소 중 id가 "fcltyResveSn"인 요소를 선택합니다.
+const tdElements = document.querySelectorAll("td#fcltyResveSn");
+
+// 선택된 <td> 요소의 갯수를 가져옵니다.
+const count = tdElements.length;
+
+// 결과를 화면에 표시합니다.
+document.getElementById("countValue").textContent = count;
+
 </script>

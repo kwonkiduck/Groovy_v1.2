@@ -1,6 +1,8 @@
-package kr.co.groovy.facility.manage;
+package kr.co.groovy.reservation;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.groovy.vo.FacilityVO;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +38,19 @@ public class FacilityManageController {
 		log.info("(컨트롤러)값이 들어가니?" + reservedRooms);
 		return "admin/gat/room/manage";
 	}
+	
 	//삭제 버튼 메소드
     @GetMapping("/deleteReserved")
-    public String deleteReserved(String delReserved) {
-        service.delResved((int) fcltyResveSn);
+    public String deleteReserved(HttpServletRequest request) {
+        try {
+            int fcltyResveSn = Integer.parseInt(request.getParameter("fcltyResveSn"));
+            service.delResved(fcltyResveSn);
+            log.info("(컨트롤러) 값이 나오니?" + fcltyResveSn);
+        } catch (Exception e) {
+            // 예외 처리: 예외 발생 시 로그 기록 및 예외 처리 로직 추가
+            log.error("예약 삭제 중 오류 발생: " + e.getMessage(), e);
+            // 추가적인 예외 처리 로직을 여기에 추가하세요.
+        }
         return "redirect:/admin/gat/room/manage";
     }
 	
