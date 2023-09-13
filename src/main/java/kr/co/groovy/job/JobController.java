@@ -1,31 +1,37 @@
 package kr.co.groovy.job;
 
+import kr.co.groovy.common.CommonService;
 import kr.co.groovy.enums.ClassOfPosition;
+import kr.co.groovy.enums.Department;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
+import kr.co.groovy.vo.JobVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequestMapping("/job")
 public class JobController {
     final JobService service;
+    final CommonService commonService;
 
-    public JobController(JobService service) {
+    public JobController(JobService service, CommonService commonService) {
         this.service = service;
+        this.commonService = commonService;
     }
 
     @GetMapping("/write")
     public String jobDiaryWrite() {
-        return "employee/jobDiaryWrite";
+        return "employee/job/jobDiaryWrite";
     }
 
     @GetMapping("/read")
@@ -36,7 +42,7 @@ public class JobController {
         jobDiaryVO.setJobDiaryReportDate(date);
         System.out.println("date = " + date);
         model.addAttribute("vo", jobDiaryVO);
-        return "employee/jobDiaryRead";
+        return "employee/job/jobDiaryRead";
     }
 
     @PostMapping("/insertDiary")
@@ -71,6 +77,27 @@ public class JobController {
 
         }
         model.addAttribute("list", list);
-        return "employee/jobDiary";
+        return "employee/job/jobDiary";
+    }
+
+    @GetMapping("/jobOrgChart")
+    public String jobOrgChart(Model model) {
+        List<String> departmentCodes = Arrays.asList("DEPT010", "DEPT011", "DEPT012", "DEPT013", "DEPT014", "DEPT015");
+        for (String deptCode : departmentCodes) {
+            List<EmployeeVO> deptEmployees = commonService.loadOrgChart(deptCode);
+            for (EmployeeVO vo : deptEmployees) {
+                vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
+                vo.setCommonCodeClsf(ClassOfPosition.valueOf(vo.getCommonCodeClsf()).label());
+            }
+            model.addAttribute(deptCode + "List", deptEmployees);
+        }
+        return "/employee/job/jobOrgChart";
+    }
+
+    @PostMapping("/insertJob")
+    @ResponseBody
+    public void insertJob(JobVO jobVO, Principal principal) {
+        log.info("data= {}", jobVO);
+        jobVO.setJobRequstEmplId(principal.getName());
     }
 }
