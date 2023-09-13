@@ -40,20 +40,66 @@
         ORDER BY COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
     </select>
     <update id="approve" parameterType="String">
-        UPDATE SANCTN_LINE
-        SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016'
-        WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+        {CALL DECLARE
+        BEGIN
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016'
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN011'
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+--             BEGIN
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN013'
+            WHERE SANCTN_LINE_ORDR = (SELECT SANCTN_LINE_ORDR
+                                      FROM SANCTN_LINE
+                                      WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+                                        AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}) + 1
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+            --             EXCEPTION
+--                 WHEN NO_DATA_FOUND THEN
+--                     NULL;
+--             END;
+        END}
+    </update>
+    <update id="finalApprove" parameterType="String">
+        {CALL DECLARE
+        BEGIN
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016'
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016'
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+        END}
+
     </update>
     <update id="reject" parameterType="String">
-        UPDATE SANCTN_LINE
-        SET COMMON_CODE_SANCT_PROGRS = 'SANCTN015', SANCTN_LINE_RETURN_RESN = #{sanctnLineReturnResn}
-        WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+        {CALL DECLARE
+        BEGIN
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN015',
+                SANCTN_LINE_RETURN_RESN  = #{sanctnLineReturnResn}
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN015'
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+        END}
+
     </update>
     <update id="collect" parameterType="String">
         UPDATE ELCTRN_SANCTN
         SET COMMON_CODE_SANCT_PROGRS = 'SANCTN012'
         WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </update>
+
     <!--  결재 insert  -->
     <insert id="inputSanction" parameterType="sanctionVO">
         INSERT INTO ELCTRN_SANCTN( ELCTRN_SANCTN_ETPR_CODE
@@ -173,8 +219,8 @@
              EMPL P
         WHERE E.ELCTRN_SANCTN_ETPR_CODE = L.ELCTRN_SANCTN_ETPR_CODE
           AND E.ELCTRN_SANCTN_DRFT_EMPL_ID = P.EMPL_ID
-          AND L.ELCTRN_SANCTNEMPL_ID =  #{emplId}
-        ORDER BY L.COMMON_CODE_SANCT_PROGRS ASC
+          AND L.ELCTRN_SANCTNEMPL_ID = #{emplId}
+        ORDER BY L.COMMON_CODE_SANCT_PROGRS, L.ELCTRN_SANCTN_ETPR_CODE ASC
     </select>
     <select id="loadSanctionFile" parameterType="String" resultType="uploadFileVO">
         SELECT U.UPLOAD_FILE_SN,
@@ -212,7 +258,8 @@
              EMPL P
         WHERE E.ELCTRN_SANCTN_ETPR_CODE = R.ELCTRN_SANCTN_ETPR_CODE
           AND P.EMPL_ID = E.ELCTRN_SANCTN_DRFT_EMPL_ID
-          AND SANCTN_REFRN_EMPL_ID =  #{emplId}
+          AND SANCTN_REFRN_EMPL_ID = #{emplId}
+        ORDER BY E.COMMON_CODE_SANCT_PROGRS, E.ELCTRN_SANCTN_ETPR_CODE ASC
     </select>
 </mapper>
 

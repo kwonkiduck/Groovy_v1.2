@@ -29,12 +29,15 @@ public class SanctionService {
     }
 
 
-    public void approve(String elctrnSanctnemplId) {
-        mapper.approve(elctrnSanctnemplId);
+    public void approve(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
+        mapper.approve(elctrnSanctnemplId, elctrnSanctnEtprCode);
+    }
+  public void finalApprove(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
+        mapper.finalApprove(elctrnSanctnemplId, elctrnSanctnEtprCode);
     }
 
-    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn) {
-        mapper.reject(elctrnSanctnemplId, sanctnLineReturnResn);
+    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn, String elctrnSanctnEtprCode) {
+        mapper.reject(elctrnSanctnemplId, sanctnLineReturnResn, elctrnSanctnEtprCode);
     }
 
     public void collect(String elctrnSanctnEtprCode) {

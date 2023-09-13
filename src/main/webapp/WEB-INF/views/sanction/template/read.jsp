@@ -12,7 +12,7 @@
         text-align: center;
     }
 </style>
-<button>문서 다운로드</button>
+<a href="/pdf">문서 다운로드</a>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
     <div id="formCard">
@@ -85,25 +85,34 @@
 
             <%-- 세션에 담긴 사번이 문서의 기안자 사번과 같고 결재 코드가 최초 상신 상태일 때--%>
         <c:if test="${CustomUser.employeeVO.emplId == sanction.elctrnSanctnDrftEmplId && sanction.commonCodeSanctProgrs == '상신' }">
-            <button type="button" onclick="collect(${sanction.elctrnSanctnEtprCode})">회수</button>
+            <button type="button" onclick="collect(${CustomUser.employeeVO.emplId})">회수</button>
         </c:if>
         <c:forEach var="lineVO" items="${lineList}" varStatus="stat">
             <%-- 세션에 담긴 사번이 문서의 결재자 사번과 같고 결재 상태가 대기이며 결재의 상태가 반려가 아닌 경우--%>
             <c:if test="${ (CustomUser.employeeVO.emplId == lineVO.elctrnSanctnemplId)
                         && (lineVO.commonCodeSanctProgrs == '대기')
-                        && (sanction.commonCodeSanctProgrs != '반려')}">
+                        && (sanction.commonCodeSanctProgrs != '반려')
+                        && (lineVO.elctrnSanctnFinalAt == 'N')}">
                 <button type="button" onclick="approve(${lineVO.elctrnSanctnemplId})">승인</button>
                 <button type="button" onclick="reject(${lineVO.elctrnSanctnemplId})">반려</button>
             </c:if>
+            <c:if test="${ (CustomUser.employeeVO.emplId == lineVO.elctrnSanctnemplId)
+                        && (lineVO.commonCodeSanctProgrs == '대기')
+                        && (sanction.commonCodeSanctProgrs != '반려')
+                        && (lineVO.elctrnSanctnFinalAt == 'Y')}">
+                <button type="button" onclick="finalApprove(${lineVO.elctrnSanctnemplId})">최종승인</button>
+                <button type="button" onclick="reject(${lineVO.elctrnSanctnemplId})">반려</button>
+            </c:if>
         </c:forEach>
-<br><br>
+        <br><br>
         <button type="button" onclick="closeWindow()">닫기</button>
     </div>
     <script>
         let rejectReason;
         let rejectId;
+        let etprCode = '${sanction.elctrnSanctnEtprCode}';
 
-        function closeWindow(){
+        function closeWindow() {
             window.close();
         }
 
@@ -113,12 +122,33 @@
             $.ajax({
                 url: "/sanction/approve",
                 type: "POST",
-                data: {elctrnSanctnemplId: id},
+                data: {
+                    elctrnSanctnemplId: id,
+                    elctrnSanctnEtprCode: etprCode
+                },
                 success: function (data) {
-                    console.log('승인 처리 성공')
+                    alert('승인 처리 성공')
                 },
                 error: function (xhr) {
-                    console.log('승인 처리 실패')
+                    alert('승인 처리 실패')
+                }
+            });
+        }
+        /* 최종 승인 처리 */
+        function finalApprove(id) {
+            console.log(id);
+            $.ajax({
+                url: "/sanction/finalApprove",
+                type: "POST",
+                data: {
+                    elctrnSanctnemplId: id,
+                    elctrnSanctnEtprCode: etprCode
+                },
+                success: function (data) {
+                    alert('최종 승인 처리 성공')
+                },
+                error: function (xhr) {
+                    alert('최종 승인 처리 실패')
                 }
             });
         }
@@ -140,29 +170,33 @@
                 type: "POST",
                 data: {
                     elctrnSanctnemplId: rejectId,
-                    sanctnLineReturnResn: rejectReason
+                    sanctnLineReturnResn: rejectReason,
+                    elctrnSanctnEtprCode: etprCode
                 },
                 success: function (data) {
-                    console.log('반려 처리 성공')
+                    alert('반려 처리 성공')
                 },
                 error: function (xhr) {
-                    console.log('반려 처리 실패')
+                    alert('반려 처리 실패')
                 }
             });
         }
 
         /* 회수 처리 */
-        function collect(code) {
-            console.log(code);
+        function collect(id) {
+            console.log(id);
             $.ajax({
                 url: "/sanction/collect",
                 type: "POST",
-                data: {elctrnSanctnEtprCode: code},
+                data: {
+                    elctrnSanctnemplId: id,
+                    elctrnSanctnEtprCode: etprCode
+                },
                 success: function (data) {
-                    console.log('회수 처리 성공')
+                    alert('회수 처리 성공')
                 },
                 error: function (xhr) {
-                    console.log('회수 처리 실패')
+                    alert('회수 처리 실패')
                 }
             });
         }
