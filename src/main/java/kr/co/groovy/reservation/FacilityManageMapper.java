@@ -12,9 +12,12 @@ public interface FacilityManageMapper {
     //시설 예약조회
     public List<FacilityVO> getAllReservedRooms();
     
-    //예약순번  조회
-    public int getReserveCount();
-    
     //예약취소
     public void delReserve(int fcltyResveSn);
+    
+    //회의실 갯수
+    public int getMeetingRoom(int meetingCount);
+    
+    //휴게실 갯수
+    public int getRetiringRoom(int retiringCount);
 }	

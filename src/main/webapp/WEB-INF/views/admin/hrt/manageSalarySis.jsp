@@ -153,7 +153,7 @@
 	const deptName = document.querySelector("#deptName");
     deptName = function fAjax(){
         let xhr = new XMLHttpRequest();
-        xhr.open("get", "/admin/hrt/manageSalarySis", true);
+        xhr.open("get", "", true);
         xhr.onreadystatechange = function(){
             if (xhr.readyState == 4 && xhr.status == 200){
             	const dept = JSON.parse(xhr.responseText);

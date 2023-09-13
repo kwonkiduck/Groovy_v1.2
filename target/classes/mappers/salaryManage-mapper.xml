@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mappers.salary-mapper">
+<mapper namespace="kr.co.groovy.salary.manage.SalaryManageMapper">
 	
-	<!-- 직급코드, 부서코드 등록 -->
-	<insert id="inputSalary" parameterType="kr.co.groovy.vo.AnslryVO">
+	<!-- 부서코드 조회 -->
+	<select id="getDept" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
+		SELECT COMMON_CODE
+	    ,COMMON_NAME
+	    ,COMMON_SECTION_VALUE 
+		FROM COMMON
+		WHERE COMMON_CODE LIKE '%'||#{"deptCode"}||'%'
+	</select>
+	
+	<!--  직급코드 조회 -->
+	<select id="getClsf" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
+		SELECT COMMON_CODE
+	    ,COMMON_NAME
+	    ,COMMON_SECTION_VALUE 
+		FROM COMMON
+		WHERE COMMON_CODE LIKE '%'||#{"clsfCode"}||'%'
+	</select>
+		
+	<!-- 연봉 등록 -->
+	<insert id="inputSalary" parameterType="String">
 		INSERT INTO ANSLRY(ANSLRY_STDR_YEAR
 							,COMMON_CODE_DEPT_BSLRY
 							,COMMON_CODE_CLSF_ALLWNC)
@@ -11,20 +29,4 @@
 				,#{commonCodeDeptBslry}
 				,#{commonCodeClsfAllwnc})
 	</insert>
-
-	<!-- 급여 수정 -->
-	<update id="modifySalary" parameterType="int">
-		
-	</update>
-
-	<!-- 시간 외 수당 등록 -->
-	<insert id="inputOvertime" parameterType="int">
-
-	</insert>
-
-	<!-- 시간 외 수당 수정 -->
-	<update id="modifyOvertime" parameterType="int">
-
-	</update>
-
 </mapper>

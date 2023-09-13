@@ -2,18 +2,14 @@ package kr.co.groovy.reservation;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.groovy.vo.FacilityVO;
 import lombok.extern.slf4j.Slf4j;
@@ -40,27 +36,45 @@ public class FacilityManageController {
 	}
 	
 	//삭제 버튼 메소드
-    @GetMapping("/deleteReserved")
-    public String deleteReserved(HttpServletRequest request) {
-        try {
-            int fcltyResveSn = Integer.parseInt(request.getParameter("fcltyResveSn"));
-            service.delResved(fcltyResveSn);
-            log.info("(컨트롤러) 값이 나오니?" + fcltyResveSn);
-        } catch (Exception e) {
-            // 예외 처리: 예외 발생 시 로그 기록 및 예외 처리 로직 추가
-            log.error("예약 삭제 중 오류 발생: " + e.getMessage(), e);
-            // 추가적인 예외 처리 로직을 여기에 추가하세요.
-        }
-        return "redirect:/admin/gat/room/manage";
-    }
+	@GetMapping("/deleteReserved")
+	@ResponseBody 
+	public String deleteReserved(@RequestParam int fcltyResveSn) {
+		log.info("값이 나오니?"+fcltyResveSn);
+	    try {
+	        service.delResved(fcltyResveSn);
+	        return "success"; // 삭제 성공 시 "success" 반환
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "failure"; // 삭제 실패 시 "failure" 반환
+	    }
+	}
 	
-	//예약현황 증가 값
-	@GetMapping(value = "reserveCount")
-	public String getFcltyResveCn(Model model) {
-		int fcltyResveCn = service.incountResved();
-		model.addAttribute("fcltyResveCn",fcltyResveCn);
-		log.info("(컨트롤러)값이 나오니?" + fcltyResveCn);
-		return "admin/gat/room/manage";
+	//회의실 갯수 메소드
+	@ResponseBody
+	@GetMapping("/countMeeting")
+	public String countingMeeting(@RequestParam int meetingCount) {
+		log.info("회의실 수가 나오니? " + meetingCount);
+		try {
+			service.getMeetingRoom(meetingCount);
+			return "success";
+		}catch (Exception e) {
+			e.getMessage();
+			return "failure";
+		}
+	}
+	
+	//휴게실 갯수 메소드
+	@ResponseBody
+	@GetMapping("/countRetiring")
+	public String countingretiring(@RequestParam int retiringCount) {
+		log.info("휴게실 수가 나오니? " + retiringCount);
+		try {
+			service.getMeetingRoom(retiringCount);
+			return "success";
+		}catch (Exception e) {
+			e.getMessage();
+			return "failure";
+		}
 	}
 	
 }

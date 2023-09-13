@@ -11,5 +11,8 @@ public class SalaryManageService {
 
 	@Autowired
 	private SalaryManageMapper mapper;
-	
+
+	public String clsfCode(String commonCodeClsfAllwnc) {
+		return null;
+	}
 }

@@ -65,46 +65,52 @@ table tr td, table tr th {
 			<a href="#">더보기</a>
 		</div>
 		<div class="content">
-			<table border=1 style="width: 100%" id="allReservedRooms">
-				<thead>
-					<tr>
-						<th>순번</th>
-						<th>시설 종류 구분</th>
-						<th>시설 이름</th>
-						<th>시작 날짜</th>
-						<th>끝 날짜</th>
-						<th>예약 사원(사번)</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${reservedRooms}" var="room">
+				<table border=1 style="width: 100%" id="allReservedRooms">
+					<thead>
 						<tr>
-							<td id="fcltyResveSn">${room.fcltyResveSn}</td>
-							<td>${room.commonCodeFcltyKind}</td>
-							<td>${room.fcltyName}</td>
-							<td>${room.fcltyResveBeginTime}</td>
-							<td>${room.fcltyResveEndTime}</td>
-							<td>${room.fcltyResveEmplId}</td>
-							<td><button class="deleteButton"
-									data-fcltyResveSn="${room.fcltyResveSn}">예약취소</button></td>
+							<th>리스트 순서</th>
+							<th>순번</th>
+							<th>시설 종류 구분</th>
+							<th>시설 이름</th>
+							<th>시작 날짜</th>
+							<th>끝 날짜</th>
+							<th>예약 사원(사번)</th>
+							<th>예약 취소</th>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<c:forEach items="${reservedRooms}" var="room" varStatus="stat">
+							<tr>
+								<td>${stat.count}</td>
+								<td id="fcltyResveSn">${room.fcltyResveSn}</td>
+								<td>${room.commonCodeFcltyKind}</td>
+								<td>${room.fcltyName}</td>
+								<td>${room.fcltyResveBeginTime}</td>
+								<td>${room.fcltyResveEndTime}</td>
+								<td>${room.fcltyResveEmplId}</td>
+								<td><button class="delEvent" type="button" data-fcltyResveSn="${room.fcltyResveSn}">예약취소</button></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
 		</div>
 	</div>
-
+<br /><br /><hr><br /><br />
 	<div class="card">
 		<div class="header">
 			<div class="titleWrap" style="display: block">
 				<h3>시설 관리</h3>
-				<ul>
-					<li>회의실 | <span class="totalConf">10</span>개
-					</li>
-					<li>휴게실 | <span class="totalRest">10</span>개
-					</li>
-				</ul>
+				<br/>
+				<table border=1 style="width: 100%">
+					<tbody>
+						<tr>
+							<td>회의실 | <span class="totalConfm">10</span>개</td>
+						</tr>
+						<tr>
+							<td>휴게실 | <span class="totalConfr">10</span>개</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 		<div class="content">
@@ -145,38 +151,66 @@ table tr td, table tr th {
 </div>
 
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".deleteButton");
-    deleteButtons.forEach(function(deleteButton) {
-        deleteButton.addEventListener("click", function() {
-            const fcltyResveSn = this.getAttribute("data-fcltyResveSn");
-            
-            // 값이 비어있으면 요청을 보내지 않도록 확인
-            if (fcltyResveSn) {
-                let xhr = new XMLHttpRequest();
-                const encodedFcltyResveSn = encodeURIComponent(fcltyResveSn);
-                xhr.open("GET", `/deleteReserved?fcltyResveSn=${encodedFcltyResveSn}`, true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        console.log("삭제가 완료되었습니다. 상태 코드: " + xhr.responseText);
-                        // 여기에서 필요한 추가 작업을 수행할 수 있습니다.
-                    } else {
-                        console.log("삭제 요청이 실패했습니다. 상태 코드: " + xhr.status);
-                    }
-                };
-                xhr.send();
+//각 버튼에 클릭 이벤트 핸들러 추가
+function delClickEvent() {
+    let delEvents = document.querySelectorAll(".delEvent");
+    delEvents.forEach(function (delEvent) {
+        delEvent.addEventListener("click", function () {
+            console.log("취소가 되니?");
+            if (confirm("정말 취소하시겠습니까?")) { // 사용자에게 확인 메시지 표시
+                const fcltyResveSn = this.getAttribute("data-fcltyResveSn");
+					console.log(fcltyResveSn);
+
+                // 값이 비어있으면 요청을 보내지 않도록 확인
+                if (fcltyResveSn) {
+                    const xhr = new XMLHttpRequest();
+                 // 삭제 요청을 보낼때 중요한 정보가 아니므로 get을 사용하고, 파라미터 값을 가져올때 순번으로 가져오는데
+                 // 쿼리에서 orderBy를 한번에 순번에 적용하지 말고,
+                 // from밑에 orderBy를 하고 순번을 가져올때 카운트랑 별개로 가져와야 하므로,
+                 // varStatus="stat"를 추가해서 카운트는 순번과 별개로 화면에 보여지고,버튼을 누르면 순번만 인식해서 지워짐!
+                    xhr.open("get", "/fmanage/deleteReserved?fcltyResveSn=" +fcltyResveSn, true);  
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            console.log("삭제가 완료되었습니다. 상태 코드: " + xhr.responseText);
+                            location.reload(); // 페이지 리로드
+                        } else {
+                            console.log("삭제 요청이 실패했습니다. 상태 코드: " + xhr.status);
+                        }
+                    };
+
+                    xhr.onerror = function () {
+                        console.error("네트워크 오류로 인해 삭제 요청이 실패했습니다.");
+                    };
+
+                    xhr.send("fcltyResveSn=" + fcltyResveSn);
+                }
             }
         });
     });
+}
+
+// 페이지가 로드될 때 실행
+document.addEventListener("DOMContentLoaded", function () {
+    // 모든 <td> 요소 중 id가 "fcltyResveSn"인 요소를 선택합니다.
+    const tdElements = document.querySelectorAll("td#fcltyResveSn");
+
+    // 선택된 <td> 요소의 갯수를 가져옵니다.
+    const count = tdElements.length;
+
+    // 결과를 화면에 표시합니다.
+    document.getElementById("countValue").textContent = count;
+
+    // delClickEvent 함수 호출
+    delClickEvent();
 });
 
-//모든 <td> 요소 중 id가 "fcltyResveSn"인 요소를 선택합니다.
-const tdElements = document.querySelectorAll("td#fcltyResveSn");
+function countMeeting (){
+	let meeting = document.querySelectorAll(".totalConfm");
+	meeting.onload = function fAjax(){
+		let xhr = new XMLHttpRequest();
+	}
 
-// 선택된 <td> 요소의 갯수를 가져옵니다.
-const count = tdElements.length;
-
-// 결과를 화면에 표시합니다.
-document.getElementById("countValue").textContent = count;
-
+}
 </script>

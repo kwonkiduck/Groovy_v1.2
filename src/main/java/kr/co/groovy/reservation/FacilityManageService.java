@@ -18,7 +18,7 @@ public class FacilityManageService {
 	//시설 예약 현황 조회
 	public List<FacilityVO> getAllReservedRooms() {
 		List<FacilityVO> reservedRoom = mapper.getAllReservedRooms();
-			log.info("(서비스)값이 나오니? " + reservedRoom);
+			//log.info("(서비스)값이 나오니? " + reservedRoom);
 			return reservedRoom;
 	}
 	
@@ -26,10 +26,10 @@ public class FacilityManageService {
     public FacilityVO addFcilityName(FacilityVO facilityVO) {
     	String commonCodeFcltyKind = facilityVO.getCommonCodeFcltyKind();
     	String fcltyName = getFacilityName(commonCodeFcltyKind);
-    	log.info("(서비스)값이 나오니? " + commonCodeFcltyKind);
+    	//log.info("(서비스)값이 나오니? " + commonCodeFcltyKind);
     	//VO에 시설이름 저장
     	facilityVO.setFcltyName(fcltyName);
-    	log.info("(서비스)값이 나오니? " + fcltyName);
+    	//log.info("(서비스)값이 나오니? " + fcltyName);
     	return facilityVO;
     }
     
@@ -43,15 +43,55 @@ public class FacilityManageService {
             return commonCodeFcltyKind;
         }
     }
-	
-	//예약 카운트 메소드
-    public int incountResved() {
-    	int fcltyReaveSn = mapper.getReserveCount();
-    	return fcltyReaveSn;
-    }
     
     //예약 취소 매퍼 연결
     public void delResved(int fcltyResveSn) {
     	mapper.delReserve(fcltyResveSn);
+    }
+    
+    //시설 코드 vo에 전달
+    public FacilityVO addFacility(FacilityVO facilityVO) { 
+    	String meetngRoom = facilityVO.getCommonCodeFcltyKind();
+    	String meetingRoomCode = setMeetingCode(meetngRoom);
+    	
+    	String retiringRoom = facilityVO.getCommonCodeFcltyKind();
+    	String retiringRoomCode = setRetiringCode(retiringRoom);
+    	
+    	facilityVO.setMeetingRoom(meetingRoomCode);
+    	facilityVO.setRetiringRoom(retiringRoomCode);
+    	
+    	return facilityVO;
+    }
+    
+    //회의실 코드 세팅
+    public String setMeetingCode(String CommonCodeFcltyKind) {
+    	if(CommonCodeFcltyKind.startsWith("FCLTY010")) {
+			return "FCLTY010";
+    	} else {
+    		return CommonCodeFcltyKind;
+    	}
+    }
+    
+    //휴게실 코드 세팅
+    public String setRetiringCode(String CommonCodeFcltyKind) {
+    	if(CommonCodeFcltyKind.startsWith("FCLTY011")) {
+    		return "FCLTY011";
+    	}else {
+    		return CommonCodeFcltyKind;
+    	}
+    }
+    
+    //회의실 갯수 조회
+    public int getMeetingRoom(int meetingCount) {
+    	meetingCount = mapper.getMeetingRoom(meetingCount);
+    	log.info("회의실 갯수가 나오니? " + meetingCount);
+    	return meetingCount;
+    }
+    
+    //휴게실 갯수 조회
+    public int getRetiringRoom(int retiringCount) {
+    	retiringCount = mapper.getRetiringRoom(retiringCount);
+    	log.info("휴게실 갯수가 나오니? " + retiringCount);
+    	return retiringCount;
     }
 }

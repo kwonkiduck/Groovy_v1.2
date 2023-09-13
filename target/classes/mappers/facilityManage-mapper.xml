@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.groovy.facility.manage.FacilityManageMapper">
+<mapper namespace="kr.co.groovy.reservation.FacilityManageMapper">
 
 <!-- 시설 예약 현황 조회 -->
 <select id="getAllReservedRooms" resultType="facilityVO">
 	SELECT 
-	    ROW_NUMBER() OVER(ORDER BY FCLTY_RESVE_SN DESC) AS FCLTY_RESVE_SN,
+	    FCLTY_RESVE_SN,
 	    FCLTY_RESVE_BEGIN_TIME, 
 	    FCLTY_RESVE_END_TIME,
 	    FCLTY_RESVE_REQUST_MATTER,
@@ -13,12 +13,7 @@
 	    COMMON_CODE_RESVE_AT,
 	    COMMON_CODE_FCLTY_KIND
 	FROM FCLTY_RESVE
-</select>
-
-<!-- 시설 예약 순번 카운트 -->
-<select id="getReserveCount" resultType="int">
-	SELECT COUNT(FCLTY_RESVE_SN) AS FCLTY_RESVE_CN
-	FROM FCLTY_RESVE
+	ORDER BY FCLTY_RESVE_SN ASC
 </select>
 
 <!-- 예약 삭제 -->
@@ -26,4 +21,18 @@
 	DELETE  FROM FCLTY_RESVE 
 	WHERE FCLTY_RESVE_SN = #{fcltyResveSn}
 </delete>
+
+<!-- 회의실 갯수 -->
+<select id="getMeetingRoom" resultType="facilityVO" parameterType="int">
+	SELECT COUNT(COMMON_CODE_FCLTY_KIND)
+	FROM FCLTY
+	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||"#{meetingRoom}"||'%'
+</select>
+
+<!-- 휴게실 갯수 -->
+<select id="getRetiringRoom" resultType="facilityVO" parameterType="int">
+	SELECT COUNT(COMMON_CODE_FCLTY_KIND)
+	FROM FCLTY
+	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||"#{retiringRoom}"||'%'
+</select>
 </mapper>

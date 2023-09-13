@@ -10,7 +10,7 @@ import java.util.Date;
 @Setter
 @ToString
 public class FacilityVO {
-    private String commonCodeFcltyKind;
+	private String commonCodeFcltyKind;
     private int fcltyPsncpa;
     private int fcltyResveSn;
     private Date fcltyResveBeginTime;
@@ -23,6 +23,8 @@ public class FacilityVO {
     private String whiteBoard;
     private String extinguisher;
     private String fcltyName;
-    private int fcltyResveCn;
-   
+    private String meetingRoom;
+    private String retiringRoom;
+    private String meetingCount;
+    private String retiringCount;  
 }
