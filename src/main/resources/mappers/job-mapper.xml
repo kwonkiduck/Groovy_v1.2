@@ -80,7 +80,7 @@
             JOB_BEGIN_DATE,
             JOB_CLOS_DATE,
             JOB_REQUST_DATE,
-            COMMON_CODE_DUTY_KINDH
+            COMMON_CODE_DUTY_KIND
         )
         VALUES (
                    #{jobNo},
@@ -91,6 +91,21 @@
                    #{jobClosDate},
                    SYSDATE,
                    #{commonCodeDutyKind}
+               )
+    </insert>
+
+    <insert id="insertJobProgress" parameterType="jobProgressVO">
+        INSERT INTO JOB_PROGRS (
+            JOB_NO,
+            JOB_RECPTN_EMPL_ID,
+            COMMON_CODE_DUTY_STTUS,
+            COMMON_CODE_DUTY_PROGRS
+        )
+        VALUES (
+                   #{jobNo},
+                   #{jobRecptnEmplId},
+                   #{commonCodeDutySttus},
+                   #{commonCodeDutyProgrs}
                )
     </insert>
 </mapper>

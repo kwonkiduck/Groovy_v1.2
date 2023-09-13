@@ -29,7 +29,6 @@ orgBtn.addEventListener("click", () => {
                 });
                 receive.innerHTML = str;
 
-                document.querySelector("")
             });
 
             popup.document.querySelector("#orgCheck").addEventListener("click", () => {
@@ -39,4 +38,13 @@ orgBtn.addEventListener("click", () => {
         .catch((error) => {
             console.error("데이터 가져오기 실패:", error);
         });
+});
+
+document.addEventListener("click", function(event) {
+    if (event.target && event.target.classList.contains("close-empl")) {
+        let spanToRemove = event.target.closest("span");
+        if (spanToRemove) {
+            spanToRemove.remove(); // 해당 span 태그 삭제
+        }
+    }
 });

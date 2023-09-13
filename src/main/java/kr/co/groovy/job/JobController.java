@@ -100,20 +100,18 @@ public class JobController {
     public void insertJob(JobVO jobVO, JobProgressVO jobProgressVO, Principal principal) {
         log.info("data= {}", jobVO);
         log.info("jobProgressVO= {}", jobProgressVO);
-        //jobVO
-        int maxJobNo = service.getMaxJobNo();
+        int maxJobNo = service.getMaxJobNo() + 1;
         jobVO.setJobNo(maxJobNo);
         jobVO.setJobRequstEmplId(principal.getName());
-        //jobVO insert
+        service.insertJob(jobVO);
 
-        //jobProgrsVO insert - no, id, sttus, progs
         jobProgressVO.setJobNo(maxJobNo);
         List<String> selectedEmplIds = jobVO.getSelectedEmplIds();
         for (String selectedEmplId : selectedEmplIds) {
             jobProgressVO.setJobNo(maxJobNo);
             jobProgressVO.setJobRecptnEmplId(selectedEmplId);
             jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel("대기"));
-            //jonProgrsVO insert
+            service.insertJobProgress(jobProgressVO);
         }
     }
 

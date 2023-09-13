@@ -29,12 +29,52 @@ close.forEach(item => {
     })
 })
 
+//날짜 유효성 검사
+function validateBeginDate(input) {
+    let currentDate = new Date();
+    let inputDate = new Date(input.value);
+
+    if (inputDate < currentDate) {
+        let currentYear = currentDate.getFullYear();
+        let currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+        let currentDay = String(currentDate.getDate()).padStart(2, '0');
+        let minDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
+        alert('현재 날짜보다 이전의 날짜는 설정할 수 없습니다.');
+        input.value = minDate;
+    }
+}
+
+function validateCloseDate(input) {
+    validateBeginDate(input);
+    let beginDateInput = document.getElementById('jobBeginDate');
+
+    let beginDate = new Date(beginDateInput.value);
+    let closeDate = new Date(input.value);
+
+    if (beginDate > closeDate) {
+        alert('끝 날짜는 시작 날짜보다 이전이 될 수 없습니다.');
+        beginDateInput.value = input.value;
+    }
+}
+
+//업무 요청하기
 let requestBtn = document.getElementById("request");
 let requestForm = document.querySelectorAll("#requestJob")[0];
 
 requestBtn.addEventListener("click", (event) => {
     event.preventDefault();
     let formData = new FormData(requestForm);
+    let requiredList = ["jobSj", "jobCn", "jobBeginDate", "jobClosDate"];
+    let validation = true;
+
+    requiredList.forEach((required) => {
+        let req = document.getElementById(required);
+        if (req.value.trim() === "") {
+            alert("모든 값을 입력해주세요.");
+            validation = false;
+        }
+    });
 
     //받는 사원의 리스트
     let receiveEmpls = receive.querySelectorAll("span");
@@ -58,8 +98,6 @@ requestBtn.addEventListener("click", (event) => {
             console.log(xhr.status);
         }
     });
-
-
 });
 
 //

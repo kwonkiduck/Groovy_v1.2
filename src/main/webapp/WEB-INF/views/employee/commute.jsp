@@ -76,7 +76,9 @@
         <button type="button">확인</button>
     </div>
 
-
+    <button id="orgBtn" type="button"></button>
+    <div id="receive"></div>
+    <script src="/resources/js/orgChart.js"></script>
     <script>
         let dclzEmplId = `${CustomUser.employeeVO.emplId}`;
         let goBtn = document.querySelector("#goBtn");

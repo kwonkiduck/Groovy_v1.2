@@ -2,6 +2,8 @@ package kr.co.groovy.job;
 
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
+import kr.co.groovy.vo.JobProgressVO;
+import kr.co.groovy.vo.JobVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,4 +23,8 @@ public interface JobMapper {
     JobDiaryVO getDiaryByDateAndId(JobDiaryVO jobDiaryVO);
 
     int getMaxJobNo();
+
+    void insertJob(JobVO jobVO);
+
+    void insertJobProgress(JobProgressVO jobProgressVO);
 }

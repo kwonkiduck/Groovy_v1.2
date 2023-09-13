@@ -396,9 +396,9 @@
                         <li class="form-data-list">
                             <label>📅 업무 기간</label>
                             <div class="input-date">
-                                <input type="date" name="jobBeginDate" id="jobBeginDate" placeholder="시작 날짜">
+                                <input type="date" name="jobBeginDate" id="jobBeginDate" onchange="validateBeginDate(this)" placeholder="시작 날짜">
                                 ~
-                                <input type="date" name="jobClosDate" id="jobClosDate" placeholder="끝 날짜">
+                                <input type="date" name="jobClosDate" id="jobClosDate" onchange="validateCloseDate(this)" placeholder="끝 날짜">
                             </div>
                         </li>
                         <li class="form-data-list">

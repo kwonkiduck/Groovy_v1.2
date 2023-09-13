@@ -2,6 +2,8 @@ package kr.co.groovy.job;
 
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
+import kr.co.groovy.vo.JobProgressVO;
+import kr.co.groovy.vo.JobVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,4 +41,8 @@ public class JobService {
     }
 
     int getMaxJobNo() {return mapper.getMaxJobNo();}
+
+    void insertJob(JobVO jobVO) {mapper.insertJob(jobVO);}
+
+    void insertJobProgress(JobProgressVO jobProgressVO) {mapper.insertJobProgress(jobProgressVO);}
 }
