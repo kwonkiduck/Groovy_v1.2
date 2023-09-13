@@ -12,18 +12,14 @@
         text-align: center;
     }
 </style>
-<h2>
-    <a href="#">결재 요청</a>
-    <a href="#">결재 진행함</a>
-    <a href="#">개인 문서함</a>
-</h2> <br/><br/>
-
+<button>문서 다운로드</button>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
     <div id="formCard">
         <div class="formHeader">
             <div class="btnWrap">
                 <div id="myLine">
+                    <hr>
                     <p>기안</p>
                     <p>${sanction.emplNm}</p>
                     <p><img src="/uploads/sign/${sanction.uploadFileStreNm}"/></p>
@@ -53,8 +49,8 @@
 
                     <c:forEach var="refrnVO" items="${refrnList}" varStatus="stat">
                         <p>참조</p>
-                        <p>${refrnVO.emplNm}${refrnVO.commonCodeDept}${refrnVO.commonCodeClsf}</p>
-
+                        <p>${refrnVO.emplNm} ${refrnVO.commonCodeDept} ${refrnVO.commonCodeClsf}</p>
+                        <hr>
                     </c:forEach>
                 </div>
             </div>
@@ -100,12 +96,16 @@
                 <button type="button" onclick="reject(${lineVO.elctrnSanctnemplId})">반려</button>
             </c:if>
         </c:forEach>
-
-        <button type="button">닫기</button>
+<br><br>
+        <button type="button" onclick="closeWindow()">닫기</button>
     </div>
     <script>
         let rejectReason;
         let rejectId;
+
+        function closeWindow(){
+            window.close();
+        }
 
         /* 승인 처리 */
         function approve(id) {

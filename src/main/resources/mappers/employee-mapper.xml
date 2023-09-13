@@ -109,8 +109,6 @@
                  JOIN UPLOAD_FILE UF2 ON S.SIGN_ETPR_CODE = UF2.UPLOAD_FILE_ETPR_CODE
         WHERE A.EMPL_ID = #{emplId}
     </select>
-
-
     <update id="initPassword" parameterType="String">
         {call declare
         begin
@@ -197,8 +195,6 @@
         FROM EMPL
         WHERE EMPL_ID = #{emplId}
     </select>
-
-    <!--프로필 사진 추가-->
     <select id="loadBirthday" resultType="employeeVO">
         SELECT E.EMPL_NM,
                E.EMPL_BRTHDY,
@@ -210,9 +206,23 @@
           AND E.EMPL_ID = P.PROFL_EMPL_ID
           AND P.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
     </select>
-
     <select id="findEmp" resultType="employeeVO">
-        SELECT *
+        SELECT EMPL_ID
+             , EMPL_PASSWORD
+             , EMPL_NM
+             , EMPL_TELNO
+             , EMPL_EMAIL
+             , EMPL_ZIP
+             , EMPL_ADRES
+             , EMPL_DETAIL_ADRES
+             , EMPL_ENCPN
+             , EMPL_BRTHDY
+             , ENABLED
+             , COMMON_CODE_DEPT
+             , COMMON_CODE_CLSF
+             , COMMON_CODE_HFFC_STTUS
+             , COMMON_CODE_LAST_ACDMCR
+             , EMPL_MACADRS
         FROM EMPL
         WHERE 1 = 1
           AND (
@@ -221,11 +231,11 @@
             )
         ORDER BY #{sortBy} DESC
     </select>
-    <select id="findById" parameterType="String" resultType="employeeVO">
-        SELECT *
-        FROM EMPL
-        WHERE EMPL_ID = #{emplId}
-    </select>
+    <!--    <select id="findById" parameterType="String" resultType="employeeVO">-->
+    <!--        SELECT *-->
+    <!--        FROM EMPL-->
+    <!--        WHERE EMPL_ID = #{emplId}-->
+    <!--    </select>-->
     <update id="modifyProfile" parameterType="String">
         UPDATE UPLOAD_FILE
         SET UPLOAD_FILE_STRE_NM   = #{fileName},
