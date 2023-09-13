@@ -53,11 +53,11 @@
         <thead>
         <tr>
             <th style="width: 100px">
-                <input type="checkbox" id="selectAll">
+                <input type="checkbox" id="selectAll" onclick="checkAll()">
             </th>
             <th style="width: 100px">
                 읽음표시
-                <button><span>읽음</span></button>
+                <button onclick="modifyRedngAtByBtn()"><span>읽음</span></button>
             </th>
             <th style="width: 100px">
                 중요
@@ -72,9 +72,11 @@
         <tbody>
         <c:forEach var="emailVO" items="${list}">
             <tr>
-                <td><input type="checkbox" class="selectmail"></td>
-                <td>${emailVO.emailRedngAt}</td>
-                <td>${emailVO.emailImprtncAt}</td>
+                <td><input type="checkbox" class="selectMail"></td>
+                <td onclick="modifyTableAt(this)" data-id="${emailVO.emailEtprCode}"
+                    data-type="redng">${emailVO.emailRedngAt}</td>
+                <td onclick="modifyTableAt(this)"
+                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
 
                 <td>${emailVO.emailFromAddr}</td>
@@ -87,7 +89,51 @@
         </tbody>
     </table>
 </div>
+<script>
+    const allCheck = document.querySelector("#selectAll");
+    let checkboxes = document.querySelectorAll('.selectMail:checked');
 
+    function checkAll() {
+        let allCheckboxes = document.querySelectorAll(".selectmail");
+        allCheckboxes.forEach(function (checkbox) {
+            checkbox.checked = allCheck.checked;
+        });
+    }
 
+    function modifyAt(code, td) {
+        let at = td.innerText;
+        let emailEtprCode = td.getAttribute("data-id");
+        $.ajax({
+            url: `/email/\${code}/\${emailEtprCode}`,
+            type: 'put',
+            data: at,
+            success: function (result) {
+                at = result;
+                td.innerText = at;
+            },
+            error: function (xhr, status, error) {
+                console.log("code: " + xhr.status);
+                console.log("message: " + xhr.responseText);
+                console.log("error: " + xhr.error);
+            }
+        });
+    }
+
+    function modifyTableAt(td) {
+        let code = td.getAttribute("data-type");
+        modifyAt(code, td);
+    }
+
+    function modifyRedngAtByBtn() {
+        checkboxes = document.querySelectorAll(".selectmail:checked");
+        checkboxes.forEach(function (checkbox) {
+            let td = checkbox.parentNode.nextElementSibling;
+            modifyTableAt(td);
+            checkbox.checked = false;
+            allCheck.checked = false;
+        });
+    }
+
+</script>
 </body>
 </html>

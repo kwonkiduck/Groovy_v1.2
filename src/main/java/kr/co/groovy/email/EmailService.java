@@ -40,8 +40,8 @@ public class EmailService {
         return mapper.getAllReferencedMailsToMe(emailAddr);
     }
 
-    public List<EmailVO> getAllSentMailsToMe() {
-        return mapper.getAllSentMailsToMe();
+    public List<EmailVO> getAllSentMailsToMe(String emailAddr) {
+        return mapper.getAllSentMailsToMe(emailAddr);
     }
 
     public List<EmailVO> getAllSentMailsByMe(String emailAddr) {
@@ -50,6 +50,10 @@ public class EmailService {
 
     public int getEmployeeByEmailAddr(String emailAddr) {
         return mapper.getEmployeeByEmailAddr(emailAddr);
+    }
+
+    public int modifyEmailRedngAt(Map<String, String> map) {
+        return mapper.modifyEmailRedngAt(map);
     }
 
 }

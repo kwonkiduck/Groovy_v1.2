@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>메일 | 내게쓴메일함</title>
+    <script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </head>
 <style>
     ul {
@@ -53,11 +54,7 @@
         <thead>
         <tr>
             <th style="width: 100px">
-                <input type="checkbox" id="selectAll">
-            </th>
-            <th style="width: 100px">
-                읽음표시
-                <button><span>읽음</span></button>
+                <input type="checkbox" id="selectAll" onclick="checkAll()">
             </th>
             <th style="width: 100px">
                 중요
@@ -73,8 +70,8 @@
         <c:forEach var="emailVO" items="${list}">
             <tr>
                 <td><input type="checkbox" class="selectmail"></td>
-                <td>${emailVO.emailRedngAt}</td>
-                <td>${emailVO.emailImprtncAt}</td>
+                <td onclick="modifyTableAt(this)"
+                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
                 <td>${emailVO.emailFromAddr}</td>
                 <td><a href="#">${emailVO.emailFromSj}</a></td>

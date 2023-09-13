@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.*;
 import javax.mail.internet.AddressException;
@@ -69,7 +68,7 @@ public class EmailController {
     @GetMapping("/mine")
     public String getAllSentMailsToMe(Principal principal, EmailVO emailVO, Model model) {
         EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
-        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe();
+        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe(employeeVO.getEmplEmail());
         model.addAttribute("list", allSentMailsToMe);
         return "email/mine";
     }
@@ -190,7 +189,7 @@ public class EmailController {
             referencedMail.setEmailBoxName("받은메일함");
         }
         allReceivedMails.addAll(referencedMails);
-        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe();
+        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe(emailAddr);
         for (EmailVO allSentMailToMe : allSentMailsToMe) {
             allSentMailToMe.setEmailBoxName("내게쓴메일함");
         }
@@ -210,6 +209,34 @@ public class EmailController {
             }
         });
         return allReceivedMails;
+    }
+
+    @PutMapping("/{code}/{emailEtprCode}")
+    @ResponseBody
+    public String modifyEmailRedngAt(@PathVariable String code, @PathVariable String emailEtprCode, @RequestBody String at) {
+        System.out.println("code = " + code);
+        System.out.println("emailEtprCode = " + emailEtprCode);
+        System.out.println("at = " + at);
+
+        Map<String, String> map = new HashMap<>();
+        if (code.equals("redng")) {
+            map.put("emailAtKind", "EMAIL_REDNG_AT");
+            if (at.equals("N")) {
+                map.put("at", "Y");
+            } else {
+                map.put("at", "N");
+            }
+        } else if (code.equals("imprtnc")) {
+            map.put("emailAtKind", "EMAIL_IMPRTNC_AT");
+            if (at.equals("N")) {
+                map.put("at", "Y");
+            } else {
+                map.put("at", "N");
+            }
+        }
+        map.put("emailEtprCode", emailEtprCode);
+        emailService.modifyEmailRedngAt(map);
+        return map.get("at");
     }
 
     private URLName getUrlName(EmployeeVO employeeVO) {

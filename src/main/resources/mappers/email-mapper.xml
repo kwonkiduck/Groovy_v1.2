@@ -111,7 +111,7 @@
     </select>
 
     <!-- 내게 쓴 메일함 -->
-    <select id="getAllSentMailsToMe" resultType="emailVO">
+    <select id="getAllSentMailsToMe" resultType="emailVO" parameterType="String">
         SELECT ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
@@ -124,7 +124,7 @@
         FROM EMAIL_FROM ef
                  left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
-        where ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
+        where ef.EMAIL_FROM_ADDR = #{emailAddr} and ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
         order by ef.EMAIL_SN desc
     </select>
 
@@ -152,6 +152,10 @@
         where EMPL_EMAIL = #{emailAddr}
     </select>
 
-
+    <update id="modifyEmailRedngAt" parameterType="Map">
+        update EMAIL_RECEIVED_STTUS
+        set ${emailAtKind} = #{at}
+        where EMAIL_ETPR_CODE = #{emailEtprCode}
+    </update>
 </mapper>
 
