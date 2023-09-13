@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class JobProgrsVO {
+public class JobProgressVO {
     private int jobNo;
     private String jobRecptnEmplId;
     private String commonCodeDutySttus;

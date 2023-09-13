@@ -37,4 +37,6 @@ public class JobService {
     JobDiaryVO getDiaryByDateAndId(JobDiaryVO jobDiaryVO) {
         return mapper.getDiaryByDateAndId(jobDiaryVO);
     }
+
+    int getMaxJobNo() {return mapper.getMaxJobNo();}
 }

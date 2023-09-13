@@ -419,11 +419,11 @@
                         <li class="form-data-list">
                             <label>🔥 업무 진행</label>
                             <div class="input-data">
-                                <input type="radio" name="commonCodeDutyProgrs" id="DUTY030">
+                                <input type="radio" name="commonCodeDutyProgrs" id="DUTY030" value="DUTY030">
                                 <label for="DUTY030">업무 전</label>
-                                <input type="radio" name="commonCodeDutyProgrs" id="DUTY031">
+                                <input type="radio" name="commonCodeDutyProgrs" id="DUTY031" value="DUTY031">
                                 <label for="DUTY031">업무 중</label>
-                                <input type="radio" name="commonCodeDutyProgrs" id="DUTY032">
+                                <input type="radio" name="commonCodeDutyProgrs" id="DUTY032" value="DUTY032">
                                 <label for="DUTY032">업무 완료</label>
                             </div>
                         </li>

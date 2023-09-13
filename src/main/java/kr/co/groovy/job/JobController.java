@@ -3,8 +3,10 @@ package kr.co.groovy.job;
 import kr.co.groovy.common.CommonService;
 import kr.co.groovy.enums.ClassOfPosition;
 import kr.co.groovy.enums.Department;
+import kr.co.groovy.enums.DutyStatus;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
+import kr.co.groovy.vo.JobProgressVO;
 import kr.co.groovy.vo.JobVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -96,8 +97,25 @@ public class JobController {
 
     @PostMapping("/insertJob")
     @ResponseBody
-    public void insertJob(JobVO jobVO, Principal principal) {
+    public void insertJob(JobVO jobVO, JobProgressVO jobProgressVO, Principal principal) {
         log.info("data= {}", jobVO);
+        log.info("jobProgressVO= {}", jobProgressVO);
+        //jobVO
+        int maxJobNo = service.getMaxJobNo();
+        jobVO.setJobNo(maxJobNo);
         jobVO.setJobRequstEmplId(principal.getName());
+        //jobVO insert
+
+        //jobProgrsVO insert - no, id, sttus, progs
+        jobProgressVO.setJobNo(maxJobNo);
+        List<String> selectedEmplIds = jobVO.getSelectedEmplIds();
+        for (String selectedEmplId : selectedEmplIds) {
+            jobProgressVO.setJobNo(maxJobNo);
+            jobProgressVO.setJobRecptnEmplId(selectedEmplId);
+            jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel("대기"));
+            //jonProgrsVO insert
+        }
     }
+
+
 }

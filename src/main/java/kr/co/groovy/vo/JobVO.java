@@ -15,12 +15,15 @@ public class JobVO {
     private int jobNo;
     private String jobRequstEmplId;
     private String jobSj;
-    private String job;
+    private String jobCn;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date jobBeginDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date jobClosDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date jobRequstDate;
     private String commonCodeDutyKind;
+
 
     private List<String> selectedEmplIds;//수신 사원 리스트
 }

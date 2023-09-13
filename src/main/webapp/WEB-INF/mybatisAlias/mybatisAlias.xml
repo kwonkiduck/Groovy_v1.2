@@ -37,5 +37,7 @@
         <typeAlias type="kr.co.groovy.vo.ClubVO" alias="clubVO"/>
         <typeAlias type="kr.co.groovy.vo.CardVO" alias="cardVO"/>
         <typeAlias type="kr.co.groovy.vo.SanctionBookmarkVO" alias="sanctionBookmarkVO"/>
+        <typeAlias type="kr.co.groovy.vo.JobVO" alias="jobVO"/>
+        <typeAlias type="kr.co.groovy.vo.JobProgressVO" alias="jobProgressVO"/>
     </typeAliases>
 </configuration>
