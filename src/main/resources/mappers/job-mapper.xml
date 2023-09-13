@@ -66,4 +66,31 @@
           AND E.EMPL_ID = #{jobDiaryWrtingEmplId}
           and J.JOB_DIARY_REPORT_DATE = TO_DATE(#{jobDiaryReportDate}, 'YYYY-MM-DD')
     </select>
+
+    <select id="getMaxJobNo" resultType="int">
+        SELECT COALESCE(MAX(JOB_NO), 0) FROM job
+    </select>
+
+    <insert id="insertJob" parameterType="jobVO">
+        INSERT INTO JOB (
+            JOB_NO,
+            JOB_REQUST_EMPL_ID,
+            JOB_SJ,
+            JOB_CN,
+            JOB_BEGIN_DATE,
+            JOB_CLOS_DATE,
+            JOB_REQUST_DATE,
+            COMMON_CODE_DUTY_KINDH
+        )
+        VALUES (
+                   #{jobNo},
+                   #{jobRequstEmplId},
+                   #{jobSj},
+                   #{jobCn},
+                   #{jobBeginDate},
+                   #{jobClosDate},
+                   SYSDATE,
+                   #{commonCodeDutyKind}
+               )
+    </insert>
 </mapper>

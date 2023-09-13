@@ -91,17 +91,13 @@
                             }
                         }
                     }
-
                 }
             })
         });
         $(".submitLine").on("click", function () {
             approver = $("#sanctionLine input[type=hidden]").map(function () {
                 return $(this).val();
-            }).get();
-            // receiver = $("#receiveLine input[type=hidden]").map(function () {
-            //     return $(this).val();
-            // }).get();
+            }).get().reverse();
             referrer = $("#refrnLine input[type=hidden]").map(function () {
                 return $(this).val();
             }).get();

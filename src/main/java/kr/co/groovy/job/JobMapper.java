@@ -19,4 +19,6 @@ public interface JobMapper {
     List<JobDiaryVO> getDiaryByInfo(EmployeeVO employeeVO);
 
     JobDiaryVO getDiaryByDateAndId(JobDiaryVO jobDiaryVO);
+
+    int getMaxJobNo();
 }

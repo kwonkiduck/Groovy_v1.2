@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -43,6 +40,7 @@ public class SanctionController {
     public void approve(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
         service.approve(elctrnSanctnemplId, elctrnSanctnEtprCode);
     }
+
     @PostMapping("/finalApprove")
     @ResponseBody
     public void finalApprove(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
@@ -115,8 +113,8 @@ public class SanctionController {
 
     @GetMapping("/loadAllLine")
     @ResponseBody
-    public List<EmployeeVO> loadAllLine(@RequestParam("emplId")String emplId, ModelAndView mav) {
-        log.info( "loadLine" + emplId);
+    public List<EmployeeVO> loadAllLine(@RequestParam("emplId") String emplId, ModelAndView mav) {
+        log.info("loadLine" + emplId);
         List<String> departmentCodes = Arrays.asList("DEPT010", "DEPT011", "DEPT012", "DEPT013", "DEPT014", "DEPT015");
         List<EmployeeVO> allEmployees = new ArrayList<>();
         for (String deptCode : departmentCodes) {
@@ -153,10 +151,33 @@ public class SanctionController {
     public List<SanctionLineVO> loadAwaiting(String emplId) {
         return service.loadAwaiting(emplId);
     }
+
     @GetMapping("/loadReference")
     @ResponseBody
     public List<SanctionVO> loadReference(String emplId) {
         return service.loadReference(emplId);
+    }
+
+
+    /* 결재선 즐겨찾기 */
+    @PostMapping("/inputBookmark")
+    @ResponseBody
+    public void inputBookmark(@RequestBody SanctionBookmarkVO vo) {
+        log.info(vo.toString());
+        service.inputBookmark(vo);
+    }
+
+    @GetMapping("/loadBookmark")
+    @ResponseBody
+    public List<Map<String, String>> loadBookmark(String emplId) {
+        List<Map<String, String>> list = service.loadBookmark(emplId);
+        return list;
+    }
+
+    @PostMapping("/deleteBookmark")
+    @ResponseBody
+    public void deleteBookmark(String elctrnSanctnBookmarkName) {
+        service.deleteBookmark(elctrnSanctnBookmarkName);
     }
 
 }
