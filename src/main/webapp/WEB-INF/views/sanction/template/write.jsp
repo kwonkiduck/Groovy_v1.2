@@ -44,7 +44,10 @@
         <div class="formContent">
                 ${template.formatCn}
         </div>
-        <br/><br/>
+        <div>
+            <input type="file" id="sanctionFile" style="width: 99%"/>
+        </div>
+
         <button type="button" id="sanctionSubmit" disabled>결재 제출</button>
     </div>
 
@@ -66,7 +69,8 @@
         const title = "${template.formatSj}";
         let content;
         let file = $('#sanctionFile')[0].files[0];
-        let vacationId = opener.$("#vacationId").text()
+        let vacationId = opener.$("#vacationId").text();
+
 
         $(document).ready(function () {
             $("#sanctionNo").html(etprCode);
@@ -178,7 +182,7 @@
                 }
             };
             $.ajax({
-                url: `/sanction/approve`,
+                url: `/sanction/startApprove`,
                 type: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json",

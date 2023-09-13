@@ -20,6 +20,10 @@
         height:300px;
     }
 
+    #inviteBtn, #inviteEmplBtn {
+        display : none;
+    }
+
 </style>
 <hr>
 <h1>채팅방 개설</h1>
@@ -27,7 +31,9 @@
     <ul id="employeeList">
 
     </ul>
-    <button type="button" id="createRoomBtn">채팅방 생성</button>
+    <button type="button" id="createRoomBtn" style="background-color: lightsteelblue">채팅방 생성</button>
+    <button type="button" id="inviteEmplBtn" style="background-color: darkseagreen">채팅방 초대</button>
+    <button type="button" id="cancelBtn">취소</button>
 </div>
 
 <hr>
@@ -61,6 +67,10 @@
 
     let currentSubRoom;
     let currentRoomNo;
+    let currentRoomNm;
+
+    let emplsToInvite = []
+    let chttRoomMem = []
 
     function connectToStomp() {
         return new Promise(function(res, rej) {
@@ -112,9 +122,15 @@
             msg.val('');
         }
 
-        function enterRoom(currentRoomNo) {
+        function enterRoom(currentRoomNo, currentRoomNm) {
+            emplsToInvite = [];
+            chttRoomMem = [];
+            $("input[type='checkbox'][name='employees']").prop("disabled", false).prop("checked", false);
+            $("#inviteEmplBtn").hide();
+            $("#createRoomBtn").show();
+
             $("#msgArea").html('');
-            $("#msgArea").html(`<div class="myroom" id="room\${currentRoomNo}" style="border: 2px solid green"></div>`)
+            $("#msgArea").append(`<div class="myroom" id="room\${currentRoomNo}" style="border: 2px solid green"></div>`)
 
             $.ajax({
                 url: `/chat/loadRoomMessages/\${currentRoomNo}`,
@@ -123,7 +139,7 @@
                 success: function (messages) {
                     $.each(messages, function (idx, obj) {
                         if(obj.chttMbrEmplId == emplId) {
-                            var code = `<div style='border: 1px solid blue' id='\${obj.chttNo}'>`;
+                            var code = `<div style="border: 1px solid blue" id="\${obj.chttNo}">`;
                             code += "<div>";
                             code += `<p>\${obj.chttMbrEmplNm} : \${obj.chttCn}</p>`;
                             code += "</div></div>";
@@ -142,8 +158,76 @@
                     alert("채팅 로드 실패")
                 }
             })
+
+            $.ajax({
+                url : `/chat/loadRoomMembers/\${currentRoomNo}`,
+                type : "get",
+                success : function(members) {
+                    $.each(members, function (idx, obj) {
+                        chttRoomMem.push(obj);
+                    })
+                },
+                error: function (request, status, error) {
+                    alert("채팅방 멤버 로드 실패")
+                }
+            })
+
             msg.val('');
+
         }
+
+        $("#inviteBtn").on("click", function() {
+            $("#createRoomBtn").hide();
+            $("#inviteEmplBtn").show();
+
+            $('input[type="checkbox"][name="employees"]').each(function() {
+                let memId = $(this).val().split("/")[0];
+                if (chttRoomMem.includes(memId)) {
+                    $(this).prop('disabled', true);
+                }
+            });
+        })
+
+        $("#inviteEmplBtn").on("click", function() {
+
+            $("input[name='employees']:checked").each(function () {
+                let employees = $(this).val();
+                let splitResult = employees.split("/");
+                if (splitResult.length === 2) {
+                    let emplId = splitResult[0];
+                    emplsToInvite.push(emplId);
+                }
+            });
+
+            let newMem = {
+                chttRoomNo: currentRoomNo,
+                chttRoomNm : currentRoomNm,
+                employees: emplsToInvite
+            }
+
+            if (emplsToInvite.length > 0) {
+                $.ajax({
+                    url: "/chat/inviteEmpls",
+                    type: "post",
+                    data: JSON.stringify(newMem),
+                    contentType: "application/json;charset:utf-8",
+                    success: function (result) {
+                        loadRoomList();
+                        if (result == 1) {
+                            alert("초대 성공");
+                        } else {
+                            alert("초대 실패")
+                        }
+                    },
+                    error: function (request, status, error) {
+                        alert("오류로 인한 초대 실패")
+                    }
+                });
+                $("input[name='employees']:checked").prop("checked", false);
+            } else {
+                alert("초대할 사원을 선택해주세요.")
+            }
+        });
 
         function scrollToBottom() {
             const scrollRoom = document.getElementById("room" + currentRoomNo);
@@ -151,13 +235,16 @@
         }
 
         $("#chatRoomList").on("click", ".rooms", function() {
+
             let selectedRoom = $(this);
-            let chttRoomNo = selectedRoom.find("input").val();
-            let chttRoomTy = selectedRoom.data("chttRoomTy"); // chttRoomTy 값을 가져옴
+            let chttRoomNo = selectedRoom.find("#chttRoomNo").val();
+            let chttRoomTy = selectedRoom.find("#chttRoomTy").val();
+            let chttRoomNm = selectedRoom.find("#chttRoomNm").text();
 
             currentRoomNo = chttRoomNo;
+            currentRoomNm = chttRoomNm;
 
-            enterRoom(currentRoomNo);
+            enterRoom(currentRoomNo, currentRoomNm);
 
             if (chttRoomTy == '1') {
                 $("#inviteBtn").show();
@@ -217,7 +304,7 @@
 
         var groupedEmployees = {};
 
-        <c:forEach items="${empListForChat}" var="employee">
+        <c:forEach items="${emplListForChat}" var="employee">
         var deptNm = "${employee.deptNm}";
         if (!groupedEmployees[deptNm]) {
             groupedEmployees[deptNm] = [];
@@ -240,9 +327,9 @@
                 let label = $("<label>");
                 let input = $("<input>").attr({
                     type: "checkbox",
-                    name: "selectedEmpls",
+                    name: "employees",
                     value: employee.emplId + "/" + employee.emplNm
-                }).data("emplNm", employee.emplNm);
+                });
                 label.append(input);
                 label.append(document.createTextNode(employee.emplNm + " " + employee.clsfNm));
                 liSub.append(label);
@@ -254,9 +341,9 @@
         $("#createRoomBtn").click(function () {
             let roomMemList = [];
 
-            $("input[name='selectedEmpls']:checked").each(function () {
-                let selectedEmpls = $(this).val()
-                let splitResult = selectedEmpls.split("/");
+            $("input[name='employees']:checked").each(function () {
+                let employees = $(this).val()
+                let splitResult = employees.split("/");
 
                 if (splitResult.length === 2) {
                     let emplId = splitResult[0];
@@ -288,6 +375,9 @@
                     alert("채팅방 개설 실패")
                 }
             });
+
+            $("input[name='employees']:checked").prop("checked", false);
+
         });
 
         loadRoomList();
@@ -307,7 +397,7 @@
                     }
 
                     for (let i = 0; i < chatRoomList.length; i++) {
-                        const chttRoomNo = chatRoomList[i].chttRoomNo;
+                        let chttRoomNo = chatRoomList[i].chttRoomNo;
                         subscribeToChatRoom(chttRoomNo);
                     }
 
@@ -319,7 +409,6 @@
             })
         }
 
-
         let chatRoomList = [];
 
         function renderChatRoomList() {
@@ -330,16 +419,25 @@
 
             code = "";
             $.each(chatRoomList, function (idx, obj) {
-                code += `<button class="rooms" id="chatRoom\${obj.chttRoomNo}" data-chttRoomTy="\${obj.chttRoomTy}">
+                code += `<button class="rooms" id="chatRoom\${obj.chttRoomNo}">
             <img src="/uploads/profile/\${obj.chttRoomThumbnail}" alt="\${obj.chttRoomThumbnail}"/>
-            <p>\${obj.chttRoomNm}</p>
+            <p id="chttRoomNm">\${obj.chttRoomNm}</p>
             <p id="latestChttCn">\${obj.latestChttCn}</p>
-            <input type="hidden" value="\${obj.chttRoomNo}">
+            <input id="chttRoomNo" type="hidden" value="\${obj.chttRoomNo}">
+            <input id="chttRoomTy" type="hidden" value="\${obj.chttRoomTy}">
             </button>`;
             });
 
+
             $("#chatRoomList").html(code);
         }
+
+        $("#cancelBtn").on("click", function() {
+            $("input[type='checkbox'][name='employees']").prop("disabled", false).prop("checked", false);
+            $("#inviteEmplBtn").hide();
+            $("#createRoomBtn").show();
+            emplsToInvite = [];
+        });
 
     });
 </script>

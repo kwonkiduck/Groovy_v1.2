@@ -1,6 +1,7 @@
 package kr.co.groovy.alarm;
 
 import kr.co.groovy.employee.EmployeeService;
+import kr.co.groovy.enums.Department;
 import kr.co.groovy.vo.AlarmVO;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.NotificationVO;
@@ -27,18 +28,32 @@ public class AlarmController {
     //전체한테 보내기
     @PostMapping("/insertAlarm")
     @ResponseBody
-    public void insertAlarm(AlarmVO alarmVO) {
+    public void insertAlarm(AlarmVO alarmVO, String dept, Principal principal) {
         List<EmployeeVO> emplList = employeeService.loadEmpList();
         for (EmployeeVO employeeVO : emplList) {
             String emplId = employeeVO.getEmplId();
-            try {
-                NotificationVO noticeAt = employeeService.getNoticeAt(emplId);
-                System.out.println("**^^noticeAt = " + noticeAt);
+            NotificationVO noticeAt = employeeService.getNoticeAt(emplId);
+            System.out.println("**^^noticeAt = " + noticeAt);
+            System.out.println("employeeVO = " + employeeVO);
+            if (alarmVO.getCommonCodeNtcnKind().equals("NTCN013")) { //사내 공지사항
                 if (noticeAt.getAnswer().equals("NTCN_AT010")) {
                     alarmVO.setNtcnEmplId(emplId);
                     service.insertAlarm(alarmVO);
                 }
-            } catch (NullPointerException e) { }
+            }
+
+            if(alarmVO.getCommonCodeNtcnKind().equals("NTCN012")) { //팀 공지사항
+                System.out.println("emplId = " + emplId);
+                String deptValue = Department.getValueByLabel(employeeVO.getCommonCodeDept());
+                if (noticeAt.getCompanyNotice().equals("NTCN_AT010")
+                        && deptValue.equals(dept)
+                        && !emplId.equals(principal.getName())) {
+                    System.out.println("emplId = " + emplId);
+                    alarmVO.setNtcnEmplId(emplId);
+                    service.insertAlarm(alarmVO);
+                }
+            }
+
         }
     }
 

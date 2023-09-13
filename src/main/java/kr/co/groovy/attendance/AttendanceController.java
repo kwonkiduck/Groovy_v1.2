@@ -2,7 +2,6 @@ package kr.co.groovy.attendance;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,6 @@ public class AttendanceController {
         this.service = service;
     }
 
-    // 부서별 근무 관리 페이지
     @GetMapping("/manageDclz")
     public String manageDclz(Model model) {
         List<String> deptList = service.loadDeptList();
@@ -50,9 +48,7 @@ public class AttendanceController {
 
     @GetMapping("/manageDclz/{deptCode}")
     public String manageDclzDept(Model model, @PathVariable String deptCode) {
-        log.info("deptCode : {}", deptCode);
         List<Map<String, Object>> list = service.loadDeptDclz(deptCode);
-        log.info("list : {}", list);
         Gson gson = new Gson();
         String deptDclzList = gson.toJson(list);
         model.addAttribute("deptDclzList", deptDclzList);

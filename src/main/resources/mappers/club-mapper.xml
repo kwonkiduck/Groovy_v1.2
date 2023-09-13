@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.club.ClubMapper">
+    <select id="loadAllClub" resultType="clubVO" parameterType="String">
+        SELECT C.CLB_ETPR_CODE,
+               C.CLB_NM,
+               C.CLB_DC,
+               C.CLB_KIND
+        FROM CLB C,
+             EMPL E
+        WHERE C.CLB_CONFM_AT = #{clbConfmAt} AND CLB_CHIRMN_EMPL_ID = E.EMPL_ID
+    </select>
+    <insert id="inputClub" parameterType="map">
+        INSERT ALL
+            INTO CLB (
+                CLB_ETPR_CODE,
+                CLB_NM,
+                CLB_DC,
+                CLB_DATE,
+                CLB_PSNCPA,
+                CLB_CHIRMN_EMPL_ID,
+                CLB_KIND,
+                CLB_CONFM_AT
+            ) VALUES (
+                #{clbEtprCode},
+                #{clbNm},
+                #{clbDc},
+                TO_CHAR(SYSDATE, 'yyyy-MM-dd'),
+                #{clbPsncpa},
+                #{clbChirmnEmplId},
+                #{clbKind},
+                '0'
+             )INTO CLB_MBR (
+                CLB_ETPR_CODE,
+                CLB_MBR_EMPL_ID
+            ) VALUES (
+                 #{clbEtprCode},
+                 #{clbMbrEmplId}
+                     )
+            SELECT 1 FROM DUAL
+    </insert>
+    <select id="getSeq" resultType="int">
+        SELECT CLB_SEQ.NEXTVAL FROM DUAL
+    </select>
+    <select id="loadClub" resultType="clubVO" parameterType="map">
+        SELECT
+            C.CLB_ETPR_CODE,
+            C.CLB_NM,
+            C.CLB_DC,
+            C.CLB_DATE,
+            C.CLB_PSNCPA,
+            C.CLB_CHIRMN_EMPL_ID,
+            C.CLB_KIND,
+            (SELECT COUNT(*) FROM CLB_MBR WHERE CLB_MBR_EMPL_ID = #{clbMbrEmplId} AND CLB_ETPR_CODE = #{clbEtprCode}) AS JOINCHK
+        FROM    CLB C,
+                EMPL E
+        WHERE C.CLB_CONFM_AT = '1'
+            AND C.CLB_CHIRMN_EMPL_ID = E.EMPL_ID
+            AND C.CLB_ETPR_CODE = #{clbEtprCode}
+    </select>
+    <select id="emplJoinChk" resultType="int">
+        SELECT COUNT(*)
+        FROM CLB_MBR
+        WHERE CLB_MBR_EMPL_ID = #{clbMbrEmplId}
+    </select>
+    <insert id="inputClubMbr" parameterType="map">
+        INSERT INTO CLB_MBR(
+            CLB_ETPR_CODE,
+            CLB_MBR_EMPL_ID
+        )VALUES (
+                #{clbEtprCode},
+                #{clbMbrEmplId})
+    </insert>
+    <delete id="deleteClubMbr" parameterType="map">
+        DELETE
+        FROM CLB_MBR
+        WHERE CLB_ETPR_CODE =#{clbEtprCode} AND CLB_MBR_EMPL_ID = #{clbMbrEmplId}
+    </delete>
+</mapper>

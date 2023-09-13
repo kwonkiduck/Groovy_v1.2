@@ -1,5 +1,6 @@
 package kr.co.groovy.chat;
 
+import kr.co.groovy.vo.ChatMemberVO;
 import kr.co.groovy.vo.ChatRoomVO;
 import kr.co.groovy.vo.ChatVO;
 import kr.co.groovy.vo.EmployeeVO;
@@ -24,5 +25,11 @@ public interface ChatMapper {
     int inputMessage(ChatVO message);
 
     List<ChatVO> loadRoomMessages(int chttRoomNo);
+
+    List<String> loadRoomMembers(int chttRoomNo);
+
+    int inviteEmpl(ChatMemberVO chatMemberVO);
+
+    int modifyRoomNm(ChatRoomVO chatRoomVO);
 
 }

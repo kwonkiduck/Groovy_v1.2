@@ -31,6 +31,7 @@
         SELECT
             cr.CHTT_ROOM_NO,
             cr.CHTT_ROOM_NM,
+            cr.CHTT_ROOM_TY,
             CASE
                 WHEN cr.CHTT_ROOM_TY = 0 THEN (
                     SELECT UF.UPLOAD_FILE_STRE_NM
@@ -103,4 +104,23 @@
                 #{chttCn},
                 #{chttInputDate})
     </insert>
+
+    <select id="loadRoomMembers" parameterType="integer" resultType="String">
+        SELECT CHTT_MBR_EMPL_ID
+        FROM CHTT_MBR
+        WHERE CHTT_ROOM_NO = #{chttRoomNo}
+    </select>
+    
+    <insert id="inviteEmpl" parameterType="chatVO">
+        INSERT INTO CHTT_MBR
+        VALUES (#{chttRoomNo}, #{chttMbrEmplId})
+    </insert>
+
+    <update id="modifyRoomNm" parameterType="chatRoomVO">
+        UPDATE CHTT_ROOM
+        SET CHTT_ROOM_NM = #{chttRoomNm}
+        WHERE CHTT_ROOM_NO = #{chttRoomNo}
+    </update>
+
+
 </mapper>

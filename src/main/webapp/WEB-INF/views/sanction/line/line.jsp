@@ -1,4 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="sec"
+           uri="http://www.springframework.org/security/tags" %>
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication property="principal" var="CustomUser"/>
 <html>
 <head>
     <title>Title</title>
@@ -16,12 +20,6 @@
 </head>
 <body>
 
-// 인사,HRT
-// 회계,AT
-// 영업,ST
-// 홍보,PRT
-// 총무,GAT
-// 경영자,CEO
 <div id="line">
     <div id="ceo">
         <ul class="ceo">
@@ -115,14 +113,16 @@
 <script>
     const lineAddBtn = document.querySelectorAll(".lineAddBtn");
     const lineInner = document.querySelectorAll(".lineInner");
+    const emplId = ${CustomUser.employeeVO.emplId}
 
     $.ajax({
-        url: '/sanction/loadOrgChart',
+        url: '/sanction/loadAllLine?emplId=' + emplId,
         method: 'GET',
         contentType: "application/json;charset=utf-8",
         dataType: 'json',
         success: function (data) {
             data.forEach(function (employee) {
+                console.log(employee)
                 var employeeLi = $('<li class=emplList>');
                 employeeLi.html(
                     `<label style="display: flex">
@@ -133,10 +133,9 @@
                              <span class="dept">\${employee.commonCodeDept}</span>
                              <span class="clsf">\${employee.commonCodeClsf}</span>
                        </div></label>`);
+
                 if (employee.commonCodeCrsf === '대표') {
                     $('#ceo .ceo > ul').append(employeeLi);
-                } else if (employee.commonCodeDept === '회계') {
-                    $('#at .depth2 > ul').append(employeeLi);
                 } else if (employee.commonCodeDept === '영업') {
                     $('#st .depth3 > ul').append(employeeLi);
                 } else if (employee.commonCodeDept === '홍보') {
@@ -145,6 +144,8 @@
                     $('#gat .depth5 > ul').append(employeeLi);
                 } else if (employee.commonCodeDept === '인사') {
                     $('#hrt .depth1 > ul').append(employeeLi);
+                } else if (employee.commonCodeDept === '회계') {
+                    $('#at .dept2 > ul').append(employeeLi);
                 }
 
             });
@@ -190,3 +191,4 @@
 </script>
 </body>
 </html>
+</sec:authorize>

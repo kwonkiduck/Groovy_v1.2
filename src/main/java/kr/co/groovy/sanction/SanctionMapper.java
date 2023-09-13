@@ -1,9 +1,6 @@
 package kr.co.groovy.sanction;
 
-import kr.co.groovy.vo.ReferenceVO;
-import kr.co.groovy.vo.SanctionFormatVO;
-import kr.co.groovy.vo.SanctionLineVO;
-import kr.co.groovy.vo.SanctionVO;
+import kr.co.groovy.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -28,7 +25,9 @@ public interface SanctionMapper {
 
     void inputRefrn(ReferenceVO vo);
 
-    List<SanctionLineVO> loadAwaiting(@Param("progrsCode") String progrsCode, @Param("emplId") String emplId);
+    /* 결재 문서 불러오기 */
+
+    List<SanctionLineVO> loadAwaiting(@Param("emplId") String emplId);
 
     List<SanctionLineVO> loadLine(String elctrnSanctnEtprCode);
 
@@ -36,5 +35,17 @@ public interface SanctionMapper {
 
     SanctionVO loadSanction(String elctrnSanctnEtprCode);
 
+    UploadFileVO loadSanctionFile(String elctrnSanctnEtprCode);
+
+    /* */
+
+    void approve(String elctrnSanctnemplId);
+
+    void reject(@Param("elctrnSanctnemplId") String elctrnSanctnemplId, @Param("sanctnLineReturnResn") String sanctnLineReturnResn);
+
+    void collect(String elctrnSanctnEtprCode);
+
+    List<EmployeeVO> loadAllLine(@Param("depCode") String depCode, @Param("emplId") String emplId);
+    List<SanctionVO> loadReference(String emplId);
 
 }
