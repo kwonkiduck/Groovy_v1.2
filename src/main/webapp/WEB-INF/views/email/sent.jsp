@@ -1,9 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>메일 | 전체 메일</title>
+    <title>메일 | 보낸메일</title>
 </head>
 <style>
     ul {
@@ -63,7 +64,7 @@
                 <button><span>삭제</span></button>
             </th>
             <th style="width: 100px">파일여부</th>
-            <th>보낸이</th>
+            <th>받는이</th>
             <th>제목</th>
             <th>날짜</th>
         </tr>
@@ -72,13 +73,15 @@
         <c:forEach var="emailVO" items="${list}">
             <tr>
                 <td><input type="checkbox" class="selectmail"></td>
-                <td>읽음</td>
-                <td>안중요</td>
-                <td></td>
+                <td>${emailVO.emailRedngAt}</td>
+                <td>${emailVO.emailImprtncAt}</td>
+                <td>파일존재여부</td>
 
-                <td>${emailVO.emailDsptchEmplId}</td>
-                <td><a href="#">${emailVO.emailCn}</a></td>
-                <td>${emailVO.emailTrnsmisDt}</td>
+                <td>${emailVO.emailFromAddr}</td>
+                <td><a href="#">${emailVO.emailFromSj}</a></td>
+                <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
+                <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
+                <td>${sendDate}</td>
             </tr>
         </c:forEach>
         </tbody>

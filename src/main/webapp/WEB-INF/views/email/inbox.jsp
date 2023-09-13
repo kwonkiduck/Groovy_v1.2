@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
@@ -49,26 +51,20 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <c:forEach var="emailVO" items="${list}">
+                <tr>
                     <td><input type="checkbox" class="selectmail"></td>
-                    <td>읽음</td>
-                    <td>안중요</td>
-                    <td>파일없음</td>
+                    <td>${emailVO.emailRedngAt}</td>
+                    <td>${emailVO.emailImprtncAt}</td>
+                    <td>파일존재여부</td>
 
-                    <td>조수인</td>
-                    <td> <a href="#">개인정보 이용내역 안내 드립니다. </a></td>
-                    <td>23.08.20</td>
-            </tr>
-            <tr>
-                    <td><input type="checkbox" class="selectmail"></td>
-                    <td>읽음</td>
-                    <td>안중요</td>
-                    <td>파일없음</td>
-
-                    <td>조수인</td>
-                    <td> <a href="#">개인정보 이용내역 안내 드립니다. </a></td>
-                    <td>23.08.20</td>
-            </tr>
+                    <td>${emailVO.emailFromAddr}</td>
+                    <td><a href="#">${emailVO.emailFromSj}</a></td>
+                    <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
+                    <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
+                    <td>${sendDate}</td>
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
     </div>

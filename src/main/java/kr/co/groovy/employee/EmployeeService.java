@@ -14,12 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +44,7 @@ public class EmployeeService {
     public void initPassword(String emplId, String emplPassword) {
         String encodePw = encoder.encode(emplPassword);
         mapper.initPassword(emplId, encodePw);
+
 /*
         try {
             InetAddress ip = InetAddress.getLocalHost();
