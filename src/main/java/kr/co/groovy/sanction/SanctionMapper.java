@@ -49,4 +49,12 @@ public interface SanctionMapper {
     List<EmployeeVO> loadAllLine(@Param("depCode") String depCode, @Param("emplId") String emplId);
     List<SanctionVO> loadReference(String emplId);
 
+    void inputBookmark(SanctionBookmarkVO vo);
+
+    List<SanctionBookmarkVO> loadBookmark(String emplId);
+
+    void deleteBookmark(String elctrnSanctnBookmarkName);
+
+
+
 }
