@@ -10,8 +10,11 @@ import java.util.Map;
 public interface ClubMapper {
     List<ClubVO> loadAllClub(String clbConfmAt);
     List<ClubVO> loadClub(Map<String, Object> map);
+    List<ClubVO> loadProposalList();
+    List<ClubVO> loadRegistList();
     int getSeq();
     void inputClub(Map<String, Object> map);
+    void updateClubAt(Map<String, Object> map);
     void inputClubMbr(Map<String, Object> map);
     void deleteClubMbr(Map<String, Object> map);
 }

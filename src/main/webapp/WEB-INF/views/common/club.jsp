@@ -128,7 +128,31 @@
         const joinBtn = document.querySelector("#join");
         const leaveBtn = document.querySelector("#leave");
         const modal = document.querySelector("#modal");
+        const textArea = document.querySelector("#clbDc");
+        const clbNm = document.querySelector("#clbNm");
         let clbEtprCode;
+
+        /* 이모지 처리   */
+        function containsWindowsEmoji(text) {
+            const windowsEmojiRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/;
+            return windowsEmojiRegex.test(text);
+        }
+        function convertImojiToUnicode(text) {
+            let unicodeText = '';
+            for (let i = 0; i < text.length; i++) {
+                const char = text.charAt(i);
+                const codePoint = text.charCodeAt(i);
+
+                // Check if the character is an emoji (code points typically > 127)
+                if (codePoint > 127) {
+                    unicodeText += '\\u' + codePoint.toString(16).toUpperCase().padStart(4, '0');
+                } else {
+                    unicodeText += char;
+                }
+            }
+
+            return unicodeText;
+        }
         form.addEventListener("submit",e=>{
             e.preventDefault();
         })
@@ -136,6 +160,10 @@
             document.querySelector("#modal-proposal").style.display = "block";
         })
         proposalBtn.addEventListener("click",()=>{
+            if(containsWindowsEmoji(textArea.value)||containsWindowsEmoji(clbNm.value)){
+                textArea.value = convertImojiToUnicode(textArea.value);
+                clbNm.value = convertImojiToUnicode(clbNm.value);
+            }
             form.submit();
             return false;
         })

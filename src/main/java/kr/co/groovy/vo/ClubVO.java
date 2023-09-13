@@ -19,6 +19,7 @@ public class ClubVO {
     private Date clbDate;
     private int clbPsncpa;
     private String clbChirmnEmplId;
+    private String clbChirmnEmplNm;
     private String clbKind;
     private String clbConfmAt;
     private List<ClubMbrVO> clubMbr;
