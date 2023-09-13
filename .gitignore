@@ -935,3 +935,14 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/mine.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/sent.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/teamCommunity.jsp
 target/test-classes/mail/MailTest.class
+target/classes/kr/co/groovy/file/PdfView.class
+target/classes/kr/co/groovy/vo/CardVO.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/file/PdfView.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/vo/CardVO.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/bcmail-jdk14-1.38.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/bcmail-jdk14-138.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/bcprov-jdk14-1.38.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/bcprov-jdk14-138.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/bctsp-jdk14-1.38.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/itext-2.1.7.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/sanction/template/pdf.jsp
