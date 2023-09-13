@@ -39,9 +39,10 @@ public interface SanctionMapper {
 
     /* */
 
-    void approve(String elctrnSanctnemplId);
+    void approve(@Param("elctrnSanctnemplId") String elctrnSanctnemplId, @Param("elctrnSanctnEtprCode") String elctrnSanctnEtprCode);
+    void finalApprove(@Param("elctrnSanctnemplId") String elctrnSanctnemplId, @Param("elctrnSanctnEtprCode") String elctrnSanctnEtprCode);
 
-    void reject(@Param("elctrnSanctnemplId") String elctrnSanctnemplId, @Param("sanctnLineReturnResn") String sanctnLineReturnResn);
+    void reject(@Param("elctrnSanctnemplId") String elctrnSanctnemplId, @Param("sanctnLineReturnResn") String sanctnLineReturnResn, @Param("elctrnSanctnEtprCode") String elctrnSanctnEtprCode);
 
     void collect(String elctrnSanctnEtprCode);
 

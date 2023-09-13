@@ -40,14 +40,19 @@ public class SanctionController {
 
     @PostMapping("/approve")
     @ResponseBody
-    public void approve(String elctrnSanctnemplId) {
-        service.approve(elctrnSanctnemplId);
+    public void approve(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
+        service.approve(elctrnSanctnemplId, elctrnSanctnEtprCode);
+    }
+    @PostMapping("/finalApprove")
+    @ResponseBody
+    public void finalApprove(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
+        service.finalApprove(elctrnSanctnemplId, elctrnSanctnEtprCode);
     }
 
     @PostMapping("/reject")
     @ResponseBody
-    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn) {
-        service.reject(elctrnSanctnemplId, sanctnLineReturnResn);
+    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn, String elctrnSanctnEtprCode) {
+        service.reject(elctrnSanctnemplId, sanctnLineReturnResn, elctrnSanctnEtprCode);
     }
 
     @PostMapping("/collect")
