@@ -13,5 +13,6 @@ public class CardVO {
     private String cprCardNo;
     private String cprCardNm;
     private String cprCardChrgCmpny;
-
+    private String cprCardUseAt;
+    private String maskCardNo;
 }

@@ -30,4 +30,35 @@
         values (#{vhcleNo}, #{vhcleVhcty}, #{vhclePsncpa}, #{commonCodeHipassAsnAt})
     </insert>
 
+    <insert id="inputCard" parameterType="cardVO">
+        INSERT INTO CPR_CARD (CPR_CARD_NO,
+                              CPR_CARD_NM,
+                              CPR_CARD_CHRG_CMPNY,
+                              CPR_CARD_USE_AT)
+        VALUES (#{cprCardNo},
+                #{cprCardNm},
+                #{cprCardChrgCmpny},
+                'Y')
+    </insert>
+
+    <select id="loadAllCard" resultType="cardVO">
+        SELECT CPR_CARD_NO,
+               CPR_CARD_NM,
+               CPR_CARD_CHRG_CMPNY
+        FROM CPR_CARD
+        WHERE CPR_CARD_USE_AT = 'Y'
+    </select>
+
+    <update id="modifyCardNm" parameterType="cardVO">
+        UPDATE CPR_CARD
+        SET CPR_CARD_NM = #{cprCardNm}
+        WHERE CPR_CARD_NO = #{cprCardNo}
+    </update>
+
+    <update id="modifyCardUseAt" parameterType="String">
+        UPDATE CPR_CARD
+        SET CPR_CARD_USE_AT = 'N'
+        WHERE CPR_CARD_NO = #{cprCardNo}
+    </update>
+
 </mapper>

@@ -1,11 +1,13 @@
 package kr.co.groovy.reservation;
 
 import kr.co.groovy.enums.Hipass;
+import kr.co.groovy.vo.CardVO;
 import kr.co.groovy.vo.VehicleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.smartcardio.Card;
 import java.util.List;
 @Slf4j
 @Service
@@ -38,6 +40,42 @@ public class ReservationService {
             vehicleVO.setCommonCodeHipassAsnAt(Hipass.valueOf(vehicleVO.getCommonCodeHipassAsnAt()).getLabel());
         }
     }
+
+    public int inputCard(CardVO cardVO) {
+        return mapper.inputCard(cardVO);
+    }
+
+    public List<CardVO> loadAllCard() {
+        List<CardVO> cardList = mapper.loadAllCard();
+        for(CardVO cardVO : cardList) {
+            String cprCardNo = cardVO.getCprCardNo();
+            cardVO.setMaskCardNo(maskCardNumber(cprCardNo));
+        }
+        return cardList;
+    }
+
+    private String maskCardNumber(String cprCardNo) {
+        if (cprCardNo.length() != 19 || !cprCardNo.matches("\\d{4}-\\d{4}-\\d{4}-\\d{4}")) {
+            return "Invalid card number format";
+        }
+
+        String[] number = cprCardNo.split("-");
+        number[1] = "****";
+        number[2] = "****";
+
+        String maskCardNo = String.join("-", number);
+
+        return maskCardNo;
+    }
+
+    public int modifyCardNm(CardVO cardVO) {
+        return mapper.modifyCardNm(cardVO);
+    }
+
+    public int modifyCardUseAt(String cprCardNo) {
+        return mapper.modifyCardUseAt(cprCardNo);
+    }
+
 
 
 
