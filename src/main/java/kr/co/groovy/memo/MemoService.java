@@ -21,8 +21,8 @@ public class MemoService {
 		return memoMapper.getMemo();
 	}
 	
-	public MemoVO getOneMemoVO(int memoSn) {
-		return memoMapper.getOneMemoVO(memoSn);
+	public MemoVO getOneMemo(int memoSn) {
+		return memoMapper.getOneMemo(memoSn);
 	}
 	
 	public int inputMemo(MemoVO memoVO) {

@@ -19,27 +19,27 @@
     </select>
 
     <select id="getInfoById" parameterType="String" resultType="employeeVO"> --부서랑 직급
-        SELECT COMMON_CODE_DEPT,
-               COMMON_CODE_CLSF
-        FROM EMPL
-        WHERE EMPL_ID = #{emplId}
+    SELECT COMMON_CODE_DEPT,
+           COMMON_CODE_CLSF
+    FROM EMPL
+    WHERE EMPL_ID = #{emplId}
     </select>
 
     <insert id="insertDiary" parameterType="jobDiaryVO">
         INSERT INTO JOB_DIARY (
-             JOB_DIARY_REPORT_DATE,
-             JOB_DIARY_WRTING_EMPL_ID,
-             JOB_DIARY_RECPTN_EMPL_ID,
-             JOB_DIARY_SBJ,
-             JOB_DIARY_CN
-             )
+            JOB_DIARY_REPORT_DATE,
+            JOB_DIARY_WRTING_EMPL_ID,
+            JOB_DIARY_RECPTN_EMPL_ID,
+            JOB_DIARY_SBJ,
+            JOB_DIARY_CN
+        )
         VALUES (
-                TRUNC(SYSDATE),
-                #{jobDiaryWrtingEmplId},
-                #{jobDiaryRecptnEmplId},
-                #{jobDiarySbj},
-                #{jobDiaryCn}
-                )
+                   TRUNC(SYSDATE),
+                   #{jobDiaryWrtingEmplId},
+                   #{jobDiaryRecptnEmplId},
+                   #{jobDiarySbj},
+                   #{jobDiaryCn}
+               )
     </insert>
 
     <select id="getDiaryByDept" parameterType="String" resultMap="jobDiaryMap">
@@ -89,7 +89,7 @@
                    #{jobCn},
                    #{jobBeginDate},
                    #{jobClosDate},
-                   SYSDATE,
+                   TO_DATE(SYSDATE, 'YYYY-MM-DD'),
                    #{commonCodeDutyKind}
                )
     </insert>
@@ -108,4 +108,18 @@
                    #{commonCodeDutyProgrs}
                )
     </insert>
+
+    <select id="getAllJobById" parameterType="String" resultType="jobVO">
+        SELECT JOB_NO,
+               JOB_REQUST_EMPL_ID,
+               JOB_SJ,
+               JOB_CN,
+               JOB_BEGIN_DATE,
+               JOB_CLOS_DATE,
+               JOB_REQUST_DATE,
+               COMMON_CODE_DUTY_KIND
+        FROM JOB
+        WHERE JOB_REQUST_EMPL_ID = #{jobRequstEmplId}
+        ORDER BY JOB_NO
+    </select>
 </mapper>

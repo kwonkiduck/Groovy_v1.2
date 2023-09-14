@@ -1,6 +1,5 @@
 package kr.co.groovy.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,11 +8,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SanctionBookmarkVO {
-    @JsonProperty("elctrnSanctnDrftEmplId")
+    private String sanctionLineBookmarkSn;
     private String elctrnSanctnDrftEmplId;
-    @JsonProperty("elctrnSanctnBookmarkName")
     private String elctrnSanctnBookmarkName;
-    @JsonProperty("elctrnSanctnLineBookmark")
+//    @JsonProperty("elctrnSanctnLineBookmark")
     private String elctrnSanctnLineBookmark;
 
 }

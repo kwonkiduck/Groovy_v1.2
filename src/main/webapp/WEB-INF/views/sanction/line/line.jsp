@@ -106,13 +106,14 @@
             </div>
         </div>
         <button type="button" class="submitLine">결재선 적용</button>
-        <button type="button" onclick="openInput()">결재선 저장</button>
+        <button type="button" onclick="openInput()">개인 결재선으로 저장</button>
         <button type="button" onclick="loadLine()">결재선 불러오기</button>
         <div>
             결재선명<input type="text" id="bookmarkName">
-            <button type="button" onclick="saveLine()">저장</button>
+            <button type="button" onclick="saveLine()">확인</button>
+            <button type="button" onclick="closeWindow()">취소</button>
         </div>
-        <div id="finalLine">
+        <div id="bookmarkLine">
 
         </div>
         <button>닫기</button>
@@ -134,16 +135,17 @@
             $.ajax({
                 url: "/sanction/loadBookmark?emplId=" + emplId,
                 type: "GET",
-                success: function (data) {
-                    let resultDiv = $("#finalLine")
-                    console.log(data)
-                    data.forEach(function (obj) {
-                        for (var key in obj) {
-                            if (obj.hasOwnProperty(key)) {
-                                var value = obj[key];
-                                var keyValueHtml = `<p>키: ${key}</p><p>값: ${value}</p>`;
-                                resultDiv.innerHTML += keyValueHtml;
+                success: function (lines) {
+                    console.log(lines)
+                    let result = "";
+                    lines.forEach(function (line) {
+                        for (let key in line) {
+                            if (line.hasOwnProperty(key)) {
+                                let value = line[key];
+                                let keyValueHtml = `<p>키: \${key}</p><p>값: \${value}</p>`;
+                                result += keyValueHtml;
                             }
+                            $("#bookmarkLine").html(result);
                         }
                     });
                 },
@@ -188,7 +190,6 @@
             dataType: 'json',
             success: function (data) {
                 data.forEach(function (employee) {
-                    console.log(employee)
                     var employeeLi = $('<li class=emplList>');
                     employeeLi.html(
                         `<label style="display: flex">
