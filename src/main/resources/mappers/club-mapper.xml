@@ -5,6 +5,10 @@
         SELECT C.CLB_ETPR_CODE,
                C.CLB_NM,
                C.CLB_DC,
+               C.CLB_DATE,
+               C.CLB_PSNCPA,
+               C.CLB_CHIRMN_EMPL_ID,
+               (SELECT EMPL_NM FROM EMPL WHERE EMPL_ID = C.CLB_CHIRMN_EMPL_ID) AS CLBCHIRMNEMPLNM,
                C.CLB_KIND
         FROM CLB C,
              EMPL E
@@ -39,6 +43,11 @@
                      )
             SELECT 1 FROM DUAL
     </insert>
+    <update id="updateClubAt" parameterType="map">
+        UPDATE CLB
+        SET CLB_CONFM_AT = #{clbConfmAt}
+        WHERE CLB_ETPR_CODE = #{clbEtprCode}
+    </update>
     <select id="getSeq" resultType="int">
         SELECT CLB_SEQ.NEXTVAL FROM DUAL
     </select>
@@ -62,6 +71,38 @@
         SELECT COUNT(*)
         FROM CLB_MBR
         WHERE CLB_MBR_EMPL_ID = #{clbMbrEmplId}
+    </select>
+    <select id="loadProposalList" resultType="clubVO">
+        <![CDATA[
+            SELECT
+                C.CLB_ETPR_CODE,
+                C.CLB_NM,
+                C.CLB_DC,
+                C.CLB_DATE,
+                C.CLB_PSNCPA,
+                C.CLB_CHIRMN_EMPL_ID,
+                C.CLB_KIND,
+                C.CLB_CONFM_AT
+            FROM CLB C
+            WHERE TO_NUMBER(C.CLB_CONFM_AT) < 3
+            ORDER BY C.CLB_DATE DESC
+        ]]>
+    </select>
+    <select id="loadRegistList" resultType="clubVO">
+        <![CDATA[
+            SELECT
+                C.CLB_ETPR_CODE,
+                C.CLB_NM,
+                C.CLB_DC,
+                C.CLB_DATE,
+                C.CLB_PSNCPA,
+                C.CLB_CHIRMN_EMPL_ID,
+                C.CLB_KIND,
+                C.CLB_CONFM_AT
+            FROM CLB C
+            WHERE TO_NUMBER(C.CLB_CONFM_AT) = 1 OR TO_NUMBER(C.CLB_CONFM_AT) = 3
+            ORDER BY C.CLB_DATE DESC
+        ]]>
     </select>
     <insert id="inputClubMbr" parameterType="map">
         INSERT INTO CLB_MBR(

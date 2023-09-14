@@ -1,9 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>메일 | 전체 메일</title>
+    <title>메일 | 내게쓴메일함</title>
+    <script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </head>
 <style>
     ul {
@@ -52,11 +54,7 @@
         <thead>
         <tr>
             <th style="width: 100px">
-                <input type="checkbox" id="selectAll">
-            </th>
-            <th style="width: 100px">
-                읽음표시
-                <button><span>읽음</span></button>
+                <input type="checkbox" id="selectAll" onclick="checkAll()">
             </th>
             <th style="width: 100px">
                 중요
@@ -72,13 +70,14 @@
         <c:forEach var="emailVO" items="${list}">
             <tr>
                 <td><input type="checkbox" class="selectmail"></td>
-                <td>읽음</td>
-                <td>안중요</td>
-                <td></td>
-
-                <td>${emailVO.emailDsptchEmplId}</td>
-                <td><a href="#">${emailVO.emailCn}</a></td>
-                <td>${emailVO.emailTrnsmisDt}</td>
+                <td onclick="modifyTableAt(this)"
+                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
+                <td>파일존재여부</td>
+                <td>${emailVO.emailFromAddr}</td>
+                <td><a href="#">${emailVO.emailFromSj}</a></td>
+                <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
+                <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
+                <td>${sendDate}</td>
             </tr>
         </c:forEach>
         </tbody>

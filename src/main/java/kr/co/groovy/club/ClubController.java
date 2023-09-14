@@ -25,7 +25,6 @@ public class ClubController {
         emplId = principal.getName();
         List<ClubVO> loadAllClub = service.loadAllClub("1");
         model.addAttribute("clubList",loadAllClub);
-        log.info("loadAllClub ===> " + loadAllClub);
         return "common/club";
     }
     @ResponseBody
@@ -61,4 +60,52 @@ public class ClubController {
         return "탈퇴 성공~~";
     };
 
+    /*  관리자 - 동호회 관리    */
+    @GetMapping("/admin")
+    public String loadAdminClub(Model model){
+        List<ClubVO> clubList = service.loadAllClub("0");
+        List<ClubVO> clubRegistList = service.loadAllClub("1");
+        model.addAttribute("clubList",clubList);
+        model.addAttribute("clubRegistList",clubRegistList);
+        return "admin/gat/club/manage";
+    }
+    @ResponseBody
+    @PutMapping("/admin/update")
+    public String approveClub(@RequestBody Map<String, Object> map){
+        service.updateClubAt(map);
+        return "완료";
+    }
+    @ResponseBody
+    @PutMapping(value="/admin/disapprove", produces = "text/plain; charset=UTF-8")
+    public String disapproveClub(String clbEtprCode){
+        Map<String, Object> map = new HashMap<>();
+        map.put("clbEtprCode",clbEtprCode);
+        map.put("clbConfmAt",'2');
+        service.updateClubAt(map);
+        return "승인 거절 완료";
+    }
+    @GetMapping("/admin/proposalList")
+    public String loadProposalClub(Model model){
+        return "admin/gat/club/proposalList";
+    }
+    @ResponseBody
+    @PostMapping("/admin/proposalList")
+    public List<ClubVO> loadProposalList(){
+        List<ClubVO> clubList = service.loadProposalList();
+        return clubList;
+    }
+    @GetMapping("/admin/registList")
+    public String loadRegistClub(Model model){
+        return "admin/gat/club/registList";
+    }
+    @ResponseBody
+    @PostMapping("/admin/registList")
+    public List<ClubVO> loadRegistList(){
+        List<ClubVO> clubList = service.loadRegistList();
+        return clubList;
+    }
+    @GetMapping("/admin/{clbEtprCode}")
+    public String loadClubDetail(Model model){
+        return "admin/gat/club/detail";
+    }
 }

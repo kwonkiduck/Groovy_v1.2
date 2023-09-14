@@ -8,19 +8,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <header id="mailheader" class="tab">
     <ul>
-        <li><a href="#">메일</a></li>
+        <li><a href="/email/all">메일</a></li>
     </ul>
 </header>
 <div class="mailnavWrap">
     <nav>
         <ul>
-            <li class="mail"><a href="mail/allMail">전체메일</a></li>
-            <li class="mail"><a href="mail/receiveMail">받은메일함</a></li>
-            <li class="mail"><a href="#">보낸메일함</a></li>
-            <li class="mail"><a href="#">내게쓴메일함</a></li>
-            <li class="mail"><a href="#">중요메일함</a></li>
-            <li class="mail"><a href="#">임시저장함</a></li>
-            <li class="mail"><a href="#">휴지통</a></li>
+            <li class="mail"><a href="/email/all">전체메일</a></li>
+            <li class="mail"><a href="/email/inbox">받은메일함</a></li>
+            <li class="mail"><a href="/email/sent">보낸메일함</a></li>
+            <li class="mail"><a href="/email/mine">내게쓴메일함</a></li>
+            <li class="mail"><a href="/email/draft">임시저장함</a></li>
+            <li class="mail"><a href="/email/trash">휴지통</a></li>
         </ul>
     </nav>
     <form action="#" method="get">

@@ -36,6 +36,8 @@
 						value="org.springframework.web.servlet.view.tiles3.TilesView"/>
 		<beans:property name="order" value="1"/>
 	</beans:bean>
+	<!-- pdf라는 뷰 이름이 왔을 때 출력할 뷰를 설정 -->
+	<beans:bean id="pdf" class="kr.co.groovy.file.PdfView"/>
 
 	<context:component-scan base-package="kr.co.groovy"/>
 

@@ -1,5 +1,7 @@
 package kr.co.groovy.sanction;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.groovy.enums.ClassOfPosition;
 import kr.co.groovy.enums.Department;
 import kr.co.groovy.enums.SanctionFormat;
@@ -7,12 +9,13 @@ import kr.co.groovy.enums.SanctionProgress;
 import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +32,16 @@ public class SanctionService {
     }
 
 
-    public void approve(String elctrnSanctnemplId) {
-        mapper.approve(elctrnSanctnemplId);
+    public void approve(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
+        mapper.approve(elctrnSanctnemplId, elctrnSanctnEtprCode);
     }
 
-    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn) {
-        mapper.reject(elctrnSanctnemplId, sanctnLineReturnResn);
+    public void finalApprove(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
+        mapper.finalApprove(elctrnSanctnemplId, elctrnSanctnEtprCode);
+    }
+
+    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn, String elctrnSanctnEtprCode) {
+        mapper.reject(elctrnSanctnemplId, sanctnLineReturnResn, elctrnSanctnEtprCode);
     }
 
     public void collect(String elctrnSanctnEtprCode) {
@@ -57,20 +64,20 @@ public class SanctionService {
 
     }
 
-    SanctionFormatVO loadFormat(String format) {
+    public SanctionFormatVO loadFormat(String format) {
         return mapper.loadFormat(format);
     }
 
-    String getSeq(String formatSanctnKnd) {
+    public String getSeq(String formatSanctnKnd) {
         return mapper.getSeq(formatSanctnKnd);
     }
 
 
-    int getStatus(String elctrnSanctnDrftEmplId, String commonCodeSanctProgrs) {
+    public int getStatus(String elctrnSanctnDrftEmplId, String commonCodeSanctProgrs) {
         return mapper.getStatus(elctrnSanctnDrftEmplId, commonCodeSanctProgrs);
     }
 
-    List<SanctionLineVO> loadAwaiting(String emplId) {
+    public List<SanctionLineVO> loadAwaiting(String emplId) {
         List<SanctionLineVO> list = mapper.loadAwaiting(emplId);
         for (SanctionLineVO vo : list) {
             vo.setCommonCodeSanctProgrs(SanctionProgress.valueOf(vo.getCommonCodeSanctProgrs()).label());
@@ -78,7 +85,7 @@ public class SanctionService {
         return list;
     }
 
-    List<SanctionVO> loadRequest(String emplId) {
+    public List<SanctionVO> loadRequest(String emplId) {
         List<SanctionVO> list = mapper.loadRequest(emplId);
         for (SanctionVO vo : list) {
             vo.setElctrnSanctnFormatCode(SanctionFormat.valueOf(vo.getElctrnSanctnFormatCode()).label());
@@ -88,7 +95,7 @@ public class SanctionService {
         return list;
     }
 
-    void inputSanction(ParamMap requestData) {
+    public void inputSanction(ParamMap requestData) {
         log.info(String.valueOf(requestData));
         SanctionVO vo = new SanctionVO();
         String etprCode = requestData.getString("etprCode");
@@ -165,20 +172,47 @@ public class SanctionService {
         return vo;
     }
 
-    UploadFileVO loadSanctionFile(String elctrnSanctnEtprCode) {
+    public UploadFileVO loadSanctionFile(String elctrnSanctnEtprCode) {
         return mapper.loadSanctionFile(elctrnSanctnEtprCode);
     }
 
-    List<EmployeeVO> loadAllLine(String depCode, String emplId) {
+    public List<EmployeeVO> loadAllLine(String depCode, String emplId) {
         return mapper.loadAllLine(depCode, emplId);
     }
 
-    List<SanctionVO> loadReference(String emplId){
-        List<SanctionVO>list =  mapper.loadReference(emplId);
+    public List<SanctionVO> loadReference(String emplId) {
+        List<SanctionVO> list = mapper.loadReference(emplId);
         for (SanctionVO vo : list) {
             vo.setCommonCodeSanctProgrs(SanctionProgress.valueOf(vo.getCommonCodeSanctProgrs()).label());
         }
         return list;
+    }
+
+    /* 결재선 즐겨찾기 */
+    public void inputBookmark(SanctionBookmarkVO vo) {
+        mapper.inputBookmark(vo);
+    }
+
+    public List<Map<String, String>> loadBookmark(String emplId) {
+        List<SanctionBookmarkVO> list = mapper.loadBookmark(emplId);
+        List<Map<String, String>> resultList = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        for (SanctionBookmarkVO vo : list) {
+            String jsonLineBookmark = vo.getElctrnSanctnLineBookmark();
+
+            try {
+                Map<String, String> lineBookmarkMap = objectMapper.readValue(jsonLineBookmark, new TypeReference<Map<String,String>>() {});
+                resultList.add(lineBookmarkMap);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return resultList;
+    }
+    public void deleteBookmark(String elctrnSanctnBookmarkName) {
+        mapper.deleteBookmark(elctrnSanctnBookmarkName);
     }
 }
 
