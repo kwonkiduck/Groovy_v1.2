@@ -981,3 +981,5 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/manage.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/proposalList.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/registList.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/trash.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/at/card/manage.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/at/card/reservationRecords.jsp
