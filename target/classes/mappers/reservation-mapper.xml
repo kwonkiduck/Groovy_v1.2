@@ -33,20 +33,19 @@
     <insert id="inputCard" parameterType="cardVO">
         INSERT INTO CPR_CARD (CPR_CARD_NO,
                               CPR_CARD_NM,
-                              CPR_CARD_CHRG_CMPNY,
-                              CPR_CARD_USE_AT)
+                              CPR_CARD_CHRG_CMPNY)
         VALUES (#{cprCardNo},
                 #{cprCardNm},
-                #{cprCardChrgCmpny},
-                'Y')
+                #{cprCardChrgCmpny})
     </insert>
 
     <select id="loadAllCard" resultType="cardVO">
         SELECT CPR_CARD_NO,
                CPR_CARD_NM,
-               CPR_CARD_CHRG_CMPNY
+               CPR_CARD_CHRG_CMPNY,
+               CPR_CARD_STTUS
         FROM CPR_CARD
-        WHERE CPR_CARD_USE_AT = 'Y'
+        ORDER BY CPR_CARD_STTUS
     </select>
 
     <update id="modifyCardNm" parameterType="cardVO">
@@ -55,10 +54,19 @@
         WHERE CPR_CARD_NO = #{cprCardNo}
     </update>
 
-    <update id="modifyCardUseAt" parameterType="String">
+    <update id="modifyCardStatusDisabled" parameterType="String">
         UPDATE CPR_CARD
-        SET CPR_CARD_USE_AT = 'N'
+        SET CPR_CARD_STTUS = 2
         WHERE CPR_CARD_NO = #{cprCardNo}
     </update>
+
+    <select id="loadWaitingList" resultType="cardReservationVO">
+        SELECT CPR_CARD_RESVE_SN,
+               CPR_CARD_RESVE_BEGIN_DATE,
+               CPR_CARD_RESVE_CLOS_DATE,
+               CPR_CARD_RESVE_EMPL_ID
+        FROM CPR_CARD_RESVE
+        WHERE COMMON_CODE_RESVE_AT = 'RESVE010';
+    </select>
 
 </mapper>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.notice.NoticeMapper">
-
-    <!-- 총무팀 공지사항 관리   -->
     <insert id="inputNotice" parameterType="NoticeVO">
+        /* 총무팀 - 공지사항 등록 */
         INSERT INTO NOTI(NOTI_ETPR_CODE,
                          NOTI_TITLE,
                          NOTI_CONTENT,
@@ -17,9 +16,8 @@
                 #{notiCtgryIconFileStreNm},
                 'NOTI020')
     </insert>
-
-    <!--    'NOTI-' || NOTI_SEQ.nextval || '-' || TO_CHAR(sysdate, 'yyyyMMdd')-->
     <insert id="uploadNoticeFile" parameterType="map">
+        /* 총무팀 - 공지사항 등록 파일 업로드 처리(다중) */
         INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN,
                                 UPLOAD_FILE_ETPR_CODE,
                                 UPLOAD_FILE_ORGINL_NM,
@@ -33,19 +31,19 @@
                 #{fileSize},
                 sysdate)
     </insert>
-
     <select id="getNotiSeq" resultType="int">
+        /* 총무팀 - 파일 다중 업로드용 시퀀스 불러오기 */
         SELECT NOTI_SEQ.nextval
         FROM dual
     </select>
-
     <update id="deleteNotice">
+        /* 총무팀 - 공지사항 삭제 */
         UPDATE NOTI
         SET COMMON_CODE_NOTI_KIND = 'NOTI021'
         WHERE NOTI_ETPR_CODE = #{notiEtprCode}
     </update>
-
     <update id="modifyNotice">
+        /* 총무팀 - 공지사항 수정 */
         UPDATE NOTI
         SET NOTI_TITLE                   = #{notiTitle},
             NOTI_CONTENT                 = #{notiContent},
@@ -59,6 +57,7 @@
 
     <!--employee notice -->
     <select id="loadNoticeList" parameterType="String" resultType="noticeVO">
+        /* 사원(공통) - 전체 공지사항 불러오기(중요 선정렬) */
         SELECT NOTI_ETPR_CODE,
                NOTI_TITLE,
                NOTI_CONTENT,
@@ -76,6 +75,7 @@
                  NOTI_ETPR_CODE DESC
     </select>
     <select id="findNotice" parameterType="map" resultType="noticeVO">
+        /* 사원(공통) - 공지사항 검색 및 선택 정렬 */
         SELECT
         NOTI_ETPR_CODE,
         NOTI_TITLE,
@@ -102,6 +102,7 @@
         </if>
     </select>
     <select id="loadNoticeDetail" parameterType="String" resultType="noticeVO">
+        /* 사원(공통) - 공지사항 상세 내용 불러오기 */
         SELECT NOTI_ETPR_CODE,
                NOTI_TITLE,
                NOTI_CONTENT,
@@ -113,27 +114,31 @@
         WHERE NOTI_ETPR_CODE = #{notiEtprCode}
     </select>
     <select id="loadNotiFiles" parameterType="String" resultType="uploadFileVO">
-        SELECT UPLOAD_FILE.UPLOAD_FILE_SN,
-               UPLOAD_FILE.UPLOAD_FILE_ETPR_CODE,
-               UPLOAD_FILE.UPLOAD_FILE_ORGINL_NM,
-               UPLOAD_FILE.UPLOAD_FILE_STRE_NM,
-               UPLOAD_FILE.UPLOAD_FILE_SIZE,
-               UPLOAD_FILE.UPLOAD_FILE_RGSDE
-        FROM NOTI
-                 LEFT JOIN UPLOAD_FILE ON NOTI.NOTI_ETPR_CODE = UPLOAD_FILE.UPLOAD_FILE_ETPR_CODE
-        WHERE NOTI.NOTI_ETPR_CODE = #{notiEtprCode}
+        /* 사원(공통) - 공지사항 첨부 파일 불러오기 */
+        SELECT U.UPLOAD_FILE_SN,
+               U.UPLOAD_FILE_ETPR_CODE,
+               U.UPLOAD_FILE_ORGINL_NM,
+               U.UPLOAD_FILE_STRE_NM,
+               U.UPLOAD_FILE_SIZE,
+               U.UPLOAD_FILE_RGSDE
+        FROM NOTI N,
+             UPLOAD_FILE U
+        WHERE U.UPLOAD_FILE_ETPR_CODE = N.NOTI_ETPR_CODE
+          AND N.NOTI_ETPR_CODE = #{notiEtprCode}
     </select>
-    <select id="downloadNotiFile" parameterType="int" resultType="uploadFileVO">
-        SELECT UPLOAD_FILE_SN,
-               UPLOAD_FILE_ETPR_CODE,
-               UPLOAD_FILE_ORGINL_NM,
-               UPLOAD_FILE_STRE_NM,
-               UPLOAD_FILE_SIZE,
-               UPLOAD_FILE_RGSDE
-        FROM UPLOAD_FILE
-        WHERE UPLOAD_FILE_SN = #{uploadFileSn}
-    </select>
+<!--    <select id="downloadNotiFile" parameterType="int" resultType="uploadFileVO">-->
+<!--        /* 사원(공통) - 공지사항 첨부 파일 다운로드 */-->
+<!--        SELECT UPLOAD_FILE_SN,-->
+<!--               UPLOAD_FILE_ETPR_CODE,-->
+<!--               UPLOAD_FILE_ORGINL_NM,-->
+<!--               UPLOAD_FILE_STRE_NM,-->
+<!--               UPLOAD_FILE_SIZE,-->
+<!--               UPLOAD_FILE_RGSDE-->
+<!--        FROM UPLOAD_FILE-->
+<!--        WHERE UPLOAD_FILE_SN = #{uploadFileSn}-->
+<!--    </select>-->
     <update id="modifyNoticeView" parameterType="String">
+        /* 사원(공통) - 공지사항 조회수 증가 */
         UPDATE NOTI
         SET NOTI_RDCNT=NOTI_RDCNT + 1
         WHERE NOTI_ETPR_CODE = #{notiEtprCode}
