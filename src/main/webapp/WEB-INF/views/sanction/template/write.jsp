@@ -11,12 +11,6 @@
         text-align: center;
     }
 </style>
-<h2>
-    <a href="#">결재 요청</a>
-    <a href="#">결재 진행함</a>
-    <a href="#">개인 문서함</a>
-</h2> <br/><br/>
-
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
     <div id="formCard">
@@ -82,10 +76,10 @@
                 type: "GET",
                 success: function (data) {
                     console.log(data)
-                    for (var key in data) {
+                    for (let key in data) {
                         if (data.hasOwnProperty(key)) {
-                            var value = data[key];
-                            var element = document.getElementById(key);
+                            let value = data[key];
+                            let element = document.getElementById(key);
                             if (element) {
                                 element.textContent = value;
                             }

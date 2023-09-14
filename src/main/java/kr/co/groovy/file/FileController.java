@@ -94,8 +94,5 @@ public class FileController {
         } catch (Exception e) {
             log.info("파일 등록 실패");
         }
-
-
     }
-
 }

@@ -208,7 +208,6 @@ public class SanctionService {
                 throw new RuntimeException(e);
             }
         }
-
         return resultList;
     }
     public void deleteBookmark(String elctrnSanctnBookmarkName) {
