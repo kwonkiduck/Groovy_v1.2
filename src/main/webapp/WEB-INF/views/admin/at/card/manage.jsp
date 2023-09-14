@@ -1,7 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<sec:authentication property="principal" var="CustomUser"/>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <style>
     #modifyCardInfoBtn, #saveCardInfoBtn, #cancelModifyCardInfoBtn, #deleteCardBtn {
         display: none;
@@ -36,7 +35,8 @@
             </select>
             <button id="registerCardBtn">등록</button>
         </form>
-    </div>y65
+    </div>
+    y65
     <hr/>
     <h1>카드 목록</h1>
     <div id="cardList"></div>
@@ -65,8 +65,33 @@
         </form>
     </div>
     <hr/>
-    <h1>카드 사용 현황</h1>
-    <div id="cardStatus"></div>
+    <h1>카드 신청 미처리건 <span id="waitingListCnt" style="color: dodgerblue">${waitingListCnt}</span></h1>
+    <div id="cardWaitingList">
+        <table>
+            <tr>
+                <th>순번</th>
+                <th>사용 시작 일자</th>
+                <th>사용 마감 일자</th>
+                <th>사원명(사번)</th>
+                <th>카드 지정</th>
+            </tr>
+            <c:forEach items="${loadCardWaitingList}" var="resve">
+                <tr>
+                    <td>${resve.cprCardResveSn}</td>
+                    <td><fmt:formatDate value="${resve.cprCardResveBeginDate}" type="date" pattern="yyyy-MM-dd" /></td>
+                    <td><fmt:formatDate value="${resve.cprCardResveClosDate}" type="date" pattern="yyyy-MM-dd" /></td>
+                    <td>${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})</td>
+                    <td>
+                        <select name="cprCardNo" class="selectedCard">
+
+                        </select>
+                        <button>저장</button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+
+    </div>
     <hr/>
 
 </main>
@@ -109,29 +134,37 @@
 
     function loadAllCard() {
         $.ajax({
-            url : "/reserve/loadAllCard",
-            type : "get",
-            dataType : "json",
-            success : function (result) {
-                code = "";
-                $.each(result, function (idx, obj){
-                    code += `<button class="cards" id="\${obj.cprCardNo}">
+            url: "/reserve/loadAllCard",
+            type: "get",
+            dataType: "json",
+            success: function (result) {
+                codeforList = "";
+                codeforSelect = "";
+                $.each(result, function (idx, obj) {
+                    codeforList += `<button class="cards" id="\${obj.cprCardNo}">
                     <p id="btnCardNm">\${obj.cprCardNm}</p>
                     <p id="btnCardNo">\${obj.maskCardNo}</p>
                     <p id="btnCardCom">\${obj.cprCardChrgCmpny}</p>
                     <input type=hidden id="btnCardStatus" value="\${obj.cprCardSttus}">
                     </button><br/>`;
+
+                    let cprCardSttus = obj.cprCardSttus
+
+                    if(cprCardSttus == 0) {
+                        codeforSelect += `<option value="\${obj.cprCardNo}">\${obj.cprCardNm}</option>`;
+                    }
                 });
-                cardListDiv.html(code);
+                cardListDiv.html(codeforList);
+                $(".selectedCard").append(codeforSelect);
             },
-            error : function (xhr) {
+            error: function (xhr) {
                 console.log(xhr.responseText);
                 alert("실패");
             }
         })
     }
 
-    cardListDiv.on("click", ".cards", function() {
+    cardListDiv.on("click", ".cards", function () {
         $("#saveCardInfoBtn").hide();
         $("#cancelModifyCardInfoBtn").hide();
         $("#modifyCardInfoBtn").show();
@@ -151,7 +184,7 @@
         currentCardNm = selectedCardNm;
     })
 
-    $("#modifyCardInfoBtn").on("click", function() {
+    $("#modifyCardInfoBtn").on("click", function () {
         $("#selectedCardName").html(`<input type='text' id='newCardNm' value='\${currentCardNm}'>`);
         $(this).hide();
         $("#deleteCardBtn").hide();
@@ -159,29 +192,29 @@
         $("#cancelModifyCardInfoBtn").show();
     })
 
-    $("#saveCardInfoBtn").on("click", function() {
+    $("#saveCardInfoBtn").on("click", function () {
         let newCardNm = $("#newCardNm").val();
         $("#selectedCardName").html('');
         $("#selectedCardName").text(newCardNm);
 
         let modifiedData = {
-            cprCardNo : currentCardNo,
-            cprCardNm : newCardNm
+            cprCardNo: currentCardNo,
+            cprCardNm: newCardNm
         }
 
         $.ajax({
-            url : "/reserve/modifyCardNm",
-            type : "post",
-            data : JSON.stringify(modifiedData),
+            url: "/reserve/modifyCardNm",
+            type: "post",
+            data: JSON.stringify(modifiedData),
             contentType: "application/json;charset:utf-8",
-            success : function (result) {
-                if(result == 1) {
+            success: function (result) {
+                if (result == 1) {
                     loadAllCard();
                 } else {
                     alert("수정 실패")
                 }
             },
-            error : function (xhr) {
+            error: function (xhr) {
                 console.log(xhr.responseText);
                 alert("오류로 인한 실패");
             }
@@ -193,7 +226,7 @@
         $("#deleteCardBtn").show();
     })
 
-    $("#cancelModifyCardInfoBtn").on("click", function() {
+    $("#cancelModifyCardInfoBtn").on("click", function () {
         $("#selectedCardName").html('');
         $("#selectedCardName").text(currentCardNm);
 
@@ -206,10 +239,10 @@
     $("#deleteCardBtn").on("click", function () {
         if (confirm(`'\${currentCardNm}' 카드를 사용불가 처리하시겠습니까?`)) {
             $.ajax({
-                url : `/reserve/modifyCardUseAt/\${currentCardNo}`,
-                type : "get",
-                success : function (result) {
-                    if(result == 1) {
+                url: `/reserve/modifyCardUseAt/\${currentCardNo}`,
+                type: "get",
+                success: function (result) {
+                    if (result == 1) {
                         loadAllCard();
                         $("#selectedCardName").html('');
                         $("#selectedCardNo").html('');
@@ -219,7 +252,7 @@
                         alert("사용불가 처리 실패")
                     }
                 },
-                error : function (xhr) {
+                error: function (xhr) {
                     console.log(xhr.responseText);
                     alert("오류로 인한 실패")
                 }

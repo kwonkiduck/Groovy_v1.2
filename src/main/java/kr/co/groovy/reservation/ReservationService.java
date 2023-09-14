@@ -1,6 +1,7 @@
 package kr.co.groovy.reservation;
 
 import kr.co.groovy.enums.Hipass;
+import kr.co.groovy.vo.CardReservationVO;
 import kr.co.groovy.vo.CardVO;
 import kr.co.groovy.vo.VehicleVO;
 import lombok.extern.slf4j.Slf4j;
@@ -71,10 +72,12 @@ public class ReservationService {
     public int modifyCardNm(CardVO cardVO) {
         return mapper.modifyCardNm(cardVO);
     }
-
     public int modifyCardStatusDisabled(String cprCardNo) {
         return mapper.modifyCardStatusDisabled(cprCardNo);
     }
 
+    public List<CardReservationVO> loadCardWaitingList() {
+        return mapper.loadCardWaitingList();
+    }
 
 }
