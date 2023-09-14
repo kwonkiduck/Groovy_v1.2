@@ -45,4 +45,8 @@ public class JobService {
     void insertJob(JobVO jobVO) {mapper.insertJob(jobVO);}
 
     void insertJobProgress(JobProgressVO jobProgressVO) {mapper.insertJobProgress(jobProgressVO);}
+
+    List<JobVO> getAllJobById(String jobRequstEmplId) {
+        return mapper.getAllJobById(jobRequstEmplId);
+    }
 }

@@ -30,31 +30,34 @@ close.forEach(item => {
 })
 
 //날짜 유효성 검사
-function validateBeginDate(input) {
-    let currentDate = new Date();
-    let inputDate = new Date(input.value);
+function validateDate() {
+    let begin = document.querySelector("#jobBeginDate");
+    let close = document.querySelector("#jobClosDate");
+    let beginDate = begin.value;
+    let closeDate = close.value;
+    validateCurrentDate(beginDate);
+    validateCurrentDate(closeDate);
 
-    if (inputDate < currentDate) {
-        let currentYear = currentDate.getFullYear();
-        let currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
-        let currentDay = String(currentDate.getDate()).padStart(2, '0');
-        let minDate = `${currentYear}-${currentMonth}-${currentDay}`;
-
-        alert('현재 날짜보다 이전의 날짜는 설정할 수 없습니다.');
-        input.value = minDate;
+    if (closeDate != "" && beginDate > closeDate) {
+        alert('끝 날짜는 시작 날짜보다 이전이 될 수 없습니다.');
+        close.value = begin.value;
     }
 }
 
-function validateCloseDate(input) {
-    validateBeginDate(input);
-    let beginDateInput = document.getElementById('jobBeginDate');
+function validateCurrentDate(input) {
+    let currentDate = new Date();
+    let inputDate = new Date(input.value);
 
-    let beginDate = new Date(beginDateInput.value);
-    let closeDate = new Date(input.value);
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+    let currentDay = String(currentDate.getDate()).padStart(2, '0');
 
-    if (beginDate > closeDate) {
-        alert('끝 날짜는 시작 날짜보다 이전이 될 수 없습니다.');
-        beginDateInput.value = input.value;
+    let minDate = new Date(currentYear, currentDate.getMonth(), currentDay); // 월은 0부터 시작하므로 -1 제거
+
+    if (inputDate <= minDate) {
+        alert('현재 날짜보다 이전의 날짜는 설정할 수 없습니다.');
+        let formattedDate = `${currentYear}-${currentMonth}-${currentDay}`;
+        input.value = formattedDate;
     }
 }
 
@@ -93,6 +96,7 @@ requestBtn.addEventListener("click", (event) => {
         processData: false,
         cache: false,
         success: function() {
+            location.href = "/employee/job";
         },
         error: function(xhr) {
             console.log(xhr.status);
@@ -100,19 +104,4 @@ requestBtn.addEventListener("click", (event) => {
     });
 });
 
-//
-// document.querySelector("#request").addEventListener("click", (event) => {
-//
-//     //받는 사원의 리스트
-//     let receiveEmpls = receive.querySelectorAll("span");
-//     let selectedEmplIds = [];
-//
-//     receiveEmpls.forEach((receiveEmpl) => {
-//         let emplId = receiveEmpl.getAttribute("data-id");
-//         console.log(emplId);
-//         selectedEmplIds.push(emplId);
-//     });
-//
-//     console.log(JSON.stringify(selectedEmplIds));
-// })
 

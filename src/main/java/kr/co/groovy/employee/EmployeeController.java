@@ -132,9 +132,6 @@ public class EmployeeController {
         return mav;
     }
 
-
-
-
     /* 다시 매핑~ */
 
     @ResponseBody
@@ -146,11 +143,6 @@ public class EmployeeController {
     @GetMapping("/commute")
     public String commute() {
         return "employee/commute";
-    }
-
-    @GetMapping("/job")
-    public String task() {
-        return "employee/job/job";
     }
 
     @GetMapping("/teamCommunity")
