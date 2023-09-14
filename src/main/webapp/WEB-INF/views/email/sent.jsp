@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>메일 | 보낸메일함</title>
-    <script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </head>
 <style>
     ul {
@@ -84,7 +83,6 @@
         </tbody>
     </table>
 </div>
-
-
+<script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </body>
 </html>

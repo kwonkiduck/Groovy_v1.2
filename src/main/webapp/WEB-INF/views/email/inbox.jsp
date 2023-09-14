@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>메일 | 받은메일함</title>
-    <script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </head>
 <style>
     ul {
@@ -58,11 +57,11 @@
             </th>
             <th style="width: 100px">
                 읽음표시
-                <button onclick="modifyRedngAtByBtn()"><span>읽음</span></button>
+                <button onclick="modifyAtByBtn()"><span>읽음</span></button>
             </th>
             <th style="width: 100px">
                 중요
-                <button><span>삭제</span></button>
+                <button onclick="modifyDeleteAtByBtn()"><span>삭제</span></button>
             </th>
             <th style="width: 100px">파일여부</th>
             <th>보낸이</th>
@@ -72,12 +71,13 @@
         </thead>
         <tbody>
         <c:forEach var="emailVO" items="${list}">
-            <tr>
-                <td><input type="checkbox" class="selectmail"></td>
-                <td onclick="modifyTableAt(this)" data-id="${emailVO.emailEtprCode}"
-                    data-type="redng">${emailVO.emailRedngAt}</td>
-                <td onclick="modifyTableAt(this)"
-                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
+            <tr data-id="${emailVO.emailEtprCode}">
+                <td><input type="checkbox" class="selectMail"></td>
+                <td onclick="modifyTableAt(this)" data-type="redng">
+                    ${emailVO.emailRedngAt}
+                    <input type="hidden" value="${emailVO.emailDeleteAt}">
+                </td>
+                <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
 
                 <td>${emailVO.emailFromAddr}</td>
@@ -90,7 +90,6 @@
         </tbody>
     </table>
 </div>
-
-
+<script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </body>
 </html>

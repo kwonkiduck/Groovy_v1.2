@@ -37,8 +37,11 @@ public class EmailController {
     @GetMapping("/inbox")
     public String getReceivedMails(Principal principal, EmailVO emailVO, Model model) throws Exception {
         EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
-        List<EmailVO> allReceivedMailsToMe = emailService.getAllReceivedMailsToMe(employeeVO.getEmplEmail());
-        List<EmailVO> allReferencedMailsToMe = emailService.getAllReferencedMailsToMe(employeeVO.getEmplEmail());
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", employeeVO.getEmplEmail());
+        map.put("at", "N");
+        List<EmailVO> allReceivedMailsToMe = emailService.getAllReceivedMailsToMe(map);
+        List<EmailVO> allReferencedMailsToMe = emailService.getAllReferencedMailsToMe(map);
 
         List<EmailVO> allReceivedMailList = new ArrayList<>();
         allReceivedMailList.addAll(allReceivedMailsToMe);
@@ -60,7 +63,10 @@ public class EmailController {
     @GetMapping("/sent")
     public String getAllSentMailsByMe(Principal principal, EmailVO emailVO, Model model) {
         EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
-        List<EmailVO> allSentMailsByMe = emailService.getAllSentMailsByMe(employeeVO.getEmplEmail());
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", employeeVO.getEmplEmail());
+        map.put("at", "N");
+        List<EmailVO> allSentMailsByMe = emailService.getAllSentMailsByMe(map);
         model.addAttribute("list", allSentMailsByMe);
         return "email/sent";
     }
@@ -68,9 +74,53 @@ public class EmailController {
     @GetMapping("/mine")
     public String getAllSentMailsToMe(Principal principal, EmailVO emailVO, Model model) {
         EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
-        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe(employeeVO.getEmplEmail());
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", employeeVO.getEmplEmail());
+        map.put("at", "N");
+        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe(map);
         model.addAttribute("list", allSentMailsToMe);
         return "email/mine";
+    }
+
+    @GetMapping("/trash")
+    public String getAllDeletedMails(Principal principal, EmailVO emailVO, Model model) {
+        EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
+        List<EmailVO> list = setAllEmailList(employeeVO.getEmplEmail(), "Y");
+        model.addAttribute("list", list);
+        return "email/trash";
+    }
+
+    @PutMapping("/{code}/{emailEtprCode}")
+    @ResponseBody
+    public String modifyEmailRedngAt(@PathVariable String code, @PathVariable String emailEtprCode, @RequestBody String at) {
+        Map<String, String> map = new HashMap<>();
+        switch (code) {
+            case "redng":
+                map.put("emailAtKind", "EMAIL_REDNG_AT");
+                break;
+            case "imprtnc":
+                map.put("emailAtKind", "EMAIL_IMPRTNC_AT");
+                break;
+            case "delete":
+                map.put("emailAtKind", "EMAIL_DELETE_AT");
+                break;
+        }
+
+        if (at.equals("N")) {
+            map.put("at", "Y");
+        } else {
+            map.put("at", "N");
+        }
+        map.put("emailEtprCode", emailEtprCode);
+        emailService.modifyEmailRedngAt(map);
+        return map.get("at");
+    }
+
+    @PutMapping ("/{emailEtprCode}")
+    @ResponseBody
+    public String deleteMail(@PathVariable String emailEtprCode) {
+        emailService.deleteMails(emailEtprCode);
+        return "success";
     }
 
     public List<EmailVO> inputReceivedEmails(Principal principal, EmailVO emailVO) throws Exception {
@@ -174,27 +224,30 @@ public class EmailController {
                 }
             }
         }
-        return setAllEmailList(employeeVO.getEmplEmail());
+        return setAllEmailList(employeeVO.getEmplEmail(), "N");
     }
 
-    private List<EmailVO> setAllEmailList(String emailAddr) {
+    private List<EmailVO> setAllEmailList(String emailAddr, String at) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", emailAddr);
+        map.put("at", at);
         List<EmailVO> allReceivedMails = new ArrayList<>();
-        List<EmailVO> receivedMails = emailService.getAllReceivedMailsToMe(emailAddr);
+        List<EmailVO> receivedMails = emailService.getAllReceivedMailsToMe(map);
         for (EmailVO receivedMail : receivedMails) {
             receivedMail.setEmailBoxName("받은메일함");
         }
         allReceivedMails.addAll(receivedMails);
-        List<EmailVO> referencedMails = emailService.getAllReferencedMailsToMe(emailAddr);
+        List<EmailVO> referencedMails = emailService.getAllReferencedMailsToMe(map);
         for (EmailVO referencedMail : referencedMails) {
             referencedMail.setEmailBoxName("받은메일함");
         }
         allReceivedMails.addAll(referencedMails);
-        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe(emailAddr);
+        List<EmailVO> allSentMailsToMe = emailService.getAllSentMailsToMe(map);
         for (EmailVO allSentMailToMe : allSentMailsToMe) {
             allSentMailToMe.setEmailBoxName("내게쓴메일함");
         }
         allReceivedMails.addAll(allSentMailsToMe);
-        List<EmailVO> allSentMailsByMe = emailService.getAllSentMailsByMe(emailAddr);
+        List<EmailVO> allSentMailsByMe = emailService.getAllSentMailsByMe(map);
         for (EmailVO allSentMailByMe : allSentMailsByMe) {
             allSentMailByMe.setEmailBoxName("보낸메일함");
         }
@@ -209,34 +262,6 @@ public class EmailController {
             }
         });
         return allReceivedMails;
-    }
-
-    @PutMapping("/{code}/{emailEtprCode}")
-    @ResponseBody
-    public String modifyEmailRedngAt(@PathVariable String code, @PathVariable String emailEtprCode, @RequestBody String at) {
-        System.out.println("code = " + code);
-        System.out.println("emailEtprCode = " + emailEtprCode);
-        System.out.println("at = " + at);
-
-        Map<String, String> map = new HashMap<>();
-        if (code.equals("redng")) {
-            map.put("emailAtKind", "EMAIL_REDNG_AT");
-            if (at.equals("N")) {
-                map.put("at", "Y");
-            } else {
-                map.put("at", "N");
-            }
-        } else if (code.equals("imprtnc")) {
-            map.put("emailAtKind", "EMAIL_IMPRTNC_AT");
-            if (at.equals("N")) {
-                map.put("at", "Y");
-            } else {
-                map.put("at", "N");
-            }
-        }
-        map.put("emailEtprCode", emailEtprCode);
-        emailService.modifyEmailRedngAt(map);
-        return map.get("at");
     }
 
     private URLName getUrlName(EmployeeVO employeeVO) {
