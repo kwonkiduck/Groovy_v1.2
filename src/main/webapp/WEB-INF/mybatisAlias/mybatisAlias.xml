@@ -35,6 +35,7 @@
         <typeAlias type="kr.co.groovy.vo.MemoVO" alias="memoVO"/>
         <typeAlias type="kr.co.groovy.vo.EmailVO" alias="emailVO"/>
         <typeAlias type="kr.co.groovy.vo.ClubVO" alias="clubVO"/>
+        <typeAlias type="kr.co.groovy.vo.ClubMbrVO" alias="clubMbrVO"/>
         <typeAlias type="kr.co.groovy.vo.CardVO" alias="cardVO"/>
         <typeAlias type="kr.co.groovy.vo.CardReservationVO" alias="cardReservationVO"/>
         <typeAlias type="kr.co.groovy.vo.SanctionBookmarkVO" alias="sanctionBookmarkVO"/>
