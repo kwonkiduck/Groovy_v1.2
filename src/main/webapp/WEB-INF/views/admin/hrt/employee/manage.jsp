@@ -30,7 +30,6 @@
             <input type="text" name="emplTelno" required><br/>
 
 
-
             <label>우편번호</label>
             <input type="text" name="emplZip" class="emplZip" required><br/>
             <button type="button" id="findZip">우편번호 찾기</button>
@@ -39,9 +38,6 @@
             <input type="text" name="emplAdres" class="emplAdres" required><br/>
             <label>상세주소</label>
             <input type="text" name="emplDetailAdres" class="emplDetailAdres" required><br/>
-
-
-
 
 
             <label>생년월일</label>
@@ -73,8 +69,8 @@
             <label for="empPos5">팀장</label>
             <input type="radio" name="commonCodeClsf" id="empPos6" value="CLSF011">
             <label for="empPos6">부장</label>
-            <input type="radio" name="commonCodeClsf" id="empPos7" value="CLSF010">
-            <label for="empPos7">대표이사</label>
+            <%--            <input type="radio" name="commonCodeClsf" id="empPos7" value="CLSF010">--%>
+            <%--            <label for="empPos7">대표이사</label>--%>
 
             <%-- commonCodeDept --%>
             <label>부서</label>
@@ -84,7 +80,7 @@
                 <option value="DEPT012">영업팀</option>
                 <option value="DEPT013">홍보팀</option>
                 <option value="DEPT014">총무팀</option>
-                <option value="DEPT015">경영자</option>
+                <%--                <option value="DEPT015">경영자</option>--%>
             </select><br/>
 
             <label>입사일</label>
@@ -113,7 +109,6 @@
 <hr/>
 
 
-<h2>사원 조회 필터, 검색 및 정렬 -> 프론트로 처리할건지?</h2>
 <form action="#" method="GET">
     <label>부서 필터</label>
     <select name="searchDepCode">
@@ -139,28 +134,27 @@
 <br/><br/>
 
 
-<!-- 사원 목록 -->
-<hr/>
-<h2>사원 조회 및 엑셀로 내보내기</h2>
-<form action="#" method="GET">
-    <button type="exportExc">엑셀로 내보내기</button>
-</form>
-<div id="empList">
+<%--<hr/>--%>
+<%--<h2>사원 조회 및 엑셀로 내보내기</h2>--%>
+<%--<form action="#" method="GET">--%>
+<%--    <button type="exportExc">엑셀로 내보내기</button>--%>
+<%--</form>--%>
 
-</div>
+<!-- 사원 목록 -->
+<div id="empList"></div>
 
 
 <script>
-$("#findZip").on("click", function (){
-    // 다음 주소 API
-    new daum.Postcode({
-        oncomplete: function(data) {
-            $(".emplZip").val(data.zonecode);
-            $(".emplAdres").val(data.address);
-            $(".emplDetailAdres").focus();
-        }
-    }).open();
-})
+    $("#findZip").on("click", function () {
+        // 다음 주소 API
+        new daum.Postcode({
+            oncomplete: function (data) {
+                $(".emplZip").val(data.zonecode);
+                $(".emplAdres").val(data.address);
+                $(".emplDetailAdres").focus();
+            }
+        }).open();
+    })
 
     $(document).ready(function () {
 
@@ -199,7 +193,7 @@ $("#findZip").on("click", function (){
                             code += `<td>\${res[i].commonCodeClsf}</td>`;
                             code += `<td>\${res[i].emplEncpn}</td>`;
                             code += `<td>\${res[i].emplBrthdy}</td>`;
-                            code += `<td>\${res[i].signPhotoFileStreNm == 'noSign.png' ? "미등록" : "등록완료"}</td>`;
+                            code += `<td>\${res[i].signPhotoFileStreNm == 'groovy_noSign.png' ? "미등록" : "등록완료"}</td>`;
                             code += `<td>\${(res[i].commonCodeHffcSttus == 'HFFC010') ? "재직" : (res[i].commonCodeHffcSttus == 'HFFC011') ? "휴직" : "퇴직"}</td>`;
                             code += "</tr>";
                         }
@@ -229,7 +223,6 @@ $("#findZip").on("click", function (){
                 type: 'GET',
                 dataType: 'text',
                 success: function (data) {
-                    console.log("countEmp: ", data);
                     // 사번 생성 (idx 3글자로 설정함)
                     const dateSplit = joinDateVal.split("-");
                     let count = parseInt(data) + 1;
@@ -245,6 +238,7 @@ $("#findZip").on("click", function (){
                 }
             })
         })
+
         /*사원 목록 불러오기 */
         function getEmpList() {
             $.ajax({
@@ -267,13 +261,12 @@ $("#findZip").on("click", function (){
                             code += `<td>\${res[i].commonCodeClsf}</td>`;
                             code += `<td>\${res[i].emplEncpn}</td>`;
                             code += `<td>\${res[i].emplBrthdy}</td>`;
-                            code += `<td>\${res[i].signPhotoFileStreNm == 'noSign.png' ? "미등록" : "등록완료"}</td>`;
+                            code += `<td>\${res[i].signPhotoFileStreNm == 'groovy_noSign.png' ? "미등록" : "등록완료"}</td>`;
                             code += `<td>\${(res[i].commonCodeHffcSttus == 'HFFC010') ? "재직" : (res[i].commonCodeHffcSttus == 'HFFC011') ? "휴직" : "퇴직"}</td>`;
                             code += "</tr>";
                         }
                     }
                     code += "</tbody></table>";
-
                     $("#empList").html(code);
                 },
                 error: function (xhr, status, error) {
@@ -283,6 +276,7 @@ $("#findZip").on("click", function (){
                 }
             });
         }
+
         getEmpList();
 
         // 사원 리스트 - 전체 선택

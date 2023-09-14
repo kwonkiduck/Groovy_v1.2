@@ -25,10 +25,10 @@
                E.COMMON_CODE_DEPT,
                E.COMMON_CODE_CLSF,
                E.COMMON_CODE_HFFC_STTUS
-        FROM UPLOAD_FILE UF
-                 JOIN PROFL P ON UF.UPLOAD_FILE_ETPR_CODE = P.PROFL_ETPR_CODE
-                 JOIN EMPL E ON P.PROFL_EMPL_ID = E.EMPL_ID
+        FROM UPLOAD_FILE UF,
+             EMPL E
         WHERE E.COMMON_CODE_DEPT = #{depCode}
+          AND UF.UPLOAD_FILE_ETPR_CODE = E.PROFL_ETPR_CODE
         ORDER BY TO_NUMBER(SUBSTR(E.COMMON_CODE_CLSF, 5)), E.EMPL_ENCPN ASC
     </select>
 </mapper>

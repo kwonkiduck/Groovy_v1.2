@@ -30,7 +30,9 @@ public class EmployeeVO {
     private String commonCodeHffcSttus;  // 재직상태 (0: 재직 1: 휴직 2: 퇴사)
     private String commonCodeLastAcdmcr; // 최종학력 (0: 고졸, 1: 학사, 2: 석사, 3: 박사)
     private String proflPhotoFileStreNm; // 프로필사진 (PROFL 테이블)
+    private String proflEtprCode; // 프로필사진 (PROFL 테이블)
     private String signPhotoFileStreNm;  // 서명 (SIGN 테이블)
+    private String signEtprCode;  // 서명 (SIGN 테이블)
     private List<EmployeeAuthVO> employeeAuthVOList;
     private NotificationVO notificationVO;
     private String deptNm;  // 부서명

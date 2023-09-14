@@ -100,29 +100,6 @@
 
 <a href="#">할 일</a>
 <a href="/job/jobDiary">업무 일지</a>
-<div class="taskBoxWrapper">
-    <div class="inTaskBox">
-        <h1>들어온 업무 요청</h1>
-        <ul>
-            <li class="border">
-                <span>이혜진</span>
-                <p>스마트홈 시스템 확장, 인공지능 비서가 집안 생활을 편리하게 지원</p>
-                <p>2023년 03월 05일</p>
-                <button type="button">거절</button>
-                <button type="button">동의</button>
-            </li>
-        </ul>
-    </div>
-    <div class="outTaskBox">
-        <h1>요청한 업무</h1>
-        <ul>
-            <li class="border">
-                <p>[최서연]회의록 작성 건</p>
-                <p>2023년 03월 05일</p>
-            </li>
-        </ul>
-    </div>
-</div>
 
 <div id="todoBoard">
     <div class="todoBoardListWrapper">
@@ -300,7 +277,9 @@
 </div>
 
 <button class="receiveJob">스마트 홈 시스템 확장,인공지능 비서가 집안 생활을 편리하게 지원</button> <br />
-<button class="requestJobDetail">요청한 업무 [최서연] 회의록 작성 건</button><br /><br />
+<div id="requestJobDetailContainer">
+    <button class="requestJobDetail">요청한 업무 [최서연] 회의록 작성 건</button><br /><br />
+</div>
 <button class="requestJob">업무 요청하기</button><br />
 <button class="addJob">+</button>
 <button class="myjob">등록된 업무</button>
@@ -377,7 +356,7 @@
         </div>
 
         <!-- 업무 요청하기 -->
-        <div id="modal-request-job" class="modal-common on">
+        <div id="modal-request-job" class="modal-common">
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 요청하기</h4>
                 <button class="close">&times;</button>
@@ -396,9 +375,9 @@
                         <li class="form-data-list">
                             <label>📅 업무 기간</label>
                             <div class="input-date">
-                                <input type="date" name="jobBeginDate" id="jobBeginDate" onchange="validateBeginDate(this)" placeholder="시작 날짜">
+                                <input type="date" name="jobBeginDate" id="jobBeginDate" onchange="validateDate()" placeholder="시작 날짜">
                                 ~
-                                <input type="date" name="jobClosDate" id="jobClosDate" onchange="validateCloseDate(this)" placeholder="끝 날짜">
+                                <input type="date" name="jobClosDate" id="jobClosDate" onchange="validateDate()" placeholder="끝 날짜">
                             </div>
                         </li>
                         <li class="form-data-list">
