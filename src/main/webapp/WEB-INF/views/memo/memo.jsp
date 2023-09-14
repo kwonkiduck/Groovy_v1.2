@@ -39,7 +39,7 @@
                    <p class="memoSn">${list.memoSn}</p>
                    <p class="title">${list.memoSj}</p>
                    <p class="content">${list.memoCn}</p>
-                   <p><fmt:formatDate value="${list.memoWrtngDate}" type="date" dateStyle="long" /></p>
+                   <p><fmt:formatDate value="${list.memoWrtngDate}" type="date" pattern="yyyy-MM-dd" /></p>
                 </div>
                 <div class="bntWrap">
                     <button class="modifyBtn">수정</button>
@@ -56,6 +56,7 @@
     const inputMemoBtn = document.querySelector("#inputMemoBtn");
     const memoLists = document.querySelector("#memoLists");
     let flug = true;
+    let memoCnt = null;
     inputMemoBtn.addEventListener("click",()=>{
         if(flug){
             const memoElem = document.createElement("div");
@@ -65,30 +66,46 @@
             memoTitle.type = "text";
             memoTitle.name = "memoSj";
             memoTitle.id = "memoSj";
-            memoTitle.placeholder = "제목을 입력해주세요.";
+            memoTitle.placeholder = "제목을 입력해주세요";
             memoElem.appendChild(memoTitle);
 
-            const memoCnt = document.createElement("textarea");
+            memoCnt = document.createElement("textarea");
             memoCnt.name = "memoCn";
             memoCnt.id = "memoCn";
             memoCnt.placeholder = "내용을 입력해주세요.";
-
+            
             memoElem.appendChild(memoCnt);
             const saveBtn = document.createElement("button");
 
             saveBtn.className = "savebtn";
             saveBtn.innerText = "저장";
+            saveBtn.addEventListener("click", validateForm);
             memoElem.appendChild(saveBtn);
 
             document.querySelector("#appendMemo").append(memoElem);
             flug = false;
         }
-
     })
+    
+    function validateForm() {
+    if (memoCnt === null) {
+        alert("내용을 입력해주세요");
+        return false;
+    }
+
+    const memoValue = memoCnt.value;
+
+    if (memoValue === null || memoValue.trim() === "") {
+        alert("내용을 입력해주세요");
+        return false;
+    }
+
+    return true;
+}   
+    
     memoLists.addEventListener("click",(e)=>{
         const target = e.target;
         if(target.classList.contains("savebtn")){
-        	
             const memoElem = target.parentElement;
             const memoTitleInput = memoElem.querySelector('input[name="memoSj"]');
             const memoContentTextarea = memoElem.querySelector('textarea[name="memoCn"]');
@@ -96,15 +113,10 @@
             const memoSj = memoTitleInput.value;
             const memoCn = memoContentTextarea.value;
             
-            console.log("memoSj", memoSj);
-            console.log("memoCn", memoCn);
-            
             const memoData = {
             		memoSj: memoSj,
             		memoCn: memoCn
             	};
-            
-            console.log("memoData", memoData);
             
             $.ajax({
                     url: "/memo/memoMain",
@@ -113,8 +125,7 @@
                     contentType: "application/json;charset=UTF-8",
                     success:function(data){
 	                    		if(data=="success") {
-	                    			console.log("성공")
-	                               location.href=location.href;                    			
+                                    location.href=location.href;                    			
 	                    		}
 	                    		else {
 	                    			alert("메모 추가를 실패했습니다");
@@ -123,12 +134,9 @@
                     error: function (request, status, error) {
                           console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                         }            
-
-        })
-
+                    })
             flug = true;
         }
-        
         
         if(target.classList.contains("modifyBtn")){
             const memo = target.closest(".memo");
@@ -170,19 +178,14 @@
 		        dataType: "text",
 		        success: function (response) {
 		        		if(response=="success"){
-		        		console.log("성공" + response); 
-		        		
 		        		} 
-		        		
-		        	} //success function 끝
-		        }) //get ajax 끝
-            
-        } //modifyBtn if문 끝
+		        	} 
+		        })     
+        }
         
         if(target.classList.contains("save")){
             const memo = target.closest(".memo");
             const memoNumber = memo.querySelector(".memoSn");
-            console.log(memoNumber);
             const memoContent = memo.querySelector(".memo-content");
             document.querySelector(".modifyBtn").style.display = "inline-block";
             document.querySelector(".delete").style.display = "inline-block";
@@ -195,12 +198,16 @@
             let content = document.createElement("p");
             content.classList = "content";
 
-            console.log(title, content);
             sn.innerText = memo.querySelector("#memoSn").value;
             title.innerText = memo.querySelector("#memoSj").value;
             content.innerText = memo.querySelector("#memoCn").value;
-            
-			console.log(sn.innerText, title.innerText);
+			
+			if (title.innerText === "" || content.innerText === "") {
+                    alert("내용을 입력해주세요");
+                    location.reload();
+
+                    return;
+			}
             
 			memoContent.innerHTML = "";
             memoContent.append(sn);
@@ -217,8 +224,6 @@
                     memoCn: memoCn
                 };
             
-            console.log(updateData);
-            
             $.ajax({
                 url: `memoMain/\${memoSn}`,
                 type: "PUT",
@@ -227,32 +232,26 @@
                 contentType: "application/json;charset=UTF-8",
                 success:function(data){
                     		if(data=="success") {
-                    			console.log("성공")
-                               location.href=location.href;                    			
-                    		} // if 끝
+                                location.href=location.href;                    			
+                    		}
                     		else {
                     			alert("메모 추가를 실패했습니다");
-                    		} // else 끝
-                        }, // success 끝
+                    		}
+                        },
                 error: function (request, status, error) {
                       console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                    } // save error 끝            
-    }) // put ajax 끝
-        } // save if 끝
+                    }           
+        }) 
+     } 
         
         if(target.classList.contains("delete")) {
             const memo = target.closest(".memo");
             const memoNumber = memo.querySelector(".memoSn");
-            console.log(memoNumber);
             memoSn = memoNumber.innerText;
-
-            console.log(memoSn);
 
             const deleteData = {
                 memoSn : memoSn
             }
-
-            console.log(deleteData);
 
             $.ajax({
                 url: `memoMain/\${memoSn}`,
@@ -262,16 +261,15 @@
                 contentType: "application/json;charset=UTF-8",
                 success: function(data) {
                     if(data=="success") {
-                        console.log("삭제 성공");
                         location.href = location.href;
                     } else {
-                        alert("메모 삭제를 실패했습니다.");
+                        alert("메모 삭제를 실패했습니다");
                     }
                 },
                 error: function (request, status, error) {
                       console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                 }
-            }) //delete ajax 끝
+            }) 
         }
-    }) // memoLists.addEventListener 끝
+    }) 
 </script>

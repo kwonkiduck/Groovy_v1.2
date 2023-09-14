@@ -35,7 +35,6 @@ public class MemoController {
 	public String memoMain(Model model) {
 		List<MemoVO> list = memoService.getMemo();
 		model.addAttribute("memoList", list);
-	
 		return "memo/memo";
 	}
 	
@@ -51,9 +50,7 @@ public class MemoController {
 	public String insertMemo(@RequestBody MemoVO memoVO, Principal principal) {
 		String emplId = principal.getName();
 		memoVO.setMemoEmplId(emplId);
-		log.info(emplId);
 		memoService.inputMemo(memoVO);
-		log.info(""+memoVO);
 		return "success";
 	}
 	
@@ -61,8 +58,6 @@ public class MemoController {
 	@ResponseBody
 	@PutMapping("/memoMain/{memoSn}")
 	public String modifyMemo(@RequestBody MemoVO memoVO, @PathVariable int memoSn) {
-		log.info(""+memoSn);
-		log.info(""+memoVO);
 		memoService.modifyMemo(memoVO);
 		return "success";
 	}
