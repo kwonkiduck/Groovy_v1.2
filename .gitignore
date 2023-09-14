@@ -967,3 +967,17 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/job/jobDiary.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/job/jobDiaryRead.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/job/jobDiaryWrite.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/job/jobOrgChart.jsp
+target/classes/kr/co/groovy/reservation/FacilityManageController.class
+target/classes/kr/co/groovy/reservation/FacilityManageMapper.class
+target/classes/kr/co/groovy/reservation/FacilityManageService.class
+target/classes/kr/co/groovy/vo/CardReservationVO.class
+target/classes/mappers/facilityManage-mapper.xml
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/reservation/FacilityManageController.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/reservation/FacilityManageMapper.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/reservation/FacilityManageService.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/vo/CardReservationVO.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/mappers/facilityManage-mapper.xml
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/manage.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/proposalList.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/registList.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/trash.jsp

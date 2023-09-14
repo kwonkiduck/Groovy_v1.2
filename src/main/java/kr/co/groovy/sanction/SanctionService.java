@@ -202,14 +202,19 @@ public class SanctionService {
             String jsonLineBookmark = vo.getElctrnSanctnLineBookmark();
 
             try {
-                Map<String, String> lineBookmarkMap = objectMapper.readValue(jsonLineBookmark, new TypeReference<Map<String,String>>() {});
+                Map<String, String> lineBookmarkMap = objectMapper.readValue(jsonLineBookmark, new TypeReference<Map<String, String>>() {
+                });
+                lineBookmarkMap.put("no", vo.getSanctionLineBookmarkSn());
+                lineBookmarkMap.put("name", vo.getElctrnSanctnBookmarkName());
                 resultList.add(lineBookmarkMap);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        log.info(resultList.toString());
         return resultList;
     }
+
     public void deleteBookmark(String elctrnSanctnBookmarkName) {
         mapper.deleteBookmark(elctrnSanctnBookmarkName);
     }

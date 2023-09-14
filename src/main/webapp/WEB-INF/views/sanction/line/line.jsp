@@ -137,16 +137,22 @@
                 type: "GET",
                 success: function (lines) {
                     console.log(lines)
-                    let result = "";
+                    let result = '<label style="display: flex"><input type="checkbox" class="lineChk">';
                     lines.forEach(function (line) {
                         for (let key in line) {
                             if (line.hasOwnProperty(key)) {
                                 let value = line[key];
-                                let keyValueHtml = `<p>키: \${key}</p><p>값: \${value}</p>`;
-                                result += keyValueHtml;
+                                if (key === 'no') {
+                                    result += `<input type="hidden" value= "\${value}"/>`;
+                                } else if (key === 'name') {
+                                    result += `<span class="name">\${value}: </span>`;
+                                } else {
+                                    result += `<span class="emplId"> \${value} </span>`;
+                                }
                             }
-                            $("#bookmarkLine").html(result);
                         }
+                        result += '<button type="button">결재선 삭제</button></label>';
+                        $("#bookmarkLine").html(result);
                     });
                 },
                 error: function (xhr) {
@@ -155,8 +161,7 @@
         }
 
         function saveLine() {
-            // bookmarkName = $("#bookmarkName").val()
-            bookmarkLine["alias"] = $("#bookmarkName").val()
+            bookmarkName = $("#bookmarkName").val()
             $("#sanctionLine .lineList li label").each(function () {
                 const emplId = $(this).find("input[type=hidden]").val();
                 const value = $(this).find('.name').text() + ' ' + $(this).find('.dept').text() + ' ' + $(this).find('.clsf').text();
@@ -165,7 +170,7 @@
             const jsonApprover = JSON.stringify(bookmarkLine);
             let jsonData = {
                 elctrnSanctnDrftEmplId: emplId,
-                // elctrnSanctnBookmarkName: bookmarkName,
+                elctrnSanctnBookmarkName: bookmarkName,
                 elctrnSanctnLineBookmark: jsonApprover
             }
             $.ajax({

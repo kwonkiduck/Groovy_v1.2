@@ -37,8 +37,8 @@ public class Weather {
         baseDate = currentDateTime.toLocalDate().toString().replace("-", "");
         baseTime = closestBaseTime;
 
-        System.out.println("baseDate: " + baseDate);
-        System.out.println("baseTime: " + baseTime);
+        log.info("baseDate: " + baseDate);
+        log.info("baseTime: " + baseTime);
 
         String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
         String serviceKey = "qZe4uWWBzGxh3ONQq9pLg2ttxtKjdcqH5RDNzmyGTr8JnV5p8RXvVxR%2Bnj21qUT9uZm%2FucTk9%2BWLviOGGsphtw%3D%3D";
@@ -56,7 +56,7 @@ public class Weather {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
-        System.out.println("Response code: " + conn.getResponseCode());
+        log.info("Response code: " + conn.getResponseCode());
 
         BufferedReader rd;
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {

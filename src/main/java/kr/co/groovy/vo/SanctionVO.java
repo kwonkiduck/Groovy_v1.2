@@ -26,4 +26,7 @@ public class SanctionVO {
     private String commonCodeDept; // 부서
     private String commonCodeClsf; // 직급
     private String uploadFileStreNm; // 서명 파일
+
+    // 관리자 결재 리스트 출력용
+    private String emplId;
 }
