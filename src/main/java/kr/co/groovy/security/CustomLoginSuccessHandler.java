@@ -100,7 +100,7 @@ public class CustomLoginSuccessHandler extends
         if (roleNames.contains("ROLE_NEW")) {
             response.sendRedirect("/employee/initPassword");
         } else {
-            response.sendRedirect("/main/home");
+            response.sendRedirect("/home");
         }
         if (!response.isCommitted()) {
             // 리다이렉트 전에 응답이 커밋되지 않았을 경우에만 리다이렉트 수행
