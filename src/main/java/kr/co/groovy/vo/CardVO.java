@@ -15,4 +15,5 @@ public class CardVO {
     private String cprCardChrgCmpny;
     private String cprCardUseAt;
     private String maskCardNo;
+    private int cprCardSttus;
 }
