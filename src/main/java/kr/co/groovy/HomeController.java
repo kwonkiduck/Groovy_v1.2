@@ -20,6 +20,10 @@ public class HomeController {
 	public String home() {
 		return "signIn";
 	}
+	@GetMapping("/home")
+	public String comebackHome() {
+		return "main/home" ;
+	}
 
 
 	@GetMapping("/mail")

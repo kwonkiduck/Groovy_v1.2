@@ -27,7 +27,7 @@ public class EmployeeController {
     /* 사원 로그인 */
     @GetMapping("/signIn")
     public String singInForm(Authentication auth) {
-        return auth != null ? "main/home" : "signIn";
+        return auth != null ? "home" : "signIn";
     }
 
     @GetMapping("/signInFail")
