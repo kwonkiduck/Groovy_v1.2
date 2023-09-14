@@ -4,11 +4,10 @@ import kr.co.groovy.enums.Hipass;
 import kr.co.groovy.vo.CardVO;
 import kr.co.groovy.vo.VehicleVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.smartcardio.Card;
 import java.util.List;
+
 @Slf4j
 @Service
 public class ReservationService {
@@ -18,6 +17,7 @@ public class ReservationService {
     public ReservationService(ReservationMapper mapper) {
         this.mapper = mapper;
     }
+
     /* 차량 예약 */
     public List<VehicleVO> getTodayReservedVehicles() {
         List<VehicleVO> todayReservedVehicles = mapper.getTodayReservedVehicles();
@@ -47,7 +47,7 @@ public class ReservationService {
 
     public List<CardVO> loadAllCard() {
         List<CardVO> cardList = mapper.loadAllCard();
-        for(CardVO cardVO : cardList) {
+        for (CardVO cardVO : cardList) {
             String cprCardNo = cardVO.getCprCardNo();
             cardVO.setMaskCardNo(maskCardNumber(cprCardNo));
         }
@@ -75,8 +75,6 @@ public class ReservationService {
     public int modifyCardUseAt(String cprCardNo) {
         return mapper.modifyCardUseAt(cprCardNo);
     }
-
-
 
 
 }
