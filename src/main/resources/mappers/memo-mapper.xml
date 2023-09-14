@@ -53,9 +53,7 @@
 	SET 
 		MEMO_SJ = #{memoSj},
 		MEMO_CN = #{memoCn}, 
-		MEMO_WRTNG_DATE = #{memoWrtngDate},
-		COMMON_CODE_FIXING_AT = #{commonCodeFixingAt},
-		COMMON_CODE_BKMK_AT = #{commonCodeBkmkAt}
+		MEMO_WRTNG_DATE = sysdate
 	WHERE 
 		MEMO_SN = #{memoSn}
 </update>

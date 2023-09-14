@@ -8,7 +8,7 @@ public interface MemoMapper {
 	
 	public List<MemoVO> getMemo();
 	
-	public MemoVO getOneMemoVO(int memoSn);
+	public MemoVO getOneMemo(int memoSn);
 	
 	public int inputMemo(MemoVO memoVO);
 	
