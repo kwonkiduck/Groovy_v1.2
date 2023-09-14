@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<%-- 동작 위한 스타일 외엔(예: display:none 등) 전부 제가 작업하면서 편하게 보려고 임시로 먹인겁니다 ! --%>
+
 <style>
     #modifyCardInfoBtn, #saveCardInfoBtn, #cancelModifyCardInfoBtn, #deleteCardBtn {
         display: none;
@@ -36,7 +39,6 @@
             <button id="registerCardBtn">등록</button>
         </form>
     </div>
-    y65
     <hr/>
     <h1>카드 목록</h1>
     <div id="cardList"></div>
@@ -65,9 +67,9 @@
         </form>
     </div>
     <hr/>
-    <h1>카드 신청 미처리건 <span id="waitingListCnt" style="color: dodgerblue">${waitingListCnt}</span></h1>
+    <h1>카드 신청 미처리건 <span id="waitingListCnt" style="color: dodgerblue; font-weight: bolder">${waitingListCnt}</span></h1>
     <div id="cardWaitingList">
-        <table>
+        <table border="1">
             <tr>
                 <th>순번</th>
                 <th>사용 시작 일자</th>
@@ -119,9 +121,6 @@
             url: "/reserve/inputCard",
             type: "post",
             data: formData,
-            contentType: false,
-            processData: false,
-            cache: false,
             success: function (result) {
                 loadAllCard();
             },
