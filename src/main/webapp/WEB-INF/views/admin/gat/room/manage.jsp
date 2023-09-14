@@ -210,6 +210,12 @@ function countMeeting (){
 	let meeting = document.querySelectorAll(".totalConfm");
 	meeting.onload = function fAjax(){
 		let xhr = new XMLHttpRequest();
+		xhr.open("GET","",true);
+		xhr.onreadystatechange = function(){
+			if (xhr.readyState == 4 && xhr.status == 200){
+				console.log(xhr.responseText);
+			}
+		}
 	}
 
 }

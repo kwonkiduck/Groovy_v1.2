@@ -5,19 +5,15 @@
 	<!-- 부서코드 조회 -->
 	<select id="getDept" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
 		SELECT COMMON_CODE
-	    ,COMMON_NAME
-	    ,COMMON_SECTION_VALUE 
 		FROM COMMON
-		WHERE COMMON_CODE LIKE '%'||#{"deptCode"}||'%'
+		WHERE COMMON_PARENT_CODE '%'||#{"deptCode"}||'%'
 	</select>
 	
 	<!--  직급코드 조회 -->
 	<select id="getClsf" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
 		SELECT COMMON_CODE
-	    ,COMMON_NAME
-	    ,COMMON_SECTION_VALUE 
 		FROM COMMON
-		WHERE COMMON_CODE LIKE '%'||#{"clsfCode"}||'%'
+		WHERE COMMON_PARENT_CODE '%'||#{"clsfCode"}||'%'
 	</select>
 		
 	<!-- 연봉 등록 -->
