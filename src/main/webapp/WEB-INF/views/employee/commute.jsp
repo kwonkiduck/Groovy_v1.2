@@ -385,9 +385,8 @@
                 }
             });
         }
-        //--------------------------- 주간 근무시간 움직이는 bar -----------------------
         let i = 0;
-        function start(weeklybar) { //weeklybar 주간 근무시간
+        function start(weeklybar) {
             if (i == 0) {
                 i = 1;
                 let elem = document.getElementById("progress-bar");

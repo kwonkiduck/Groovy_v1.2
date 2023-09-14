@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/commute")
 public class CommuteController {
@@ -35,7 +34,6 @@ public class CommuteController {
 
     @PostMapping("/insertAttend")
     public String insertAttend(CommuteVO commuteVO) {
-        log.info("commuteVO", commuteVO.toString());
         return Integer.toString(commuteService.insertAttend(commuteVO));
     }
 
@@ -73,7 +71,6 @@ public class CommuteController {
 
     @GetMapping("/getCommuteByYearMonth")
     public List<CommuteVO>getCommuteByYearMonth(String year, String month, String dclzEmplId) {
-        System.out.println(year + "," + month + "," + dclzEmplId);
         Map<String, Object> map = new HashMap<>();
         map.put("year", year);
         map.put("month", month);

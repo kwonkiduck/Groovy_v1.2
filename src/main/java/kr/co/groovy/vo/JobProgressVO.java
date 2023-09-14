@@ -10,6 +10,7 @@ import lombok.ToString;
 public class JobProgressVO {
     private int jobNo;
     private String jobRecptnEmplId;
+    private String jobRecptnEmplNm;
     private String commonCodeDutySttus;
     private String commonCodeDutyProgrs;
 }
