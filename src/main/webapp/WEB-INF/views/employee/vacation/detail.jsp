@@ -23,10 +23,18 @@
     </c:choose>
 </div>
 <script>
+    let param;
+    let vacationKind = '${detailVO.commonCodeYrycUseKind}';
+    if (vacationKind === '연차') {
+        param = 'SANCTN_FORMAT011'
+    } else {
+        param = 'SANCTN_FORMAT012'
+    }
     $("#startSanction").on("click", function () {
         $("#modifyVacation").prop("disabled", true)
-        window.open(`/sanction/write/DEPT010?format=SANCTN_FORMAT011`, "결재", "width = 1200, height = 1200")
+        window.open(`/sanction/write/DEPT010?format=\${param}`, "결재", "width = 1200, height = 1200")
     })
+
     function refreshParent() {
         window.location.reload(); // 새로고침
     }

@@ -278,7 +278,7 @@
 
         // 오늘의 식단
         $.ajax({
-            url: `/main/\${today}`,
+            url: `/common/\${today}`,
             type: 'GET',
             success: function (data) {
                 let dietRes = `<p>\${data.dietRice}</p>

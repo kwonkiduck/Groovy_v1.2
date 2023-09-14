@@ -15,7 +15,7 @@
     </resultMap>
 
     <select id="loadOrgChart" parameterType="String" resultMap="employeeWithPhoto">
-        SELECT UF.UPLOAD_FILE_STRE_NM,
+        SELECT U.UPLOAD_FILE_STRE_NM,
                E.EMPL_ID,
                E.EMPL_NM,
                E.EMPL_TELNO,
@@ -25,10 +25,35 @@
                E.COMMON_CODE_DEPT,
                E.COMMON_CODE_CLSF,
                E.COMMON_CODE_HFFC_STTUS
-        FROM UPLOAD_FILE UF,
+        FROM UPLOAD_FILE U,
              EMPL E
         WHERE E.COMMON_CODE_DEPT = #{depCode}
-          AND UF.UPLOAD_FILE_ETPR_CODE = E.PROFL_ETPR_CODE
+          AND U.UPLOAD_FILE_ETPR_CODE = E.PROFL_ETPR_CODE
         ORDER BY TO_NUMBER(SUBSTR(E.COMMON_CODE_CLSF, 5)), E.EMPL_ENCPN ASC
+    </select>
+
+    <select id="loadMenu" parameterType="String" resultType="dietVO">
+        SELECT DIET_DATE,
+               DIET_RICE,
+               DIET_SOUP,
+               DIET_DISH1,
+               DIET_DISH2,
+               DIET_DISH3,
+               DIET_DESSERT
+        FROM DIET
+        WHERE TO_CHAR(DIET_DATE,'yyyy-MM-dd') = #{today}
+    </select>
+
+    <select id="loadNotice" resultType="noticeVO">
+        SELECT NOTI_ETPR_CODE,
+               NOTI_TITLE,
+               NOTI_CONTENT,
+               NOTI_DATE,
+               NOTI_RDCNT,
+               NOTI_CTGRY_ICON_FILE_STRE_NM,
+               COMMON_CODE_NOTI_KIND
+        FROM NOTI
+        WHERE ROWNUM &lt;= 2
+        ORDER BY NOTI_DATE DESC
     </select>
 </mapper>

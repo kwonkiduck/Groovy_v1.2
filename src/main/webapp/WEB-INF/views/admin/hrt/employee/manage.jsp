@@ -230,7 +230,7 @@
                     emplId.value = dateSplit[0] + dateSplit[1] + idx;
                     // 사번에 따른 사원 이메일 생성
                     if (emplId.value !== "") {
-                        emplEmail.value = emplId.value + "@groovy.com";
+                        emplEmail.value = emplId.value + "@groovy.co.kr";
                     }
                 },
                 error: function (xhr) {

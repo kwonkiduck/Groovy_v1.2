@@ -3,13 +3,12 @@ package kr.co.groovy.common;
 import kr.co.groovy.employee.EmployeeService;
 import kr.co.groovy.enums.ClassOfPosition;
 import kr.co.groovy.enums.Department;
-import kr.co.groovy.vo.AlarmVO;
-import kr.co.groovy.vo.EmployeeVO;
-import kr.co.groovy.vo.NoticeVO;
-import kr.co.groovy.vo.UploadFileVO;
+import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +27,12 @@ import java.util.Map;
 public class CommonController {
     final
     CommonService service;
+    final
+    String uploadPath;
 
-    public CommonController(CommonService service, String uploadPath, EmployeeService employeeService) {
+    public CommonController(CommonService service, EmployeeService employeeService, String uploadPath) {
         this.service = service;
+        this.uploadPath = uploadPath;
     }
 
     @GetMapping("/loadOrgChart")
@@ -47,11 +49,48 @@ public class CommonController {
         mav.setViewName("common/orgChart");
         return mav;
     }
-    // 동호회
 
-    @GetMapping("/club")
-    public String club() {
-        return "common/club";
+    @GetMapping(value = "/{today}")
+    @ResponseBody
+    public DietVO loadMenu(@PathVariable String today) {
+        return service.loadDiet(today);
+    }
+
+    @GetMapping("/home")
+    public String comebackHome() {
+        return "main/home" ;
+    }
+
+    @PostMapping("/uploadFile")
+    public String uploadFile(MultipartFile defaultFile) {
+        try {
+            // 혹시 쓸 거면 경로 꼭 수정하기~
+            String path = uploadPath + "/profile" ;
+            File uploadDir = new File(path);
+            if (!uploadDir.exists()) {
+                if (uploadDir.mkdirs()) {
+                    log.info("폴더 생성 성공");
+                } else {
+                    log.info("폴더 생성 실패");
+                }
+            }
+
+            String originalFileName = defaultFile.getOriginalFilename();
+            File saveFile = new File(path, originalFileName);
+            defaultFile.transferTo(saveFile);
+
+            log.info("사진 저장 성공");
+            return "redirect:/main/home" ;
+        } catch (Exception e) {
+            log.info("사진 저장 실패");
+            return null;
+        }
+    }
+
+    @GetMapping("loadNotice")
+    @ResponseBody
+    public List<NoticeVO> loadNotice() {
+        return service.loadNotice();
     }
 }
 
