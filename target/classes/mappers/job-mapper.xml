@@ -19,27 +19,27 @@
     </select>
 
     <select id="getInfoById" parameterType="String" resultType="employeeVO"> --부서랑 직급
-        SELECT COMMON_CODE_DEPT,
-               COMMON_CODE_CLSF
-        FROM EMPL
-        WHERE EMPL_ID = #{emplId}
+    SELECT COMMON_CODE_DEPT,
+           COMMON_CODE_CLSF
+    FROM EMPL
+    WHERE EMPL_ID = #{emplId}
     </select>
 
     <insert id="insertDiary" parameterType="jobDiaryVO">
         INSERT INTO JOB_DIARY (
-             JOB_DIARY_REPORT_DATE,
-             JOB_DIARY_WRTING_EMPL_ID,
-             JOB_DIARY_RECPTN_EMPL_ID,
-             JOB_DIARY_SBJ,
-             JOB_DIARY_CN
-             )
+            JOB_DIARY_REPORT_DATE,
+            JOB_DIARY_WRTING_EMPL_ID,
+            JOB_DIARY_RECPTN_EMPL_ID,
+            JOB_DIARY_SBJ,
+            JOB_DIARY_CN
+        )
         VALUES (
-                TRUNC(SYSDATE),
-                #{jobDiaryWrtingEmplId},
-                #{jobDiaryRecptnEmplId},
-                #{jobDiarySbj},
-                #{jobDiaryCn}
-                )
+                   TRUNC(SYSDATE),
+                   #{jobDiaryWrtingEmplId},
+                   #{jobDiaryRecptnEmplId},
+                   #{jobDiarySbj},
+                   #{jobDiaryCn}
+               )
     </insert>
 
     <select id="getDiaryByDept" parameterType="String" resultMap="jobDiaryMap">
@@ -65,5 +65,61 @@
         WHERE J.JOB_DIARY_WRTING_EMPL_ID = E.EMPL_ID
           AND E.EMPL_ID = #{jobDiaryWrtingEmplId}
           and J.JOB_DIARY_REPORT_DATE = TO_DATE(#{jobDiaryReportDate}, 'YYYY-MM-DD')
+    </select>
+
+    <select id="getMaxJobNo" resultType="int">
+        SELECT COALESCE(MAX(JOB_NO), 0) FROM job
+    </select>
+
+    <insert id="insertJob" parameterType="jobVO">
+        INSERT INTO JOB (
+            JOB_NO,
+            JOB_REQUST_EMPL_ID,
+            JOB_SJ,
+            JOB_CN,
+            JOB_BEGIN_DATE,
+            JOB_CLOS_DATE,
+            JOB_REQUST_DATE,
+            COMMON_CODE_DUTY_KIND
+        )
+        VALUES (
+                   #{jobNo},
+                   #{jobRequstEmplId},
+                   #{jobSj},
+                   #{jobCn},
+                   #{jobBeginDate},
+                   #{jobClosDate},
+                   TO_DATE(SYSDATE, 'YYYY-MM-DD'),
+                   #{commonCodeDutyKind}
+               )
+    </insert>
+
+    <insert id="insertJobProgress" parameterType="jobProgressVO">
+        INSERT INTO JOB_PROGRS (
+            JOB_NO,
+            JOB_RECPTN_EMPL_ID,
+            COMMON_CODE_DUTY_STTUS,
+            COMMON_CODE_DUTY_PROGRS
+        )
+        VALUES (
+                   #{jobNo},
+                   #{jobRecptnEmplId},
+                   #{commonCodeDutySttus},
+                   #{commonCodeDutyProgrs}
+               )
+    </insert>
+
+    <select id="getAllJobById" parameterType="String" resultType="jobVO">
+        SELECT JOB_NO,
+               JOB_REQUST_EMPL_ID,
+               JOB_SJ,
+               JOB_CN,
+               JOB_BEGIN_DATE,
+               JOB_CLOS_DATE,
+               JOB_REQUST_DATE,
+               COMMON_CODE_DUTY_KIND
+        FROM JOB
+        WHERE JOB_REQUST_EMPL_ID = #{jobRequstEmplId}
+        ORDER BY JOB_NO
     </select>
 </mapper>

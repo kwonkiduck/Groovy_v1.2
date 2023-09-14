@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.sanction.SanctionMapper">
+    <!--  결재 템플릿 불러오기  -->
     <select id="loadFormat" resultType="sanctionFormatVO">
         SELECT COMMON_CODE_SANCTN_FORMAT,
                FORMAT_SANCTN_KND,
@@ -10,6 +11,7 @@
         FROM SANCTN_FORMAT
         WHERE COMMON_CODE_SANCTN_FORMAT = #{format}
     </select>
+    <!--  문서 번호 생성  -->
     <select id="getSeq" parameterType="String" resultType="String">
         SELECT #{formatSanctnKnd} || '-' || TO_CHAR(SYSDATE, 'YYYY') || '-' || LPAD(
                 (SELECT TO_NUMBER(COUNT(*)) + 1
@@ -20,6 +22,7 @@
             ) AS elctrnSanctnEtprCode
         FROM DUAL
     </select>
+    <!--  문서 번호 생성  -->
     <select id="getStatus" parameterType="String" resultType="int">
         SELECT COUNT(*)
         FROM ELCTRN_SANCTN
@@ -39,22 +42,71 @@
         WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
         ORDER BY COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
     </select>
+    <!--  결재 승인 - 다음 결재 순번자의 상태 변경  -->
     <update id="approve" parameterType="String">
-        UPDATE SANCTN_LINE
-        SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016'
-        WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+        {CALL DECLARE
+        BEGIN
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016',
+                SANCTN_LINE_DATE         = SYSDATE
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN011'
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN013'
+            WHERE SANCTN_LINE_ORDR = (SELECT SANCTN_LINE_ORDR
+                                      FROM SANCTN_LINE
+                                      WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+                                        AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}) + 1
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+        END}
     </update>
+    <!--  결재 최종 승인 - 결재 문서의 상태 변경  -->
+    <update id="finalApprove" parameterType="String">
+        {CALL DECLARE
+        BEGIN
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016',
+                SANCTN_LINE_DATE         = SYSDATE
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016',
+                ELCTRN_SANCTN_FINAL_DATE = SYSDATE
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+        END}
+
+    </update>
+    <!--  결재 반려 - 결재 문서의 상태 변경 및 반려 사유 등록  -->
     <update id="reject" parameterType="String">
-        UPDATE SANCTN_LINE
-        SET COMMON_CODE_SANCT_PROGRS = 'SANCTN015', SANCTN_LINE_RETURN_RESN = #{sanctnLineReturnResn}
-        WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+        {CALL DECLARE
+        BEGIN
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN015',
+                SANCTN_LINE_DATE         = SYSDATE,
+                SANCTN_LINE_RETURN_RESN  = #{sanctnLineReturnResn}
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN015'
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+        END}
+
     </update>
+    <!--  결재 회수 - 결재 문서의 상태 변경  -->
     <update id="collect" parameterType="String">
         UPDATE ELCTRN_SANCTN
         SET COMMON_CODE_SANCT_PROGRS = 'SANCTN012'
         WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </update>
-    <!--  결재 insert  -->
+
+    <!--  결재 기안 - 결재 등록 -->
     <insert id="inputSanction" parameterType="sanctionVO">
         INSERT INTO ELCTRN_SANCTN( ELCTRN_SANCTN_ETPR_CODE
                                  , ELCTRN_SANCTN_FORMAT_CODE
@@ -71,6 +123,7 @@
                 SYSDATE,
                 #{commonCodeSanctProgrs})
     </insert>
+    <!--  결재 기안 - 결재 라인 등록  -->
     <insert id="inputLine" parameterType="sanctionLineVO">
         INSERT INTO SANCTN_LINE( ELCTRN_SANCTN_ETPR_CODE
                                , ELCTRN_SANCTNEMPL_ID
@@ -83,12 +136,14 @@
                 #{commonCodeSanctProgrs},
                 #{elctrnSanctnFinalAt})
     </insert>
+    <!--  결재 기안 - 결재 참조 등록 -->
     <insert id="inputRefrn" parameterType="referenceVO">
         INSERT INTO SANCTN_REFRN( SANCTN_REFRN_EMPL_ID
                                 , ELCTRN_SANCTN_ETPR_CODE)
         VALUES (#{sanctnRefrnEmplId},
                 #{elctrnSanctnEtprCode})
     </insert>
+    <!--  결재 기안 - 첨부 파일 업로드  -->
     <insert id="uploadFile" parameterType="uploadFileVO">
         INSERT INTO UPLOAD_FILE( UPLOAD_FILE_SN
                                , UPLOAD_FILE_ETPR_CODE
@@ -103,8 +158,7 @@
                 #{fileSize},
                 sysdate)
     </insert>
-    <!--  결재 insert  -->
-    <!--  결재선 포함 결재 문서 불러오기  -->
+    <!--  결재 문서 불러오기 - 결재선 -->
     <select id="loadLine" parameterType="String" resultType="sanctionLineVO">
         SELECT L.ELCTRN_SANCTN_ETPR_CODE
              , L.ELCTRN_SANCTNEMPL_ID
@@ -119,13 +173,13 @@
              , E.COMMON_CODE_CLSF
         FROM SANCTN_LINE L,
              UPLOAD_FILE U,
-             SIGN S,
              EMPL E
-        WHERE L.ELCTRN_SANCTNEMPL_ID = S.SIGN_EMPL_ID
-          AND S.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+        WHERE E.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
           AND L.ELCTRN_SANCTNEMPL_ID = E.EMPL_ID
           AND L.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
+        ORDER BY L.SANCTN_LINE_ORDR ASC
     </select>
+    <!--  결재 문서 불러오기 - 참조 -->
     <select id="loadRefrn" parameterType="String" resultType="referenceVO">
         SELECT R.SANCTN_REFRN_EMPL_ID
              , R.ELCTRN_SANCTN_ETPR_CODE
@@ -137,6 +191,7 @@
         WHERE R.SANCTN_REFRN_EMPL_ID = E.EMPL_ID
           AND R.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </select>
+    <!--  결재 문서 불러오기 - 결재 문서 -->
     <select id="loadSanction" parameterType="String" resultType="sanctionVO">
         SELECT S.ELCTRN_SANCTN_ETPR_CODE
              , S.ELCTRN_SANCTN_FORMAT_CODE
@@ -145,21 +200,19 @@
              , S.ELCTRN_SANCTN_DRFT_EMPL_ID
              , S.ELCTRN_SANCTN_RECOM_DATE
              , S.COMMON_CODE_SANCT_PROGRS
+             , S.ELCTRN_SANCTN_FINAL_DATE
              , E.EMPL_NM
              , E.COMMON_CODE_CLSF
              , E.COMMON_CODE_DEPT
              , U.UPLOAD_FILE_STRE_NM
         FROM ELCTRN_SANCTN S,
              EMPL E,
-             UPLOAD_FILE U,
-             SIGN I
+             UPLOAD_FILE U
         WHERE S.ELCTRN_SANCTN_DRFT_EMPL_ID = E.EMPL_ID
-          AND I.SIGN_EMPL_ID = E.EMPL_ID
-          AND I.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+          AND E.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
           AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
-        ORDER BY S.COMMON_CODE_SANCT_PROGRS ASC
     </select>
-
+    <!--  결재함 - 결재(받은) 문서 불러오기 -->
     <select id="loadAwaiting" parameterType="String" resultType="sanctionLineVO">
         SELECT E.ELCTRN_SANCTN_ETPR_CODE,
                E.ELCTRN_SANCTN_SJ,
@@ -173,9 +226,10 @@
              EMPL P
         WHERE E.ELCTRN_SANCTN_ETPR_CODE = L.ELCTRN_SANCTN_ETPR_CODE
           AND E.ELCTRN_SANCTN_DRFT_EMPL_ID = P.EMPL_ID
-          AND L.ELCTRN_SANCTNEMPL_ID =  #{emplId}
-        ORDER BY L.COMMON_CODE_SANCT_PROGRS ASC
+          AND L.ELCTRN_SANCTNEMPL_ID = #{emplId}
+        ORDER BY L.COMMON_CODE_SANCT_PROGRS, L.ELCTRN_SANCTN_ETPR_CODE ASC
     </select>
+    <!--  결재 문서 불러오기 - 첨부 파일 -->
     <select id="loadSanctionFile" parameterType="String" resultType="uploadFileVO">
         SELECT U.UPLOAD_FILE_SN,
                U.UPLOAD_FILE_ETPR_CODE,
@@ -188,6 +242,7 @@
         WHERE U.UPLOAD_FILE_ETPR_CODE = ELCTRN_SANCTN_ETPR_CODE
           AND E.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </select>
+    <!--  결재선 지정 - 접속 사원을 제외한 조직도 불러오기 -->
     <select id="loadAllLine" parameterType="String" resultType="employeeVO">
         SELECT E.EMPL_ID,
                E.EMPL_NM,
@@ -201,6 +256,7 @@
           AND EMPL_ID != #{emplId}
         ORDER BY TO_NUMBER(SUBSTR(E.COMMON_CODE_CLSF, 5)), E.EMPL_ENCPN ASC
     </select>
+    <!--  결재함 - 참조(받은) 문서 불러오기 -->
     <select id="loadReference" parameterType="String" resultType="sanctionVO">
         SELECT E.ELCTRN_SANCTN_ETPR_CODE,
                E.ELCTRN_SANCTN_SJ,
@@ -212,7 +268,33 @@
              EMPL P
         WHERE E.ELCTRN_SANCTN_ETPR_CODE = R.ELCTRN_SANCTN_ETPR_CODE
           AND P.EMPL_ID = E.ELCTRN_SANCTN_DRFT_EMPL_ID
-          AND SANCTN_REFRN_EMPL_ID =  #{emplId}
+          AND SANCTN_REFRN_EMPL_ID = #{emplId}
+        ORDER BY E.COMMON_CODE_SANCT_PROGRS, E.ELCTRN_SANCTN_ETPR_CODE ASC
     </select>
+    <!--  결재선 즐겨찾기  -->
+    <insert id="inputBookmark" parameterType="sanctionBookmarkVO">
+        INSERT INTO SANCTN_LINE_BOOKMARK(SANCTION_LINE_BOOKMARK_SN,
+                                         ELCTRN_SANCTN_DRFT_EMPL_ID,
+                                         ELCTRN_SANCTN_BOOKMARK_NAME,
+                                         ELCTRN_SANCTN_LINE_BOOKMARK)
+        VALUES (BOOKMARK_SEQ.nextval,
+                #{elctrnSanctnDrftEmplId},
+                #{elctrnSanctnBookmarkName},
+                #{elctrnSanctnLineBookmark})
+    </insert>
+    <select id="loadBookmark" parameterType="String" resultType="sanctionBookmarkVO">
+        SELECT SANCTION_LINE_BOOKMARK_SN,
+               ELCTRN_SANCTN_DRFT_EMPL_ID,
+               ELCTRN_SANCTN_BOOKMARK_NAME,
+               ELCTRN_SANCTN_LINE_BOOKMARK
+        FROM SANCTN_LINE_BOOKMARK
+        WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{emplId}
+    </select>
+    <delete id="deleteBookmark" parameterType="String">
+        DELETE
+        FROM SANCTN_LINE_BOOKMARK
+        WHERE SANCTION_LINE_BOOKMARK_SN = #{sanctionLineBookmarkSn}
+    </delete>
 </mapper>
+
 

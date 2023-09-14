@@ -1,5 +1,5 @@
-package kr.co.groovy.vo;
 
+package kr.co.groovy.vo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,8 +23,6 @@ public class FacilityVO {
     private String whiteBoard;
     private String extinguisher;
     private String fcltyName;
-    private String meetingRoom;
-    private String retiringRoom;
-    private String meetingCount;
-    private String retiringCount;  
+    private int meetingCount;
+    private int retiringCount;  
 }

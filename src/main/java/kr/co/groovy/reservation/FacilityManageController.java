@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/fmanage")
+@RequestMapping("/reservation")
 public class FacilityManageController {
 	
 	@Autowired
@@ -39,42 +39,24 @@ public class FacilityManageController {
 	@GetMapping("/deleteReserved")
 	@ResponseBody 
 	public String deleteReserved(@RequestParam int fcltyResveSn) {
-		log.info("값이 나오니?"+fcltyResveSn);
 	    try {
 	        service.delResved(fcltyResveSn);
+	        log.info("값이 나오니?"+fcltyResveSn);
 	        return "success"; // 삭제 성공 시 "success" 반환
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return "failure"; // 삭제 실패 시 "failure" 반환
 	    }
 	}
+	@GetMapping("/list")
+	public String facilityList() {
+		return"admin/gat/room/list";
+	}
 	
-	//회의실 갯수 메소드
+	//시설 갯수 메소드
 	@ResponseBody
 	@GetMapping("/countMeeting")
-	public String countingMeeting(@RequestParam int meetingCount) {
-		log.info("회의실 수가 나오니? " + meetingCount);
-		try {
-			service.getMeetingRoom(meetingCount);
-			return "success";
-		}catch (Exception e) {
-			e.getMessage();
-			return "failure";
-		}
+	public String countingMeeting(@RequestParam int countingMeetng) {
+		return null;
 	}
-	
-	//휴게실 갯수 메소드
-	@ResponseBody
-	@GetMapping("/countRetiring")
-	public String countingretiring(@RequestParam int retiringCount) {
-		log.info("휴게실 수가 나오니? " + retiringCount);
-		try {
-			service.getMeetingRoom(retiringCount);
-			return "success";
-		}catch (Exception e) {
-			e.getMessage();
-			return "failure";
-		}
-	}
-	
 }

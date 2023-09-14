@@ -16,6 +16,12 @@ public class SalaryManageController {
 	@Autowired
 	private SalaryManageService service;
 	
+	//급여 정산 페이지 이동
+	@GetMapping("/admin")
+	public String getSalary() {
+		return "admin/hrt/manageSalarySis";
+	}
 	
+	//연봉 등록 메소드
 }
 

@@ -6,16 +6,37 @@
 	<select id="getDept" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
 		SELECT COMMON_CODE
 		FROM COMMON
-		WHERE COMMON_PARENT_CODE '%'||#{"deptCode"}||'%'
+		WHERE COMMON_PARENT_CODE '%'||#{deptParentCode}||'%'
 	</select>
 	
 	<!--  직급코드 조회 -->
 	<select id="getClsf" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
 		SELECT COMMON_CODE
 		FROM COMMON
-		WHERE COMMON_PARENT_CODE '%'||#{"clsfCode"}||'%'
+		WHERE COMMON_PARENT_CODE '%'||#{clsfParentCode}||'%'
 	</select>
 		
+	<!-- 부서코드로 부서 이름 조회  -->
+	<select id="getDeptName" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
+			SELECT COMMON_NAME
+			FROM COMMON
+			WHERE COMMON_CODE  = #{deptCode};
+	</select>
+	
+	<!-- 직급코드로 직급 이름 조회  -->
+	<select id="getClsfName" parameterType="String" resultType="kr.co.groovy.vo.AnslryVO">
+			SELECT COMMON_NAME
+			FROM COMMON
+			WHERE COMMON_CODE = #{clsfCode};
+	</select>
+	
+	<!-- 부서코드로 수당 조회 -->
+	<select id="getDeptBslry" parameterType="int" resultType="kr.co.groovy.vo.AnslryVO">
+		SELECT COMMON_SECTION_VALUE
+		FROM COMMON
+		WHERE COMMON_CODE = #{deptCode}
+	</select>
+	
 	<!-- 연봉 등록 -->
 	<insert id="inputSalary" parameterType="String">
 		INSERT INTO ANSLRY(ANSLRY_STDR_YEAR

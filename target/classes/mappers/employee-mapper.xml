@@ -26,11 +26,13 @@
         <result property="authCode" column="AUTH_CODE"/>
         <result property="authEmpId" column="AUTH_EMP_ID"/>
     </resultMap>
+    <!--  사원 - 비밀번호 초기화 시 맥 어드레스 회원 정보에 등록  -->
     <update id="initMacAddr" parameterType="String">
         UPDATE EMPL
         SET EMPL_MACADRS = #{emplMacadrs}
         WHERE EMPL_ID = #{emplId}
     </update>
+    <!--  사원 - 로그인 시 접속 로그  -->
     <insert id="inputConectLog" parameterType="connectionLogVO">
         INSERT INTO CONECT_LOG(EMPL_ID,
                                CONECT_LOG_MACADRS,
@@ -41,6 +43,7 @@
                 #{conectLogIp},
                 sysdate)
     </insert>
+    <!--  사원 - 알림 설정 값 세션에 담기  -->
     <select id="getNoticeAt" parameterType="String" resultType="notificationVO">
         SELECT MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN010' THEN COMMON_CODE_NTCN_AT END) AS DUTY_REQUEST,
                MAX(CASE WHEN COMMON_CODE_NTCN_KIND = 'NTCN011' THEN COMMON_CODE_NTCN_AT END) AS ANSWER,
@@ -54,6 +57,7 @@
         FROM NTCN_AT
         WHERE NTCN_AT_EMPL_ID = #{emplId}
     </select>
+    <!--  사원 - 알림 설정 변경  -->
     <update id="modifyNoticeAt" parameterType="map">
         UPDATE NTCN_AT
         SET COMMON_CODE_NTCN_AT =
@@ -81,6 +85,7 @@
             )
           AND NTCN_AT_EMPL_ID = #{emplId}
     </update>
+    <!--  사원 - 로그인  -->
     <select id="signIn" parameterType="String" resultMap="employeeDetailMap">
         SELECT A.EMPL_ID,
                A.EMPL_PASSWORD,
@@ -103,12 +108,11 @@
                UF2.UPLOAD_FILE_STRE_NM AS SIGN_FILE_NAME
         FROM EMPL A
                  JOIN AUTH B ON A.EMPL_ID = B.AUTH_EMP_ID
-                 JOIN PROFL P ON A.EMPL_ID = P.PROFL_EMPL_ID
-                 JOIN UPLOAD_FILE UF ON P.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
-                 JOIN SIGN S ON B.AUTH_EMP_ID = S.SIGN_EMPL_ID
-                 JOIN UPLOAD_FILE UF2 ON S.SIGN_ETPR_CODE = UF2.UPLOAD_FILE_ETPR_CODE
+                 JOIN UPLOAD_FILE UF ON A.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
+                 JOIN UPLOAD_FILE UF2 ON A.SIGN_ETPR_CODE = UF2.UPLOAD_FILE_ETPR_CODE
         WHERE A.EMPL_ID = #{emplId}
     </select>
+    <!--  사원 - 최초 로그인 시 비밀번호 초기화  -->
     <update id="initPassword" parameterType="String">
         {call declare
         begin
@@ -121,10 +125,12 @@
             WHERE AUTH_EMP_ID = #{emplId};
         end}
     </update>
+    <!--  관리자 사원 관리 - 사원 번호 생성(인덱스)을 위한 카운트  -->
     <select id="countEmp" resultType="int">
         SELECT COUNT(*)
         FROM EMPL
     </select>
+    <!--  관리자 사원 관리 - 사원 등록  -->
     <insert id="inputEmp" parameterType="employeeVO">
         INSERT INTO EMPL
         (EMPL_ID,
@@ -141,7 +147,9 @@
          COMMON_CODE_DEPT,
          COMMON_CODE_CLSF,
          COMMON_CODE_HFFC_STTUS,
-         COMMON_CODE_LAST_ACDMCR)
+         COMMON_CODE_LAST_ACDMCR,
+         PROFL_ETPR_CODE,
+         SIGN_ETPR_CODE)
         VALUES (#{emplId},
                 #{emplPassword},
                 #{emplNm},
@@ -156,26 +164,27 @@
                 #{commonCodeDept},
                 #{commonCodeClsf},
                 #{commonCodeHffcSttus},
-                #{commonCodeLastAcdmcr})
+                #{commonCodeLastAcdmcr},
+                'PROFL-' || PROFL_SEQ.NEXTVAL || '-' || #{emplId},
+                'SIGN-' || SIGN_SEQ.NEXTVAL || '-' || #{emplId})
     </insert>
+    <!-- 관리자 사원 관리 - 사원(전체) 목록 불러오기 -->
     <select id="loadEmpList" resultType="employeeVO">
-        SELECT EMPL_ID,
-               EMPL_PASSWORD,
-               EMPL_NM,
-               EMPL_TELNO,
-               EMPL_EMAIL,
-               EMPL_ZIP,
-               EMPL_ADRES,
-               EMPL_DETAIL_ADRES,
-               EMPL_ENCPN,
-               EMPL_BRTHDY,
-               ENABLED,
-               COMMON_CODE_DEPT,
-               COMMON_CODE_CLSF,
-               COMMON_CODE_HFFC_STTUS,
-               COMMON_CODE_LAST_ACDMCR
-        FROM EMPL
+        SELECT E.EMPL_ID,
+               E.EMPL_NM,
+               E.EMPL_TELNO,
+               E.EMPL_ENCPN,
+               E.EMPL_BRTHDY,
+               E.COMMON_CODE_DEPT,
+               E.COMMON_CODE_CLSF,
+               E.COMMON_CODE_HFFC_STTUS,
+               E.COMMON_CODE_LAST_ACDMCR,
+               U.UPLOAD_FILE_STRE_NM AS SIGN_PHOTO_FILE_STRE_NM
+        FROM EMPL E,
+             UPLOAD_FILE U
+        WHERE E.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
     </select>
+    <!--  관리자 사원 관리 - 사원(개인) 정보 불러오기  -->
     <select id="loadEmp" parameterType="String" resultType="employeeVO">
         SELECT EMPL_ID,
                EMPL_PASSWORD,
@@ -187,79 +196,71 @@
                EMPL_DETAIL_ADRES,
                EMPL_ENCPN,
                EMPL_BRTHDY,
-               ENABLED,
                COMMON_CODE_DEPT,
                COMMON_CODE_CLSF,
                COMMON_CODE_HFFC_STTUS,
                COMMON_CODE_LAST_ACDMCR
-        FROM EMPL
+        FROM EMPL E,
+             UPLOAD_FILE U
         WHERE EMPL_ID = #{emplId}
     </select>
+    <!--  메인 - 이번 달 생일인 사원  -->
     <select id="loadBirthday" resultType="employeeVO">
         SELECT E.EMPL_NM,
                E.EMPL_BRTHDY,
                U.UPLOAD_FILE_STRE_NM AS PROFL_PHOTO_FILE_STRE_NM
         FROM EMPL E,
-             PROFL P,
              UPLOAD_FILE U
         WHERE TO_CHAR(EMPL_BRTHDY, 'MM') = TO_CHAR(SYSDATE, 'MM')
-          AND E.EMPL_ID = P.PROFL_EMPL_ID
-          AND P.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+          AND E.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
     </select>
+    <!--  관리자 사원 관리 - 검색  -->
     <select id="findEmp" resultType="employeeVO">
-        SELECT EMPL_ID
-             , EMPL_PASSWORD
-             , EMPL_NM
-             , EMPL_TELNO
-             , EMPL_EMAIL
-             , EMPL_ZIP
-             , EMPL_ADRES
-             , EMPL_DETAIL_ADRES
-             , EMPL_ENCPN
-             , EMPL_BRTHDY
-             , ENABLED
-             , COMMON_CODE_DEPT
-             , COMMON_CODE_CLSF
-             , COMMON_CODE_HFFC_STTUS
-             , COMMON_CODE_LAST_ACDMCR
-             , EMPL_MACADRS
-        FROM EMPL
+        SELECT E.EMPL_ID,
+               E.EMPL_NM,
+               E.EMPL_TELNO,
+               E.EMPL_ENCPN,
+               E.EMPL_BRTHDY,
+               E.COMMON_CODE_DEPT,
+               E.COMMON_CODE_CLSF,
+               E.COMMON_CODE_HFFC_STTUS,
+               E.COMMON_CODE_LAST_ACDMCR,
+               U.UPLOAD_FILE_STRE_NM AS SIGN_PHOTO_FILE_STRE_NM
+        FROM EMPL E,
+             UPLOAD_FILE U
         WHERE 1 = 1
           AND (
                     COMMON_CODE_DEPT = #{depCode} AND
-                    EMPL.EMPL_NM LIKE '%' || #{emplNm} || '%'
+                    E.EMPL_NM LIKE '%' || #{emplNm} || '%'
             )
-        ORDER BY #{sortBy} DESC
+          AND E.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+        ORDER BY ${sortBy} ASC
     </select>
-    <!--    <select id="findById" parameterType="String" resultType="employeeVO">-->
-    <!--        SELECT *-->
-    <!--        FROM EMPL-->
-    <!--        WHERE EMPL_ID = #{emplId}-->
-    <!--    </select>-->
+    <!--  사원 내 정보 관리 - 프로필 사진 변경  -->
     <update id="modifyProfile" parameterType="String">
         UPDATE UPLOAD_FILE
         SET UPLOAD_FILE_STRE_NM   = #{fileName},
             UPLOAD_FILE_ORGINL_NM = #{originalFileName}
-        WHERE UPLOAD_FILE_ETPR_CODE = (SELECT P.PROFL_ETPR_CODE
-                                       FROM EMPL E
-                                                JOIN PROFL P ON E.EMPL_ID = P.PROFL_EMPL_ID
-                                       WHERE E.EMPL_ID = #{emplId})
+        WHERE UPLOAD_FILE_ETPR_CODE = (SELECT PROFL_ETPR_CODE
+                                       FROM EMPL
+                                       WHERE EMPL_ID = #{emplId})
     </update>
+    <!--  사원 내 정보 관리 - 비밀번호 변경  -->
     <update id="modifyPassword" parameterType="String">
         UPDATE EMPL
         SET EMPL_PASSWORD = #{emplPassword}
         WHERE EMPL_ID = #{emplId}
     </update>
-
+    <!--  사원 내 정보 관리 - 서명 변경  -->
     <update id="modifySign" parameterType="String">
         UPDATE UPLOAD_FILE
         SET UPLOAD_FILE_STRE_NM   = #{fileName},
             UPLOAD_FILE_ORGINL_NM = #{originalFileName}
-        WHERE UPLOAD_FILE_ETPR_CODE = (SELECT S.SIGN_ETPR_CODE
-                                       FROM EMPL E
-                                                JOIN SIGN S ON E.EMPL_ID = S.SIGN_EMPL_ID
-                                       WHERE E.EMPL_ID = #{emplId})
+        WHERE UPLOAD_FILE_ETPR_CODE = (SELECT SIGN_ETPR_CODE
+                                       FROM EMPL
+                                       WHERE EMPL_ID = #{emplId})
     </update>
+    <!--  관리자 사원 관리 - 사원 정보 수정  -->
     <update id="modifyEmp" parameterType="employeeVO">
         UPDATE EMPL
         SET EMPL_NM                 = #{emplNm},
@@ -274,6 +275,7 @@
             COMMON_CODE_HFFC_STTUS  = #{commonCodeHffcSttus}
         WHERE EMPL_ID = #{emplId}
     </update>
+    <!--  관리자 사원 관리 - 사원 접속 로그 확인  -->
     <select id="loadConnectionLog" parameterType="String" resultType="connectionLogVO">
         SELECT C.EMPL_ID,
                C.CONECT_LOG_MACADRS,

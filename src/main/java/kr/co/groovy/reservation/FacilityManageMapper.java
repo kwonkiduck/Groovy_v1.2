@@ -15,9 +15,7 @@ public interface FacilityManageMapper {
     //예약취소
     public void delReserve(int fcltyResveSn);
     
-    //회의실 갯수
-    public int getMeetingRoom(int meetingCount);
-    
-    //휴게실 갯수
-    public int getRetiringRoom(int retiringCount);
+    //시설 갯수
+    public int getRoomCount(String facilityCount);
+
 }	

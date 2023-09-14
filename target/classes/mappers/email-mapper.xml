@@ -1,60 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.email.EmailMapper">
-    <insert id="inputReceivedEmails" parameterType="emailVO">
-        {call declare
-        begin
-            insert into EMAIL_FROM( email_etpr_code
-                                  , email_from_addr
-                                  , emai_from_sj
-                                  , email_from_cn
-                                  , email_from_cn_type
-                                  , email_from_send_date
-                                  , EMAIL_FROM_TMPR_STRE_AT)
-            values ( 'EMAIL-' || EMAIL_SEQ.nextval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
-                   , #{emailFromAddr}
-                   , #{emaiFromSj}
-                   , #{emailFromCn}
-                   , #{emailFromCnType}
-                   , #{emailFromSendDate}
-                   , #{emailFromTmprStreAt});
-
-            insert into EMAIL_TO( email_etpr_code
-                                , email_from_addr
-                                , email_to_addr
-                                , email_to_received_date
-                                , email_redng_at
-                                , email_imprtnc_at
-                                , email_delete_at)
-            SELECT ef.EMAIL_ETPR_CODE,
-                   ef.EMAIL_FROM_ADDR,
-                   #{emailToAddr},
-                   #{emailToReceivedDate},
-                   #{emailRedngAt},
-                   #{emailImprtncAt},
-                   #{emailDeleteAt}
-            FROM EMAIL_FROM ef
-            WHERE ef.EMAIL_ETPR_CODE = #{emailEtprCode}
-              AND ef.EMAIL_FROM_ADDR = #{emailFromAddr};
-
-            insert into EMAIL_CC( email_etpr_code
-                                , email_from_addr
-                                , email_cc_addr
-                                , email_to_received_date
-                                , email_redng_at
-                                , email_imprtnc_at
-                                , email_delete_at)
-            SELECT ef.EMAIL_ETPR_CODE,
-                   ef.EMAIL_FROM_ADDR,
-                   #{emailCcAddr},
-                   #{emailToReceivedDate},
-                   #{emailRedngAt},
-                   #{emailImprtncAt},
-                   #{emailDeleteAt}
-            FROM EMAIL_FROM ef
-            WHERE ef.EMAIL_ETPR_CODE = #{emailEtprCode}
-              AND ef.EMAIL_FROM_ADDR = #{emailFromAddr};
-        end}
+    <insert id="inputReceivedEmailsFrom" parameterType="emailVO">
+        insert into EMAIL_FROM( email_etpr_code
+                              , email_from_addr
+                              , EMAIL_SN
+                              , email_from_sj
+                              , email_from_cn
+                              , email_from_cn_type
+                              , email_from_send_date
+                              , EMAIL_FROM_TMPR_STRE_AT)
+        values ( 'EMAIL-' || EMAIL_SEQ.nextval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
+               , #{emailFromAddr}
+               , #{emailSn}
+               , #{emailFromSj}
+               , #{emailFromCn}
+               , #{emailFromCnType}
+               , #{emailFromSendDate}
+               , #{emailFromTmprStreAt})
     </insert>
+
+    <insert id="inputReceivedEmailsTo" parameterType="emailVO">
+        insert into EMAIL_TO( email_etpr_code
+                            , email_from_addr
+                            , EMAIL_SN
+                            , email_to_addr
+                            , email_to_received_date)
+        values ( 'EMAIL-' || EMAIL_SEQ.currval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
+               , #{emailFromAddr}
+               , #{emailSn}
+               , #{emailToAddr}
+               , #{emailToReceivedDate})
+    </insert>
+
+    <insert id="inputReceivedEmailsCc" parameterType="emailVO">
+        insert into EMAIL_CC( email_etpr_code
+                            , email_from_addr
+                            , email_sn
+                            , email_cc_addr
+                            , EMAIL_CC_RECEIVED_DATE)
+        values ( 'EMAIL-' || EMAIL_SEQ.currval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
+               , #{emailFromAddr}
+               , #{emailSn}
+               , #{emailCcAddr}
+               , #{emailCcReceivedDate})
+    </insert>
+
+    <insert id="inputReceivedStatus" parameterType="emailVO">
+        insert into EMAIL_RECEIVED_STTUS( email_etpr_code
+                                        , email_from_addr
+                                        , email_received_empl_id
+                                        , email_sn
+                                        , email_redng_at
+                                        , email_delete_at
+                                        , email_imprtnc_at)
+        VALUES ( 'EMAIL-' || EMAIL_SEQ.currval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
+               , #{emailFromAddr}
+               , #{emailReceivedEmplId}
+               , #{emailSn}
+               , #{emailRedngAt}
+               , #{emailDeleteAt}
+               , #{emailImprtncAt})
+    </insert>
+
+    <select id="existsMessageNumber" resultType="int" parameterType="Map">
+        SELECT COUNT(ef.EMAIL_SN)
+        FROM EMAIL_FROM ef
+                 left join EMAIL_TO ET on ef.EMAIL_ETPR_CODE = ET.EMAIL_ETPR_CODE
+                 left join EMAIL_CC EC on ef.EMAIL_ETPR_CODE = EC.EMAIL_ETPR_CODE
+        WHERE ef.EMAIL_SN = #{emailSn}
+          and (et.EMAIL_TO_ADDR = #{nowEmailAddr} or ec.EMAIL_CC_ADDR = #{nowEmailAddr})
+    </select>
+
+    <!-- 수신받은 메일함 -->
+    <select id="getAllReceivedMailsToMe" resultType="emailVO" parameterType="String">
+        SELECT ef.EMAIL_ETPR_CODE
+             , ef.EMAIL_SN
+             , ef.EMAIL_FROM_ADDR
+             , ef.EMAIL_FROM_SJ
+             , ef.EMAIL_FROM_SEND_DATE
+             , et.EMAIL_TO_ADDR
+             , ers.EMAIL_DELETE_AT
+             , ers.EMAIL_IMPRTNC_AT
+             , ers.EMAIL_REDNG_AT
+        FROM EMAIL_FROM ef
+                 left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
+                 left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
+        where ef.EMAIL_FROM_ADDR not in #{emailAddr}
+          and et.EMAIL_TO_ADDR in #{emailAddr}
+        order by ef.EMAIL_SN desc
+    </select>
+
+    <!-- 참조받은 메일함 -->
+    <select id="getAllReferencedMailsToMe" resultType="emailVO" parameterType="String">
+        SELECT ef.EMAIL_ETPR_CODE
+             , ef.EMAIL_SN
+             , ef.EMAIL_FROM_ADDR
+             , ef.EMAIL_FROM_SJ
+             , ef.EMAIL_FROM_SEND_DATE
+             , ec.EMAIL_CC_ADDR
+             , ers.EMAIL_DELETE_AT
+             , ers.EMAIL_IMPRTNC_AT
+             , ers.EMAIL_REDNG_AT
+        FROM EMAIL_FROM ef
+                 left JOIN EMAIL_CC ec on ef.EMAIL_ETPR_CODE = ec.EMAIL_ETPR_CODE
+                 left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
+        where ef.EMAIL_FROM_ADDR not in #{emailAddr}
+          and ec.EMAIL_CC_ADDR in #{emailAddr}
+        order by ef.EMAIL_SN desc
+    </select>
+
+    <!-- 내게 쓴 메일함 -->
+    <select id="getAllSentMailsToMe" resultType="emailVO" parameterType="String">
+        SELECT ef.EMAIL_ETPR_CODE
+             , ef.EMAIL_SN
+             , ef.EMAIL_FROM_ADDR
+             , ef.EMAIL_FROM_SJ
+             , ef.EMAIL_FROM_SEND_DATE
+             , et.EMAIL_TO_ADDR
+             , ers.EMAIL_DELETE_AT
+             , ers.EMAIL_IMPRTNC_AT
+             , ers.EMAIL_REDNG_AT
+        FROM EMAIL_FROM ef
+                 left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
+                 left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
+        where ef.EMAIL_FROM_ADDR = #{emailAddr} and ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
+        order by ef.EMAIL_SN desc
+    </select>
+
+    <!-- 보낸메일함 -->
+    <select id="getAllSentMailsByMe" resultType="emailVO" parameterType="String">
+        select ef.EMAIL_ETPR_CODE
+             , ef.EMAIL_SN
+             , ef.EMAIL_FROM_ADDR
+             , ef.EMAIL_FROM_SJ
+             , ef.EMAIL_FROM_SEND_DATE
+             , et.EMAIL_TO_ADDR
+             , ers.EMAIL_IMPRTNC_AT
+             , ers.EMAIL_DELETE_AT
+        from EMAIL_FROM ef
+                 left join EMAIL_TO ET on ef.EMAIL_ETPR_CODE = ET.EMAIL_ETPR_CODE
+                 left join EMAIL_RECEIVED_STTUS ERS on ef.EMAIL_FROM_ADDR = ERS.EMAIL_FROM_ADDR
+        where ef.EMAIL_FROM_ADDR = 'groovytest@daum.net'
+          and et.EMAIL_TO_ADDR not in 'groovytest@daum.net'
+        order by ef.EMAIL_SN desc
+    </select>
+
+    <select id="getEmployeeByEmailAddr" resultType="int" parameterType="String">
+        select count(EMPL_ID)
+        from empl
+        where EMPL_EMAIL = #{emailAddr}
+    </select>
+
+    <update id="modifyEmailRedngAt" parameterType="Map">
+        update EMAIL_RECEIVED_STTUS
+        set ${emailAtKind} = #{at}
+        where EMAIL_ETPR_CODE = #{emailEtprCode}
+    </update>
 </mapper>
 

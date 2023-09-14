@@ -7,7 +7,7 @@
 	SELECT 
 	    FCLTY_RESVE_SN,
 	    FCLTY_RESVE_BEGIN_TIME, 
-	    FCLTY_RESVE_END_TIME,
+    	FCLTY_RESVE_END_TIME,
 	    FCLTY_RESVE_REQUST_MATTER,
 	    FCLTY_RESVE_EMPL_ID,
 	    COMMON_CODE_RESVE_AT,
@@ -22,17 +22,12 @@
 	WHERE FCLTY_RESVE_SN = #{fcltyResveSn}
 </delete>
 
-<!-- 회의실 갯수 -->
-<select id="getMeetingRoom" resultType="facilityVO" parameterType="int">
+<!-- 시설 갯수 -->
+<select id="getMeetingRoom" resultType="facilityVO" parameterType="String">
 	SELECT COUNT(COMMON_CODE_FCLTY_KIND)
 	FROM FCLTY
-	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||"#{meetingRoom}"||'%'
+	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||#{commonCodeFcltyKind}||'%'
 </select>
 
-<!-- 휴게실 갯수 -->
-<select id="getRetiringRoom" resultType="facilityVO" parameterType="int">
-	SELECT COUNT(COMMON_CODE_FCLTY_KIND)
-	FROM FCLTY
-	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||"#{retiringRoom}"||'%'
-</select>
+
 </mapper>

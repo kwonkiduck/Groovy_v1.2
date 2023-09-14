@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
 ul {
 	list-style: none;
@@ -48,6 +49,9 @@ table tr td, table tr th {
 	grid-template-rows: repeat(2, 1fr);
 	grid-template-columns: repeat(2, 1fr)
 }
+#fcltyResveSn, #fcltyCatagory, .fcltyResveSn{
+	display: none;
+}
 </style>
 <div class="wrap">
 	<ul>
@@ -55,6 +59,7 @@ table tr td, table tr th {
 		<li><a href="#" class="tab">예약 현황</a></li>
 	</ul>
 </div>
+<br /><br />
 <div class="cardWrap">
 	<div class="card">
 		<div class="header">
@@ -62,16 +67,17 @@ table tr td, table tr th {
 			<p>
 				<a href="#" class="totalResve"><span id="countValue"></span>건</a>
 			</p>
-			<a href="#">더보기</a>
+			<a href="list">더보기</a>
 		</div>
+<br />
 		<div class="content">
 				<table border=1 style="width: 100%" id="allReservedRooms">
 					<thead>
 						<tr>
-							<th>리스트 순서</th>
-							<th>순번</th>
-							<th>시설 종류 구분</th>
-							<th>시설 이름</th>
+							<th>순서</th>
+							<th id="fcltyResveSn">순번</th>
+							<th id="fcltyCatagory">시설 종류 구분</th>
+							<th>예약시설 이름</th>
 							<th>시작 날짜</th>
 							<th>끝 날짜</th>
 							<th>예약 사원(사번)</th>
@@ -82,11 +88,15 @@ table tr td, table tr th {
 						<c:forEach items="${reservedRooms}" var="room" varStatus="stat">
 							<tr>
 								<td>${stat.count}</td>
-								<td id="fcltyResveSn">${room.fcltyResveSn}</td>
-								<td>${room.commonCodeFcltyKind}</td>
+								<td class="fcltyResveSn">${room.fcltyResveSn}</td>
+								<td id="fcltyCatagory">${room.commonCodeFcltyKind}</td>
 								<td>${room.fcltyName}</td>
-								<td>${room.fcltyResveBeginTime}</td>
-								<td>${room.fcltyResveEndTime}</td>
+								<c:set var="fcltyResveBegin" value="${room.fcltyResveBeginTime}"/>
+								<fmt:formatDate value="${fcltyResveBegin}" pattern="yyyy-MM-dd" var="fbeginTime"/>
+								<td>${fbeginTime}</td>
+								<c:set var="fcltyResveEnd" value="${room.fcltyResveEndTime}"/>
+								<fmt:formatDate value="${fcltyResveEnd}" pattern="yyyy-MM-dd" var="fendTime"/>
+								<td>${fendTime}</td>
 								<td>${room.fcltyResveEmplId}</td>
 								<td><button class="delEvent" type="button" data-fcltyResveSn="${room.fcltyResveSn}">예약취소</button></td>
 							</tr>
@@ -101,14 +111,14 @@ table tr td, table tr th {
 			<div class="titleWrap" style="display: block">
 				<h3>시설 관리</h3>
 				<br/>
-				<table border=1 style="width: 100%">
+				<table>
 					<tbody>
+					<c:forEach items="${countingRoom}" var="count">
 						<tr>
-							<td>회의실 | <span class="totalConfm">10</span>개</td>
+							<td>회의실 | <span class="totalConfm"></span>개</td>
+							<td>휴게실 | ${count.retiringRoom}개</td>
 						</tr>
-						<tr>
-							<td>휴게실 | <span class="totalConfr">10</span>개</td>
-						</tr>
+					</c:forEach>
 					</tbody>
 				</table>
 			</div>
@@ -168,7 +178,7 @@ function delClickEvent() {
                  // 쿼리에서 orderBy를 한번에 순번에 적용하지 말고,
                  // from밑에 orderBy를 하고 순번을 가져올때 카운트랑 별개로 가져와야 하므로,
                  // varStatus="stat"를 추가해서 카운트는 순번과 별개로 화면에 보여지고,버튼을 누르면 순번만 인식해서 지워짐!
-                    xhr.open("get", "/fmanage/deleteReserved?fcltyResveSn=" +fcltyResveSn, true);  
+                    xhr.open("get", "/reservation/deleteReserved?fcltyResveSn=" +fcltyResveSn, true);  
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                     xhr.onload = function () {
@@ -194,7 +204,7 @@ function delClickEvent() {
 // 페이지가 로드될 때 실행
 document.addEventListener("DOMContentLoaded", function () {
     // 모든 <td> 요소 중 id가 "fcltyResveSn"인 요소를 선택합니다.
-    const tdElements = document.querySelectorAll("td#fcltyResveSn");
+    const tdElements = document.querySelectorAll("td.fcltyResveSn");
 
     // 선택된 <td> 요소의 갯수를 가져옵니다.
     const count = tdElements.length;
@@ -204,18 +214,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // delClickEvent 함수 호출
     delClickEvent();
-});
+});  
 
 function countMeeting (){
 	let meeting = document.querySelectorAll(".totalConfm");
 	meeting.onload = function fAjax(){
 		let xhr = new XMLHttpRequest();
-		xhr.open("GET","",true);
+		xhr.open("GET","/reservation/countMeeting?countingMeetng=" +countingMeetng",true);
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200){
 				console.log(xhr.responseText);
 			}
 		}
+		xhr.send();
 	}
 
 }
