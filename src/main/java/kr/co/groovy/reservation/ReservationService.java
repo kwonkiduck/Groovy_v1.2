@@ -72,8 +72,8 @@ public class ReservationService {
         return mapper.modifyCardNm(cardVO);
     }
 
-    public int modifyCardUseAt(String cprCardNo) {
-        return mapper.modifyCardUseAt(cprCardNo);
+    public int modifyCardStatusDisabled(String cprCardNo) {
+        return mapper.modifyCardStatusDisabled(cprCardNo);
     }
 
 

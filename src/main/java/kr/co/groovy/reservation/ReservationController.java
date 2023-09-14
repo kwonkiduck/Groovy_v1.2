@@ -65,7 +65,7 @@ public class ReservationController {
 
     @GetMapping("/manageCard")
     public String manageCard() {
-        return "admin/at/manageCard";
+        return "admin/at/card/manage";
     }
 
     @PostMapping("/inputCard")
@@ -94,6 +94,12 @@ public class ReservationController {
     @ResponseBody
     public int modifyCardUseAt(@PathVariable String cprCardNo) {
         log.info("cprCardNo : {}", cprCardNo);
-        return service.modifyCardUseAt(cprCardNo);
+        return service.modifyCardStatusDisabled(cprCardNo);
     }
+
+    @GetMapping("/manageCardReservationRecords")
+    public String manageCardReservationRecords() {
+        return "admin/at/card/reservationRecords";
+    }
+
 }

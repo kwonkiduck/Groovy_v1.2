@@ -10,6 +10,7 @@
 
 <header>
     <h1>회사 카드 관리</h1>
+    <h1>대여 내역 관리</h1>
 </header>
 <main>
     <h1>카드 등록</h1>
@@ -35,7 +36,7 @@
             </select>
             <button id="registerCardBtn">등록</button>
         </form>
-    </div>
+    </div>y65
     <hr/>
     <h1>카드 목록</h1>
     <div id="cardList"></div>
@@ -118,6 +119,7 @@
                     <p id="btnCardNm">\${obj.cprCardNm}</p>
                     <p id="btnCardNo">\${obj.maskCardNo}</p>
                     <p id="btnCardCom">\${obj.cprCardChrgCmpny}</p>
+                    <input type=hidden id="btnCardStatus" value="\${obj.cprCardSttus}">
                     </button><br/>`;
                 });
                 cardListDiv.html(code);
@@ -202,7 +204,7 @@
     })
 
     $("#deleteCardBtn").on("click", function () {
-        if (confirm(`'\${currentCardNm}' 카드를 삭제하시겠습니까?`)) {
+        if (confirm(`'\${currentCardNm}' 카드를 사용불가 처리하시겠습니까?`)) {
             $.ajax({
                 url : `/reserve/modifyCardUseAt/\${currentCardNo}`,
                 type : "get",
@@ -212,9 +214,9 @@
                         $("#selectedCardName").html('');
                         $("#selectedCardNo").html('');
                         $("#selectedCardCom").html('');
-                        alert("삭제 완료");
+                        alert("사용불가 처리 완료");
                     } else {
-                        alert("삭제 실패")
+                        alert("사용불가 처리 실패")
                     }
                 },
                 error : function (xhr) {
@@ -223,7 +225,7 @@
                 }
             })
         } else {
-            alert("삭제 취소");
+            alert("사용불가 처리 취소");
         }
     })
 

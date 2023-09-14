@@ -21,5 +21,5 @@ public interface ReservationMapper {
 
     int modifyCardNm(CardVO cardVO);
 
-    int modifyCardUseAt(String cprCardNo);
+    int modifyCardStatusDisabled(String cprCardNo);
 }
