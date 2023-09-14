@@ -25,7 +25,7 @@
     </delete>
 
     <select id="getRooms" resultType="facilityVO" parameterType="String">
-        select (COMMON_CODE_FCLTY_KIND, FCLTY_PSNCPA)
+        select COMMON_CODE_FCLTY_KIND, FCLTY_PSNCPA
         from fclty
         where COMMON_CODE_FCLTY_KIND like #{commonCodeFcltyKind}
     </select>
