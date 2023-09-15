@@ -126,17 +126,6 @@
         WHERE U.UPLOAD_FILE_ETPR_CODE = N.NOTI_ETPR_CODE
           AND N.NOTI_ETPR_CODE = #{notiEtprCode}
     </select>
-<!--    <select id="downloadNotiFile" parameterType="int" resultType="uploadFileVO">-->
-<!--        /* 사원(공통) - 공지사항 첨부 파일 다운로드 */-->
-<!--        SELECT UPLOAD_FILE_SN,-->
-<!--               UPLOAD_FILE_ETPR_CODE,-->
-<!--               UPLOAD_FILE_ORGINL_NM,-->
-<!--               UPLOAD_FILE_STRE_NM,-->
-<!--               UPLOAD_FILE_SIZE,-->
-<!--               UPLOAD_FILE_RGSDE-->
-<!--        FROM UPLOAD_FILE-->
-<!--        WHERE UPLOAD_FILE_SN = #{uploadFileSn}-->
-<!--    </select>-->
     <update id="modifyNoticeView" parameterType="String">
         /* 사원(공통) - 공지사항 조회수 증가 */
         UPDATE NOTI
