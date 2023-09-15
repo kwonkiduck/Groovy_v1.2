@@ -29,7 +29,6 @@ public class CommunityService {
         vo.setSntncEtprCode(sntncEtprCode);
         mapper.inputPost(vo);
         boolean hasFile = postFile.isEmpty();
-        log.info(postFile + "");
         if(postFile!= null && postFile.getSize() != 0 && !postFile.getName().equals("")){
             String path = uploadPath + "/teamCommunity";
             log.debug("path: " + path);
@@ -66,7 +65,6 @@ public class CommunityService {
         /* sntncEtprCode */
         String sntncEtprCode = makeSntncEtprCode();
         map.put("sntncEtprCode",sntncEtprCode);
-        log.info("service Map => " + map);
         mapper.inputTeamNoti(map);
     }
     public List<SntncVO> loadTeamNoti(String emplId){return mapper.loadTeamNoti(emplId);}

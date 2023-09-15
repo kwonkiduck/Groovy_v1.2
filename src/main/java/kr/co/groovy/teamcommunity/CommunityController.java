@@ -45,7 +45,6 @@ public class CommunityController {
         Map<String, Integer> recomendedEmpleChk = new HashMap<>();
         Map<String, Integer> answerPostCnt = new HashMap<>();
         HashMap<String, Object> map = new HashMap<>();
-        log.info("sntncList ==> " + sntncList);
         for (SntncVO post : sntncList) {
             String sntncEtprCode = post.getSntncEtprCode();
 
@@ -89,7 +88,6 @@ public class CommunityController {
     @DeleteMapping("/deletePost")
     public void deletePost(@RequestBody Map<String, Object> map){
         map.put("sntncWrtingEmplId", emplId);
-        log.info("map ====> " + map);
         service.deletePost(map);
     }
     /* 좋아요 구현 */
