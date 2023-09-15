@@ -33,4 +33,9 @@ public class CommonService {
         }
         return list;
     }
+
+    List<SanctionVO> loadSanction(String emplId) {
+        return mapper.loadSanction(emplId);
+    }
+
 }

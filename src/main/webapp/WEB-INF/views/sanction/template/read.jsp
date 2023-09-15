@@ -32,19 +32,20 @@
                     <p>결재선</p>
 
                     <c:forEach var="lineVO" items="${lineList}" varStatus="stat">
-
                         <c:choose>
-                            <c:when test="${lineVO.commonCodeSanctProgrs != '반려' && lineVO.commonCodeSanctProgrs != '승인' }">
-                                <p>${lineVO.emplNm}</p>
+                            <c:when test="${lineVO.commonCodeSanctProgrs == '반려'}">
+                                <p>반려</p>
+                            </c:when>
+                            <c:when test="${lineVO.commonCodeSanctProgrs == '승인' }">
+                                <p><img src="/uploads/sign/${lineVO.uploadFileStreNm}"/></p>
                             </c:when>
                             <c:otherwise>
-                                <p><img src="/uploads/sign/${lineVO.uploadFileStreNm}"/></p>
+                                <p>${lineVO.emplNm}</p>
                             </c:otherwise>
                         </c:choose>
                         <p>${lineVO.sanctnLineDate}</p>
                         <p>${lineVO.commonCodeSanctProgrs}</p>
                         <p>${lineVO.commonCodeClsf}</p>
-                        <p>${lineVO.elctrnSanctnemplId}</p>
                         <hr>
                     </c:forEach>
 
