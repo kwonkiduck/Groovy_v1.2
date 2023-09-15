@@ -1,39 +1,43 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
-<script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+<script defer
+	src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
-    ul {
-        list-style: none;
-        padding-left: 0;
-    }
+ul {
+	list-style: none;
+	padding-left: 0;
+}
 
-    .wrap ul {
-        display: flex;
-        gap: 10px
-    }
+.wrap ul {
+	display: flex;
+	gap: 10px
+}
 
-    #myGrid {
-        width: 100%;
-        height: calc((360 / 1080) * 100vh);
-    }
+#myGrid {
+	width: 100%;
+	height: calc(( 360/ 1080)* 100vh);
+}
 </style>
 <div class="wrap">
-    <ul>
-        <li><a href="/gat/manageVehicle" class="tab">차량 관리</a></li>
-        <li><a href="/gat/loadVehicle" class="tab">예약 현황</a></li>
-    </ul>
+	<ul>
+		<li><a href="room" class="tab">시설 관리</a></li>
+		<li><a href="room" class="tab">예약 현황</a></li>
+	</ul>
 </div>
-<br/>
+<br />
 <div class="serviceWrap">
-    <input type="text" oninput="onQuickFilterChanged()" id="quickFilter" placeholder="검색어를 입력하세요"/>
+	<input type="text" oninput="onQuickFilterChanged()" id="quickFilter"
+		placeholder="검색어를 입력하세요" />
 </div>
-<br/><br/>
+<br />
+<br />
 <div class="cardWrap">
-    <div class="card">
-        <div id="myGrid" class="ag-theme-alpine"></div>
-    </div>
+	<div class="card">
+		<div id="myGrid" class="ag-theme-alpine"></div>
+	</div>
 </div>
-
 <script>
     const returnValue = (params) => params.value;
 
@@ -46,7 +50,6 @@
             this.id = params.value;
             this.btnReturn = this.eGui.querySelector(".cancelRoom");
 
-            /*ajax 추가 하기~*/
             this.btnReturn.onclick = () => alert(this.id + "ddd 예약 취소 완료");
         }
 
@@ -68,7 +71,7 @@
         gridOptions.api.setQuickFilter(document.getElementById('quickFilter').value);
     }
     const columnDefs = [
-        {field: "fcltyResveSn", headerName: "순번", cellRenderer: returnValue},
+        {field: "fcltyResveSn", headerName: "예약번호", cellRenderer: returnValue},
         {field: "commonCodeFcltyKindParent", headerName: "시설 종류 구분",getQuickFilterText: (params) => {return params.value}},
         {field: "commonCodeFcltyKind", headerName: "시설 이름"},
         {field: "fcltyResveBeginTime", headerName: "시작 시간"},
@@ -78,8 +81,25 @@
         {field: "fcltyResveRequstMatter", headerName: "요청사항"},
         {field: "chk", headerName: " ", cellRenderer: ClassBtn},
     ];
-    const rowData = [
-        {
+    const rowData = [];
+        <c:forEach items="${toDayList}" var="room" varStatus="state">
+         <c:set var="beginTime" value="${room.fcltyResveBeginTime}"/>
+         <fmt:formatDate var="fBeginTime" value="${beginTime}" pattern="HH:mm"/>
+         <c:set var="endTime" value="${room.fcltyResveEndTime}"/>
+         <fmt:formatDate var="fEndTime" value="${endTime}" pattern="HH:mm"/>
+        rowData.push({
+            fcltyResveSn: "${room.fcltyResveSn}",
+            commonCodeFcltyKindParent: "${room.fcltyCode}",
+            commonCodeFcltyKind: "${room.fcltyName}",
+            fcltyResveBeginTime: "${fBeginTime}",
+            fcltyResveEndTime: "${fEndTime}",
+            fcltyResveEmplNm: "${room.fcltyEmplName}",
+            fcltyResveEmplId: "${room.fcltyResveEmplId}",
+            fcltyResveRequstMatter : "${room.fcltyResveRequstMatter}",
+            chk:"${room.fcltyResveSn}"
+        })
+        </c:forEach>
+       /* {
             fcltyResveSn: "1",
             commonCodeFcltyKindParent: "회의실",
             commonCodeFcltyKind: "A101",
@@ -88,18 +108,7 @@
             fcltyResveEmplNm: "강서주",
             fcltyResveEmplId: "202308001",
             fcltyResveRequstMatter : "요청사항",
-        },
-        {
-            fcltyResveSn: "1",
-            commonCodeFcltyKindParent: "회의실",
-            commonCodeFcltyKind: "A101",
-            fcltyResveBeginTime: "09:00",
-            fcltyResveEndTime: "13:00",
-            fcltyResveEmplNm: "강서주",
-            fcltyResveEmplId: "202308001",
-            fcltyResveRequstMatter : "요청사항",
-        }
-    ]
+        }*/
     const gridOptions = {
         columnDefs: columnDefs,
         rowData: rowData,

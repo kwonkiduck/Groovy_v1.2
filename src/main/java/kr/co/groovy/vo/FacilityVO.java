@@ -23,6 +23,6 @@ public class FacilityVO {
     private String whiteBoard;
     private String extinguisher;
     private String fcltyName;
-    private int meetingCount;
-    private int retiringCount;  
+    private String fcltyCode; 
+    private String fcltyEmplName;
 }

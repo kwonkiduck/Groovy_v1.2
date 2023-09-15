@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.reservation.FacilityManageMapper">
 
+<resultMap type="facilityVO" id="facilityVOMap">
+    <result property="commonCodeFcltyKind" column="COMMON_CODE_FCLTY_KIND"/>
+    <result property="fcltyResveSn" column="FCLTY_RESVE_SN"/>
+    <result property="fcltyResveBeginTime" column="FCLTY_RESVE_BEGIN_TIME"/>
+    <result property="fcltyResveEndTime" column="FCLTY_RESVE_END_TIME"/>
+    <result property="fcltyResveRequstMatter" column="FCLTY_RESVE_REQUST_MATTER"/>
+    <result property="fcltyResveEmplId" column="FCLTY_RESVE_EMPL_ID"/>
+    <result property="commonCodeResveAt" column="COMMON_CODE_RESVE_AT"/>
+    <result property="fcltyEmplName" column="EMPL_NM"/>
+</resultMap>
+
 <!-- 시설 예약 현황 조회 -->
 <select id="getAllReservedRooms" resultType="facilityVO">
 	SELECT 
@@ -11,7 +22,7 @@
 	    FCLTY_RESVE_REQUST_MATTER,
 	    FCLTY_RESVE_EMPL_ID,
 	    COMMON_CODE_RESVE_AT,
-	    COMMON_CODE_FCLTY_KIND
+	    COMMON_CODE_FCLTY_KIND                                                                                                          
 	FROM FCLTY_RESVE
 	ORDER BY FCLTY_RESVE_SN ASC
 </select>
@@ -22,12 +33,34 @@
 	WHERE FCLTY_RESVE_SN = #{fcltyResveSn}
 </delete>
 
-<!-- 시설 갯수 -->
-<select id="getMeetingRoom" resultType="facilityVO" parameterType="String">
+<!-- 회의실 갯수 -->
+<select id="getRoomCount" resultType="int" parameterType="String">
 	SELECT COUNT(COMMON_CODE_FCLTY_KIND)
 	FROM FCLTY
-	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||#{commonCodeFcltyKind}||'%'
+	WHERE COMMON_CODE_FCLTY_KIND LIKE '%'||#{roomCode}||'%'
 </select>
 
 
+<!-- 비품 예약 현황 조회 -->
+<select id="getReservedMatter" resultType="facilityVO">
+	SELECT FCLTY_RESVE_REQUST_MATTER
+	FROM FCLTY_RESVE;
+</select>
+
+<!-- 오늘 예약 현황 조회 -->
+<select id="findTodayResve" resultMap="facilityVOMap" >
+	SELECT 
+	    A.FCLTY_RESVE_SN
+	    ,A.FCLTY_RESVE_END_TIME
+	    ,A.FCLTY_RESVE_BEGIN_TIME
+	    ,A.FCLTY_RESVE_REQUST_MATTER
+	    ,A.FCLTY_RESVE_EMPL_ID
+	    ,A.COMMON_CODE_RESVE_AT
+	    ,A.COMMON_CODE_FCLTY_KIND
+        ,B.EMPL_NM
+	FROM FCLTY_RESVE A
+    INNER JOIN EMPL B
+    ON A.FCLTY_RESVE_EMPL_ID = B.EMPL_ID
+	WHERE TO_DATE(FCLTY_RESVE_BEGIN_TIME, 'YY/MM/DD HH24:MI:SS') >= TRUNC(SYSDATE)
+</select>
 </mapper>

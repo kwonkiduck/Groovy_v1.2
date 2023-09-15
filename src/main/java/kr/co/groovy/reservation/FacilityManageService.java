@@ -28,10 +28,16 @@ public class FacilityManageService {
 	public FacilityVO addFcilityName(FacilityVO facilityVO) {
 		String commonCodeFcltyKind = facilityVO.getCommonCodeFcltyKind();
 		String fcltyName = getFacilityName(commonCodeFcltyKind);
-		// log.info("(서비스)값이 나오니? " + commonCodeFcltyKind);
 		// VO에 시설이름 저장
 		facilityVO.setFcltyName(fcltyName);
-		// log.info("(서비스)값이 나오니? " + fcltyName);
+		return facilityVO;
+	}
+	// 저장된 시설 코드 VO에 전달
+	public FacilityVO addFcilityCode(FacilityVO facilityVO) {
+		String fcltyName = facilityVO.getFcltyName();
+		String fcltyCode = getFacilityCode(fcltyName);
+		// VO에 시설이름 저장
+		facilityVO.setFcltyCode(fcltyCode);
 		return facilityVO;
 	}
 
@@ -64,12 +70,16 @@ public class FacilityManageService {
 
 		return facilityVO;
 	}
-
-	//시설 수 세팅
-	public int getFacilityCount(String CommonCodeFcltyKind) {
-		String facilityCount = setMeetingCode(CommonCodeFcltyKind);
-		facilityCount = setRetiringCode(facilityCount);
-		return mapper.getRoomCount(CommonCodeFcltyKind);
+	
+	// 시설 구분코드 저장
+	public String getFacilityCode(String fcltyName) {
+		if (fcltyName.equals("회의실")) {
+			return "A101";
+		} else if (fcltyName.equals("휴게실")) {
+			return "R101";
+		} else {
+			return getFacilityCode(fcltyName);
+		}
 	}
 	
 	// 회의실 코드 세팅
@@ -89,4 +99,34 @@ public class FacilityManageService {
 			return CommonCodeFcltyKind;
 		}
 	}
+	// 회의실 이름 세팅
+	public String setMeetingName(String fcltyName) {
+		if (fcltyName.startsWith("회의실")) {
+			return "회의실";
+		} else {
+			return fcltyName;
+		}
+	}
+	
+	// 휴게실 이름 세팅
+	public String setRetiringName(String fcltyName) {
+		if (fcltyName.startsWith("휴게실")) {
+			return "휴게실";
+		} else {
+			return fcltyName;
+		}
+	}
+	
+	//회의실 갯수 
+	public int getRoomCount(String roomCode) {
+		return mapper.getRoomCount(roomCode);
+	}
+	
+	//당알 예약 가져오기
+	public List<FacilityVO> findTodayResve() {
+		List<FacilityVO> todayResve = mapper.findTodayResve();
+		log.info("당일 예약 나오니?? " + todayResve);
+		return todayResve;
+	}
 }
+

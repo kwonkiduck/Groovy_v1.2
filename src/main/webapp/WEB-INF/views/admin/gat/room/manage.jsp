@@ -49,14 +49,14 @@ table tr td, table tr th {
 	grid-template-rows: repeat(2, 1fr);
 	grid-template-columns: repeat(2, 1fr)
 }
-#fcltyResveSn, #fcltyCatagory, .fcltyResveSn{
+#fcltyResveSn, .fcltyResveSn{
 	display: none;
 }
 </style>
 <div class="wrap">
 	<ul>
-		<li><a href="#" class="tab">시설 관리</a></li>
-		<li><a href="#" class="tab">예약 현황</a></li>
+		<li><a href="/run/manage" class="tab">시설 관리</a></li>
+		<li><a href="/run/manage" class="tab">예약 현황</a></li>
 	</ul>
 </div>
 <br /><br />
@@ -65,7 +65,7 @@ table tr td, table tr th {
 		<div class="header">
 			<h3>오늘 예약 현황</h3>
 			<p>
-				<a href="#" class="totalResve"><span id="countValue"></span>건</a>
+				<a href="list" class="totalResve"><span id="countValue"></span>건</a>
 			</p>
 			<a href="list">더보기</a>
 		</div>
@@ -76,7 +76,7 @@ table tr td, table tr th {
 						<tr>
 							<th>순서</th>
 							<th id="fcltyResveSn">순번</th>
-							<th id="fcltyCatagory">시설 종류 구분</th>
+							<th>시설 종류 구분</th>
 							<th>예약시설 이름</th>
 							<th>시작 날짜</th>
 							<th>끝 날짜</th>
@@ -89,7 +89,7 @@ table tr td, table tr th {
 							<tr>
 								<td>${stat.count}</td>
 								<td class="fcltyResveSn">${room.fcltyResveSn}</td>
-								<td id="fcltyCatagory">${room.commonCodeFcltyKind}</td>
+								<td>${room.fcltyCode}</td>
 								<td>${room.fcltyName}</td>
 								<c:set var="fcltyResveBegin" value="${room.fcltyResveBeginTime}"/>
 								<fmt:formatDate value="${fcltyResveBegin}" pattern="yyyy-MM-dd" var="fbeginTime"/>
@@ -110,15 +110,19 @@ table tr td, table tr th {
 		<div class="header">
 			<div class="titleWrap" style="display: block">
 				<h3>시설 관리</h3>
-				<br/>
-				<table>
+				<br/>    
+				<table border=1 style="width: 100%">
 					<tbody>
-					<c:forEach items="${countingRoom}" var="count">
 						<tr>
-							<td>회의실 | <span class="totalConfm"></span>개</td>
-							<td>휴게실 | ${count.retiringRoom}개</td>
-						</tr>
-					</c:forEach>
+                			<td>
+                				회의실 | ${meetingCount}개
+                			</td>
+            			</tr>
+            			<tr>
+                			<td>
+                				휴게실 | ${retiringCount}개
+                			</td>
+            			</tr>
 					</tbody>
 				</table>
 			</div>
@@ -148,7 +152,6 @@ table tr td, table tr th {
 							<li>소화기</li>
 						</ul>
 					</li>
-
 				</ul>
 				<ul id="rest">
 					<li class="roomInfoList">
@@ -215,19 +218,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // delClickEvent 함수 호출
     delClickEvent();
 });  
-
-function countMeeting (){
-	let meeting = document.querySelectorAll(".totalConfm");
-	meeting.onload = function fAjax(){
-		let xhr = new XMLHttpRequest();
-		xhr.open("GET","/reservation/countMeeting?countingMeetng=" +countingMeetng",true);
-		xhr.onreadystatechange = function(){
-			if (xhr.readyState == 4 && xhr.status == 200){
-				console.log(xhr.responseText);
-			}
-		}
-		xhr.send();
-	}
-
-}
 </script>

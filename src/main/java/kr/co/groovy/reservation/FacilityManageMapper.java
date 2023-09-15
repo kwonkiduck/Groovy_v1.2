@@ -15,7 +15,13 @@ public interface FacilityManageMapper {
     //예약취소
     public void delReserve(int fcltyResveSn);
     
-    //시설 갯수
-    public int getRoomCount(String facilityCount);
+    //회의실 갯수
+    public int getRoomCount(String oomCode);
+    
+    //해당 시설에 비품 유무 조회
+    public List<FacilityVO> getReservedMatter();
+    
+    //당일 예약 조회
+    public List<FacilityVO> findTodayResve();
 
 }	
