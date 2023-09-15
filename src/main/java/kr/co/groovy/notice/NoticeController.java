@@ -34,11 +34,10 @@ public class NoticeController {
 
     /* 관리자 */
     @GetMapping("/manageNotice")
-    public ModelAndView manageNotice(ModelAndView mav) {
+    public String manageNotice(Model model) {
         List<NoticeVO> list = service.loadNoticeListForAdmin();
-        mav.addObject("notiList", list);
-        mav.setViewName("admin/gat/notice/manage");
-        return mav;
+        model.addAttribute("notiList", list);
+        return "admin/gat/notice/manage";
     }
 
     @GetMapping("/inputNotice")
@@ -53,19 +52,21 @@ public class NoticeController {
     }
 
     @GetMapping("/detailForAdmin")
-    public ModelAndView loadNoticeDetailForAdmin(ModelAndView mav, String notiSeq) {
-        NoticeVO vo = service.loadNoticeDetail(notiSeq);
-        List<UploadFileVO> list = service.loadNotiFiles(notiSeq);
-        mav.addObject("noticeDetail", vo);
-        mav.addObject("notiFiles", list);
-        mav.setViewName("admin/gat/notice/detail");
-        return mav;
+    public String loadNoticeDetailForAdmin(Model model, String notiEtprCode) {
+        NoticeVO vo = service.loadNoticeDetail(notiEtprCode);
+        log.info(vo.toString());
+        List<UploadFileVO> list = service.loadNotiFiles(notiEtprCode);
+        model.addAttribute("noticeDetail", vo);
+        if (list != null) {
+            model.addAttribute("notiFiles", list);
+        }
+        return "admin/gat/notice/detail";
     }
 
     @GetMapping("/deleteNotice")
     public String deleteNotice(String notiEtprCode) {
         service.deleteNotice(notiEtprCode);
-        return "redirect:/admin/gat/notice/manage";
+        return "redirect:/notice/manageNotice";
     }
 
 

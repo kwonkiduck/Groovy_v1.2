@@ -41,12 +41,10 @@ public class CommunityController {
     public ModelAndView teamComminity(Principal principal, ModelAndView mav) {
         emplId = principal.getName();
         List<SntncVO> sntncList = service.loadPost(emplId);
-        List<EmployeeVO> employeeList = service.loadEmpl(emplId);
         Map<String, Integer> recomendPostCnt = new HashMap<>();
         Map<String, Integer> recomendedEmpleChk = new HashMap<>();
         Map<String, Integer> answerPostCnt = new HashMap<>();
         HashMap<String, Object> map = new HashMap<>();
-
         for (SntncVO post : sntncList) {
             String sntncEtprCode = post.getSntncEtprCode();
 
@@ -64,7 +62,6 @@ public class CommunityController {
 
         }
         mav.addObject("sntncList", sntncList);
-        mav.addObject("employeeList", employeeList);
         mav.addObject("recomendPostCnt", recomendPostCnt);
         mav.addObject("recomendedEmpleChk", recomendedEmpleChk);
         mav.addObject("answerPostCnt", answerPostCnt);
@@ -91,7 +88,6 @@ public class CommunityController {
     @DeleteMapping("/deletePost")
     public void deletePost(@RequestBody Map<String, Object> map){
         map.put("sntncWrtingEmplId", emplId);
-        log.info("map ====> " + map);
         service.deletePost(map);
     }
     /* 좋아요 구현 */

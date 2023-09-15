@@ -983,3 +983,9 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/gat/club/registList.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/trash.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/at/card/manage.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/at/card/reservationRecords.jsp
+target/classes/kr/co/groovy/diet/DietController.class
+target/classes/kr/co/groovy/diet/DietMapper.class
+target/classes/kr/co/groovy/diet/DietService.class
+target/classes/kr/co/groovy/sanction/SanctionRestController.class
+target/classes/mappers/diet-mapper.xml
+target/classes/kr/co/groovy/enums/DutyKind.class

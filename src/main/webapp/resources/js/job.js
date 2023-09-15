@@ -6,7 +6,7 @@ document.querySelector(".requestJob").addEventListener("click", () => {
     document.querySelector("#modal").style.display = "flex";
     document.querySelector("#modal-request-job").classList.add("on");
 });
-document.getElementById("requestJobDetailContainer").addEventListener("click", (event) => {
+document.getElementById("requestJobContainer").addEventListener("click", (event) => {
     document.querySelector("#modal").style.display = "flex";
     document.querySelector("#modal-requestDetail-job").classList.add("on");
 
@@ -21,7 +21,6 @@ document.getElementById("requestJobDetailContainer").addEventListener("click", (
             type: 'get',
             url: '/job/getJobByNo?jobNo=' + jobNo,
             success: function (rslt) {
-                console.log(rslt);
                 document.querySelector(".data-sj").innerText = rslt.jobSj;
                 document.querySelector(".data-cn").innerText = rslt.jobCn;
                 document.querySelector(".data-begin").innerText = rslt.jobBeginDate;
@@ -48,7 +47,6 @@ document.getElementById("requestJobDetailContainer").addEventListener("click", (
                 console.log(xhr.status);
             }
         });
-
     }
 });
 document.querySelector(".addJob").addEventListener("click", () => {

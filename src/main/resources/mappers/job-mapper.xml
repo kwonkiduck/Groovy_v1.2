@@ -12,6 +12,7 @@
     <resultMap id="jobMap" type="jobVO">
         <result property="jobNo" column="JOB_NO"/>
         <result property="jobRequstEmplId" column="JOB_REQUST_EMPL_ID"/>
+        <result property="jobRequstEmplProfl" column="UPLOAD_FILE_STRE_NM"/>
         <result property="jobSj" column="JOB_SJ"/>
         <result property="jobCn" column="JOB_CN"/>
         <result property="jobBeginDate" column="JOB_BEGIN_DATE"/>
@@ -156,5 +157,26 @@
         WHERE J.JOB_NO = P.JOB_NO
           AND P.JOB_RECPTN_EMPL_ID = E.EMPL_ID
           AND J.JOB_NO = #{jobNo}
+    </select>
+
+    <select id="getAllReceiveJobById" resultMap="jobMap" parameterType="String">
+        SELECT J.JOB_SJ,
+               J.JOB_CN,
+               J.JOB_BEGIN_DATE,
+               J.JOB_CLOS_DATE,
+               J.COMMON_CODE_DUTY_KIND,
+               P.JOB_RECPTN_EMPL_ID,
+               E.EMPL_NM,
+               U.UPLOAD_FILE_STRE_NM,
+               P.COMMON_CODE_DUTY_STTUS,
+               P.COMMON_CODE_DUTY_PROGRS
+        FROM JOB J,
+             JOB_PROGRS P,
+             EMPL E,
+             UPLOAD_FILE U
+        WHERE J.JOB_NO = P.JOB_NO
+          AND E.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
+          AND P.JOB_RECPTN_EMPL_ID = E.EMPL_ID
+          AND P.JOB_RECPTN_EMPL_ID = #{jobRequstEmplProfl}
     </select>
 </mapper>

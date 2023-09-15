@@ -11,7 +11,7 @@
                 <span id="departName" class="font-24 font-md">인사부</span>
             </div>
             <div class="btn-wrap">
-                <button id="logout" class="font-11 btn-free-white color-font-md">로그아웃<i class="icon i-signOut"></i></button>
+                <button id = "logout" class="font-11 btn-free-white"><a href="${pageContext.request.contextPath}/signOut" style="color: black;" >로그아웃<i class="icon i-signOut"></i></a></button>
             </div>
         </div>
     </header>
@@ -21,10 +21,10 @@
                 <li class="department nav-list"><a href="#" class="active">인사팀  <i class="icon i-arr-bt"></i></a></li>
                 <ul>
                     <li class="nav-list"><a href="#"><i class="icon i-sanction"></i >결재 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-emp"></i >사원 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/employee/manageEmp"><i class="icon i-emp"></i >사원 관리</a></li>
                     <li class="nav-list"><a href="#"><i class="icon i-todo"></i >연차 관리</a></li>
                     <li class="nav-list"><a href="${pageContext.request.contextPath}/employee/loadLog"><i class="icon i-job"></i >근태 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-money"></i >기본 급여 및 시간외 수당 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/salary"><i class="icon i-money"></i >기본 급여 및 시간외 수당 관리</a></li>
                 </ul>
             </ul>
         </div>

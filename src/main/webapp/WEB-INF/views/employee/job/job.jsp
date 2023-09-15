@@ -295,9 +295,18 @@
         </div>
     </div>
 </div>
+<div id="receiveJob">
+    <h1>들어온 업무 요청</h1>
+    <h1>${receiveJobList}</h1>
+    <c:forEach var="receiveJobVO" items="${receiveJobList}" >
+        <button class="receiveJob">
+            <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile">
+                ${receiveJobVO.jobSj}
+        </button>
+    </c:forEach>
+</div>
 
-<button class="receiveJob">스마트 홈 시스템 확장,인공지능 비서가 집안 생활을 편리하게 지원</button> <br />
-<div id="requestJobDetailContainer">
+<div id="requestJobContainer">
     <h1>요청한 업무</h1>
     <c:forEach var="requestJobVO" items="${requestJobList}" >
         <button type="button" class="requestJobDetail" data-seq="${requestJobVO.jobNo}">

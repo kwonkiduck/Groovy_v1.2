@@ -133,7 +133,7 @@
 
         function loadLine() {
             $.ajax({
-                url: "/sanction/loadBookmark?emplId=" + emplId,
+                url: `/sanction/api/bookmark/\${emplId}`,
                 type: "GET",
                 success: function (lines) {
                     console.log(lines)
@@ -174,7 +174,7 @@
                 elctrnSanctnLineBookmark: jsonApprover
             }
             $.ajax({
-                url: "/sanction/inputBookmark",
+                url: "/sanction/api/bookmark",
                 type: "POST",
                 data: JSON.stringify(jsonData),
                 contentType: "application/json",
@@ -189,7 +189,7 @@
 
 
         $.ajax({
-            url: '/sanction/loadAllLine?emplId=' + emplId,
+            url: `/sanction/api/line/\${emplId}`,
             method: 'GET',
             contentType: "application/json;charset=utf-8",
             dataType: 'json',

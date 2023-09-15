@@ -67,6 +67,8 @@ public class ClubController {
         List<ClubVO> clubRegistList = service.loadAllClub("1");
         model.addAttribute("clubList",clubList);
         model.addAttribute("clubRegistList",clubRegistList);
+        log.info("clubList ===> " + clubList);
+        log.info("clubRegistList ===> " + clubRegistList);
         return "admin/gat/club/manage";
     }
     @ResponseBody
@@ -92,6 +94,7 @@ public class ClubController {
     @PostMapping("/admin/proposalList")
     public List<ClubVO> loadProposalList(){
         List<ClubVO> clubList = service.loadProposalList();
+        log.info("clubList ==> " + clubList);
         return clubList;
     }
     @GetMapping("/admin/registList")

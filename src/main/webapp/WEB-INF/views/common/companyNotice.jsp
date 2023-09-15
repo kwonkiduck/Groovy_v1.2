@@ -57,7 +57,7 @@
 </style>
 <h1 class="font-36 font-md color-font-high">공지사항</h1>
 <div class="box-sort-search">
-    <form action="/common/findNotice" method="get">
+    <form action="${pageContext.request.contextPath}/notice/findNotice" method="get">
         <select name="sortBy" id="" class="stroke">
             <option value="DESC">최신순</option>
             <option value="ASC">오래된순</option>
@@ -75,7 +75,7 @@
     <c:forEach var="noticeVO" items="${noticeList}" varStatus="stat"> <!-- 12: 공지사항 개수(length) -->
 
         <div class="box-notice card-df">
-            <a href="/common/noticeDetail?notiEtprCode=${noticeVO.notiEtprCode}">
+            <a href="/notice/noticeDetail?notiEtprCode=${noticeVO.notiEtprCode}">
                 <p><img src="/resources/images/${noticeVO.notiCtgryIconFileStreNm}"></p>
                 <p>${noticeVO.notiTitle}</p>
                 <p>${noticeVO.notiContent}</p>

@@ -34,37 +34,15 @@ public class SanctionController {
         return "sanction/template/write";
 
     }
-
-    @PostMapping("/approve")
-    @ResponseBody
-    public void approve(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
-        service.approve(elctrnSanctnemplId, elctrnSanctnEtprCode);
+    @GetMapping("/box")
+    public String getSanctionBox() {
+        return "sanction/box";
     }
 
-    @PostMapping("/finalApprove")
-    @ResponseBody
-    public void finalApprove(String elctrnSanctnemplId, String elctrnSanctnEtprCode) {
-        service.finalApprove(elctrnSanctnemplId, elctrnSanctnEtprCode);
+    @GetMapping("/document")
+    public String getInProgress() {
+        return "sanction/document";
     }
-
-    @PostMapping("/reject")
-    @ResponseBody
-    public void reject(String elctrnSanctnemplId, String sanctnLineReturnResn, String elctrnSanctnEtprCode) {
-        service.reject(elctrnSanctnemplId, sanctnLineReturnResn, elctrnSanctnEtprCode);
-    }
-
-    @PostMapping("/collect")
-    @ResponseBody
-    public void collect(String elctrnSanctnEtprCode) {
-        service.collect(elctrnSanctnEtprCode);
-    }
-
-    @PostMapping("/startApprove")
-    @ResponseBody
-    public void startApprove(@RequestBody Map<String, Object> request) {
-        service.startApprove(request);
-    }
-
 
     @GetMapping("/read/{sanctionNo}")
     public String loadSanction(@PathVariable String sanctionNo, Model model) {
@@ -89,96 +67,9 @@ public class SanctionController {
             @PathVariable String formatSanctnKnd, Model model) {
         String etprCode = service.getSeq(Department.valueOf(formatSanctnKnd).label());
         SanctionFormatVO vo = service.loadFormat(format);
-        String template = vo.getFormatCn();
         model.addAttribute("template", vo);
         model.addAttribute("etprCode", etprCode);
         return "sanction/template/write";
     }
-
-
-    @PostMapping("/inputSanction")
-    @ResponseBody
-    public void inputSanction(@RequestBody ParamMap requestData) {
-        service.inputSanction(requestData);
-    }
-
-
-    // --------------------------------------------------------------------------------------------------------------------
-    @GetMapping("/getStatus")
-    @ResponseBody
-    public String getStatus(@RequestParam("elctrnSanctnDrftEmplId") String elctrnSanctnDrftEmplId,
-                            @RequestParam("commonCodeSanctProgrs") String commonCodeSanctProgrs) {
-        return String.valueOf(service.getStatus(elctrnSanctnDrftEmplId, commonCodeSanctProgrs));
-    }
-
-    @GetMapping("/loadAllLine")
-    @ResponseBody
-    public List<EmployeeVO> loadAllLine(@RequestParam("emplId") String emplId, ModelAndView mav) {
-        log.info("loadLine" + emplId);
-        List<String> departmentCodes = Arrays.asList("DEPT010", "DEPT011", "DEPT012", "DEPT013", "DEPT014", "DEPT015");
-        List<EmployeeVO> allEmployees = new ArrayList<>();
-        for (String deptCode : departmentCodes) {
-            List<EmployeeVO> deptEmployees = service.loadAllLine(deptCode, emplId);
-            for (EmployeeVO vo : deptEmployees) {
-                vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
-                vo.setCommonCodeClsf(ClassOfPosition.valueOf(vo.getCommonCodeClsf()).label());
-            }
-            allEmployees.addAll(deptEmployees);
-        }
-        return allEmployees;
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------
-
-    @GetMapping("/box")
-    public String getSanctionBox() {
-        return "sanction/box";
-    }
-
-    @GetMapping("/document")
-    public String getInProgress() {
-        return "sanction/document";
-    }
-
-    @GetMapping("/loadRequest")
-    @ResponseBody
-    public List<SanctionVO> loadRequest(String emplId) {
-        return service.loadRequest(emplId);
-    }
-
-    @GetMapping("/loadAwaiting")
-    @ResponseBody
-    public List<SanctionLineVO> loadAwaiting(String emplId) {
-        return service.loadAwaiting(emplId);
-    }
-
-    @GetMapping("/loadReference")
-    @ResponseBody
-    public List<SanctionVO> loadReference(String emplId) {
-        return service.loadReference(emplId);
-    }
-
-
-    /* 결재선 즐겨찾기 */
-    @PostMapping("/inputBookmark")
-    @ResponseBody
-    public void inputBookmark(@RequestBody SanctionBookmarkVO vo) {
-        log.info(vo.toString());
-        service.inputBookmark(vo);
-    }
-
-    @GetMapping("/loadBookmark")
-    @ResponseBody
-    public List<Map<String, String>> loadBookmark(String emplId) {
-        List<Map<String, String>> list = service.loadBookmark(emplId);
-        return list;
-    }
-
-    @PostMapping("/deleteBookmark")
-    @ResponseBody
-    public void deleteBookmark(String elctrnSanctnBookmarkName) {
-        service.deleteBookmark(elctrnSanctnBookmarkName);
-    }
-
 }
 

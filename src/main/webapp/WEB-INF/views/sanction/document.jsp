@@ -26,6 +26,7 @@
     </div>
     <script>
         $(document).ready(function () {
+            let emplId = "${CustomUser.employeeVO.emplId}";
             /*
                기안 문서 불러오기
              */
@@ -33,7 +34,7 @@
                 // 진행 중(상신)
                 $.ajax({
                     type: "GET",
-                    url: "/sanction/loadRequest?emplId=${CustomUser.employeeVO.emplId}",
+                    url: `/sanction/api/request/\${emplId}`,
                     success: function (res) {
                         let code = "<table border=1>";
                         code += `<thead><tr><th>문서번호</th>><th>결재양식</th><th>제목</th><th>기안일시</th><th>상태</th></thead><tbody>`;
@@ -63,7 +64,7 @@
             */
             $("#approve").on("click", function () {
                 $.ajax({
-                    url: '/sanction/loadAwaiting?emplId=' + '${CustomUser.employeeVO.emplId}',
+                    url: `/sanction/api/awaiting/\${emplId}`,
                     type: 'GET',
                     success: function (res) {
                         let code = "<table border=1>";
@@ -94,7 +95,7 @@
             */
             $("#reference").on("click", function () {
                 $.ajax({
-                    url: '/sanction/loadReference?emplId=' + '${CustomUser.employeeVO.emplId}',
+                    url: `/sanction/api/reference/\${emplId}`,
                     type: 'GET',
                     success: function (res) {
                         let code = "<table border=1>";

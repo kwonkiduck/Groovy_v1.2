@@ -29,7 +29,7 @@
                 #{clbEtprCode},
                 #{clbNm},
                 #{clbDc},
-                TO_CHAR(SYSDATE, 'yyyy-MM-dd'),
+                SYSDATE,
                 #{clbPsncpa},
                 #{clbChirmnEmplId},
                 #{clbKind},
