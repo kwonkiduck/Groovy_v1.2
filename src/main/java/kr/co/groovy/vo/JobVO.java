@@ -24,6 +24,6 @@ public class JobVO {
     private Date jobRequstDate;
     private String commonCodeDutyKind;
 
-
     private List<String> selectedEmplIds;//수신 사원 리스트
+    private List<JobProgressVO> jobProgressVOList;
 }

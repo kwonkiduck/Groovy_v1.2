@@ -96,6 +96,26 @@
         border: 1px solid black;
         padding: 12px;
     }
+    .대기 {
+        border-radius: 8px;
+        background: var(--color-font-row);
+        padding: 10px;
+        color: white;
+    }
+
+    .승인 {
+        border-radius: 8px;
+        background: var(--color-main);
+        padding: 10px;
+        color: white;
+    }
+
+    .거절 {
+        border-radius: 8px;
+        background: #D93C3C;
+        padding: 10px;
+        color: white;
+    }
 </style>
 
 <a href="#">할 일</a>
@@ -278,7 +298,14 @@
 
 <button class="receiveJob">스마트 홈 시스템 확장,인공지능 비서가 집안 생활을 편리하게 지원</button> <br />
 <div id="requestJobDetailContainer">
-    <button class="requestJobDetail">요청한 업무 [최서연] 회의록 작성 건</button><br /><br />
+    <h1>요청한 업무</h1>
+    <c:forEach var="requestJobVO" items="${requestJobList}" >
+        <button type="button" class="requestJobDetail" data-seq="${requestJobVO.jobNo}">
+                ${requestJobVO.jobSj}
+                 ${requestJobVO.jobRequstDate}
+        </button>
+        <br/>
+    </c:forEach>
 </div>
 <button class="requestJob">업무 요청하기</button><br />
 <button class="addJob">+</button>
@@ -354,8 +381,6 @@
                 <button id="agree">승인</button>
             </div>
         </div>
-
-        <!-- 업무 요청하기 -->
         <div id="modal-request-job" class="modal-common">
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 요청하기</h4>
@@ -424,7 +449,7 @@
                 <button type="submit" id="request">요청</button>
             </div>
         </div>
-        <!-- 업무 요청하기 -->
+        <!-- 업무 요청하기 (상세) -->
         <div id="modal-requestDetail-job" class="modal-common">
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 요청하기(상세)</h4>
@@ -435,50 +460,39 @@
                     <li class="form-data-list">
                         <h5>📚 업무 제목</h5>
                         <div class="data-box">
-                            <p></p>
+                            <p class="data-sj"></p>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5>✅ 업무 내용</h5>
                         <div class="data-box">
-                            <p></p>
+                            <p class="data-cn"></p>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5>📅 업무 기간</h5>
                         <div class="date">
                             <div class="data-box">
-                                <p></p>
+                                <p class="data-begin"></p>
                             </div>
                             <div class="data-box">
-                                <p></p>
+                                <p class="data-close"></p>
                             </div>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5 for="">💭 업무 분류</h5>
                         <div class="input-data">
-                            <input type="radio" name="" id="">
-                            <label for="">회의</label>
-                            <input type="radio" name="" id="">
-                            <label for="">팀</label>
-                            <input type="radio" name="" id="">
-                            <label for="">개인</label>
-                            <input type="radio" name="" id="">
-                            <label for="">교육</label>
-                            <input type="radio" name="" id="">
-                            <label for="">기타</label>
-                        </div>
-                    </li>
-                    <li class="form-data-list">
-                        <h5 for="">🔥 업무 상태</h5>
-                        <div class="input-data">
-                            <input type="radio" name="" id="">
-                            <label for="">업무 전</label>
-                            <input type="radio" name="" id="">
-                            <label for="">업무 중</label>
-                            <input type="radio" name="" id="">
-                            <label for="">업무 완료</label>
+                            <input type="radio" value="DUTY010" class="data-kind" disabled/>
+                            <label>회의</label>
+                            <input type="radio" value="DUTY011" class="data-kind" disabled/>
+                            <label>팀</label>
+                            <input type="radio" value="DUTY012" class="data-kind" disabled/>
+                            <label>개인</label>
+                            <input type="radio" value="DUTY013" class="data-kind" disabled/>
+                            <label>교육</label>
+                            <input type="radio" value="DUTY014" class="data-kind" disabled/>
+                            <label>기타</label>
                         </div>
                     </li>
                     <li class="form-data-list">
@@ -490,8 +504,8 @@
                                 <li>거절</li>
                             </ul>
                         </div>
-                        <div class="data-box">
-                            <p></p>
+                        <div class="data-box" id="receiveBox">
+
                         </div>
 
                     </li>

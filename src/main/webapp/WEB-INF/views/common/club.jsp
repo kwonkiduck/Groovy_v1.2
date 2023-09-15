@@ -225,10 +225,9 @@
                 return false;
             }
             if(target.id == "leave"){
-                console.log(clbEtprCode);
                 $.ajax({
-                    url: "/club/deleteClubMbr",
-                    type: "DELETE",
+                    url: "/club/updateClubMbrAct",
+                    type: "PUT",
                     data: JSON.stringify({clbEtprCode: clbEtprCode}),
                     contentType: 'application/json',
                     success: function (data) {

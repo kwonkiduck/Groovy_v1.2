@@ -49,4 +49,8 @@ public class JobService {
     List<JobVO> getAllJobById(String jobRequstEmplId) {
         return mapper.getAllJobById(jobRequstEmplId);
     }
+
+    JobVO getJobByNo(int jobNo) {
+        return mapper.getJobByNo(jobNo);
+    }
 }

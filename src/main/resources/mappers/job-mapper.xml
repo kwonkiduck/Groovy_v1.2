@@ -6,7 +6,24 @@
         <result property="jobDiarySbj" column="JOB_DIARY_SBJ" />
         <result property="jobDiaryCn" column="JOB_DIARY_CN" />
         <result property="jobDiaryWrtingEmplId" column="JOB_DIARY_WRTING_EMPL_ID" />
-        <result property="jobDiaryWrtingEmplNm" column="EMPL_NM"></result>
+        <result property="jobDiaryWrtingEmplNm" column="EMPL_NM"/>
+    </resultMap>
+
+    <resultMap id="jobMap" type="jobVO">
+        <result property="jobNo" column="JOB_NO"/>
+        <result property="jobRequstEmplId" column="JOB_REQUST_EMPL_ID"/>
+        <result property="jobSj" column="JOB_SJ"/>
+        <result property="jobCn" column="JOB_CN"/>
+        <result property="jobBeginDate" column="JOB_BEGIN_DATE"/>
+        <result property="jobClosDate" column="JOB_CLOS_DATE"/>
+        <result property="jobRequstDate" column="JOB_REQUST_DATE"/>
+        <result property="commonCodeDutyKind" column="COMMON_CODE_DUTY_KIND"/>
+        <collection property="jobProgressVOList" ofType="jobProgressVO">
+            <result column="JOB_RECPTN_EMPL_ID" property="jobRecptnEmplId"/>
+            <result column="EMPL_NM" property="jobRecptnEmplNm"/>
+            <result column="COMMON_CODE_DUTY_STTUS" property="commonCodeDutySttus"/>
+            <result column="COMMON_CODE_DUTY_PROGRS" property="commonCodeDutyProgrs"/>
+        </collection>
     </resultMap>
 
     <select id="getLeader" parameterType="String" resultType="String">
@@ -121,5 +138,23 @@
         FROM JOB
         WHERE JOB_REQUST_EMPL_ID = #{jobRequstEmplId}
         ORDER BY JOB_NO
+    </select>
+
+    <select id="getJobByNo" resultMap="jobMap" parameterType="int">
+        SELECT J.JOB_SJ,
+               J.JOB_CN,
+               J.JOB_BEGIN_DATE,
+               J.JOB_CLOS_DATE,
+               J.COMMON_CODE_DUTY_KIND,
+               P.JOB_RECPTN_EMPL_ID,
+               E.EMPL_NM,
+               P.COMMON_CODE_DUTY_STTUS,
+               P.COMMON_CODE_DUTY_PROGRS
+        FROM JOB J,
+             JOB_PROGRS P,
+             EMPL E
+        WHERE J.JOB_NO = P.JOB_NO
+          AND P.JOB_RECPTN_EMPL_ID = E.EMPL_ID
+          AND J.JOB_NO = #{jobNo}
     </select>
 </mapper>
