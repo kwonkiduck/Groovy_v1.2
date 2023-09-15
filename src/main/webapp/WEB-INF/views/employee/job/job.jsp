@@ -300,7 +300,7 @@
     <h1>${receiveJobList}</h1>
     <c:forEach var="receiveJobVO" items="${receiveJobList}" >
         <button class="receiveJob">
-            <img src="/resources/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile">
+            <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile">
                 ${receiveJobVO.jobSj}
         </button>
     </c:forEach>
