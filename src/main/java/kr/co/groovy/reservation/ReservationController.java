@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Controller
 @RequestMapping("/reserve")
@@ -63,47 +65,6 @@ public class ReservationController {
             todayReservedVehicles.get(i).setVhcleResveNo(i + 1);
         }
         return todayReservedVehicles;
-    }
-
-    @GetMapping("/manageCard")
-    public String manageCard(Model model) {
-        List<CardReservationVO> loadCardWaitingList = service.loadCardWaitingList();
-        model.addAttribute("loadCardWaitingList", loadCardWaitingList);
-        model.addAttribute("waitingListCnt", loadCardWaitingList.size());
-        log.info("loadCardWaitingList:{}",loadCardWaitingList);
-        log.info("loadCardWaitingList:{}",loadCardWaitingList.size());
-        return "admin/at/card/manage";
-    }
-
-    @PostMapping("/inputCard")
-    @ResponseBody
-    public int inputCard(CardVO cardVO) {
-        log.info("cardVO : {}", cardVO);
-        int result = service.inputCard(cardVO);
-        return result;
-    }
-
-    @GetMapping("/loadAllCard")
-    @ResponseBody
-    public List<CardVO> loadAllCard() {
-        return service.loadAllCard();
-    }
-
-    @PostMapping("/modifyCardNm")
-    @ResponseBody
-    public int modifyCardNm(@RequestBody CardVO cardVO) {
-        return service.modifyCardNm(cardVO);
-    }
-
-    @GetMapping("/modifyCardUseAt/{cprCardNo}")
-    @ResponseBody
-    public int modifyCardUseAt(@PathVariable String cprCardNo) {
-        return service.modifyCardStatusDisabled(cprCardNo);
-    }
-
-    @GetMapping("/manageCard/ReservationRecords")
-    public String manageCardReservationRecords() {
-        return "admin/at/card/reservationRecords";
     }
 
 }

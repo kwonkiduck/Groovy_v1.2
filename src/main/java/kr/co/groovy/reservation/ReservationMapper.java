@@ -16,13 +16,4 @@ public interface ReservationMapper {
 
     int inputVehicle(VehicleVO vo);
 
-    int inputCard(CardVO cardVO);
-
-    List<CardVO> loadAllCard();
-
-    int modifyCardNm(CardVO cardVO);
-
-    int modifyCardStatusDisabled(String cprCardNo);
-
-    List<CardReservationVO> loadCardWaitingList();
 }

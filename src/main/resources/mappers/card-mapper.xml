@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.card.CardMapper">
+
+    <insert id="inputCard" parameterType="cardVO">
+        INSERT INTO CPR_CARD (CPR_CARD_NO,
+                              CPR_CARD_NM,
+                              CPR_CARD_CHRG_CMPNY)
+        VALUES (#{cprCardNo},
+                #{cprCardNm},
+                #{cprCardChrgCmpny})
+    </insert>
+
+    <select id="loadAllCard" resultType="cardVO">
+        SELECT CPR_CARD_NO,
+               CPR_CARD_NM,
+               CPR_CARD_CHRG_CMPNY,
+               CPR_CARD_STTUS
+        FROM CPR_CARD
+        ORDER BY CPR_CARD_STTUS
+    </select>
+
+    <update id="modifyCardNm" parameterType="cardVO">
+        UPDATE CPR_CARD
+        SET CPR_CARD_NM = #{cprCardNm}
+        WHERE CPR_CARD_NO = #{cprCardNo}
+    </update>
+
+    <update id="modifyCardStatusDisabled" parameterType="String">
+        UPDATE CPR_CARD
+        SET CPR_CARD_STTUS = 2
+        WHERE CPR_CARD_NO = #{cprCardNo}
+    </update>
+
+    <select id="loadCardWaitingList" resultType="cardReservationVO">
+        SELECT C.CPR_CARD_RESVE_SN,
+               C.CPR_CARD_RESVE_BEGIN_DATE,
+               C.CPR_CARD_RESVE_CLOS_DATE,
+               C.CPR_CARD_RESVE_EMPL_ID,
+               E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM
+        FROM CPR_CARD_RESVE C, EMPL E
+        WHERE COMMON_CODE_RESVE_AT = 'RESVE010'
+        AND C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
+        ORDER BY CPR_CARD_RESVE_SN
+    </select>
+
+</mapper>
