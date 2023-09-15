@@ -988,3 +988,4 @@ target/classes/kr/co/groovy/diet/DietMapper.class
 target/classes/kr/co/groovy/diet/DietService.class
 target/classes/kr/co/groovy/sanction/SanctionRestController.class
 target/classes/mappers/diet-mapper.xml
+target/classes/kr/co/groovy/enums/DutyKind.class

@@ -1,5 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<link href="/resources/css/schedule/calendar.css" rel="stylesheet" />
+<script src="/resources/fullcalendar/main.js"></script>
+<script src="/resources/fullcalendar/ko.js"></script>
+
+<!-- 캘린더에 시간 안 보이게 하기, 크기 조정 -->
+<style>
+.fc-event-time {
+	display: none;
+}
+#calendar {
+	width: 500px;
+}
+</style>
 
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
@@ -85,8 +98,14 @@
     <hr/>
     <h3>이번달 생일</h3>
     <div id="birthdayWrap">
-
     </div>
+
+    <br/>
+    <hr/>
+    <h3>일정</h3>
+    <div id="calendar">
+    </div>
+    
     <br/>
     <hr/>
     <h3>날씨</h3>
@@ -275,6 +294,37 @@
                 console.log("code: " + xhr.status)
             }
         })
+        
+        //달력
+        $(document).ready(function(){	
+			$(function(){
+				var request = $.ajax({
+					url : "/calendar/schedule",
+					method : "GET",
+					dataType : "json"
+				});
+				
+				request.done(function(data){
+					let calendarEl = document.getElementById('calendar');
+					calendar = new FullCalendar.Calendar(calendarEl,{
+						height : '500px',
+						slotMinTime : '08:00',
+						slotMaxTime : '20:00',
+						headerToolbar :{
+							left : false,
+							center : false,
+							right : false
+						},
+						initialView : 'dayGridMonth',
+						navLinks : true, 
+						selectable : true, 
+						events : data,
+						locale : 'ko' 
+					});
+					calendar.render();
+				});
+			});
+		})
 
         // 오늘의 식단
         $.ajax({
