@@ -85,7 +85,7 @@
 
             <%-- 세션에 담긴 사번이 문서의 기안자 사번과 같고 결재 코드가 최초 상신 상태일 때--%>
         <c:if test="${CustomUser.employeeVO.emplId == sanction.elctrnSanctnDrftEmplId && sanction.commonCodeSanctProgrs == '상신' }">
-            <button type="button" onclick="collect(${CustomUser.employeeVO.emplId})">회수</button>
+            <button type="button" onclick="collect()">회수</button>
         </c:if>
         <c:forEach var="lineVO" items="${lineList}" varStatus="stat">
             <%-- 세션에 담긴 사번이 문서의 결재자 사번과 같고 결재 상태가 대기이며 결재의 상태가 반려가 아닌 경우--%>
@@ -120,12 +120,8 @@
         function approve(id) {
             console.log(id);
             $.ajax({
-                url: "/sanction/approve",
-                type: "POST",
-                data: {
-                    elctrnSanctnemplId: id,
-                    elctrnSanctnEtprCode: etprCode
-                },
+                url: `/sanction/api/approval/\${id}/\${etprCode}`,
+                type: 'PUT',
                 success: function (data) {
                     alert('승인 처리 성공')
                 },
@@ -134,16 +130,13 @@
                 }
             });
         }
+
         /* 최종 승인 처리 */
         function finalApprove(id) {
             console.log(id);
             $.ajax({
-                url: "/sanction/finalApprove",
-                type: "POST",
-                data: {
-                    elctrnSanctnemplId: id,
-                    elctrnSanctnEtprCode: etprCode
-                },
+                url: `/sanction/api/final/approval/\${id}/\${etprCode}`,
+                type: 'PUT',
                 success: function (data) {
                     alert('최종 승인 처리 성공')
                 },
@@ -166,8 +159,8 @@
         function submitReject() {
             rejectReason = $("#rejectReason").val()
             $.ajax({
-                url: "/sanction/reject",
-                type: "POST",
+                url: '/sanction/api/reject',
+                type: 'PUT',
                 data: {
                     elctrnSanctnemplId: rejectId,
                     sanctnLineReturnResn: rejectReason,
@@ -183,15 +176,11 @@
         }
 
         /* 회수 처리 */
-        function collect(id) {
-            console.log(id);
+        function collect() {
+            console.log(etprCode);
             $.ajax({
-                url: "/sanction/collect",
-                type: "POST",
-                data: {
-                    elctrnSanctnemplId: id,
-                    elctrnSanctnEtprCode: etprCode
-                },
+                url: `/sanction/api/collect/\${etprCode}`,
+                type: 'PUT',
                 success: function (data) {
                     alert('회수 처리 성공')
                 },
