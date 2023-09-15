@@ -12,7 +12,7 @@
             </div>
             <div class="btn-wrap">
                 <button id = "logout" class="font-11 btn-free-white"><a href="${pageContext.request.contextPath}/signOut" style="color: black;" >로그아웃<i class="icon i-signOut"></i></a></button>
-                <button id = "logout" class="font-11 btn-free-white"><a href="${pageContext.request.contextPath}/home" style="color: black;" >사원모드<i class="icon i-home"></i></a></button>
+                <button id = "toHome" class="font-11 btn-free-white"><a href="${pageContext.request.contextPath}/home" style="color: black;" >사원모드<i class="icon i-home"></i></a></button>
             </div>
         </div>
     </header>
