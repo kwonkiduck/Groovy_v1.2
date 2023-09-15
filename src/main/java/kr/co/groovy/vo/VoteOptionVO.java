@@ -4,5 +4,6 @@ public class VoteOptionVO {
     private int voteOptionSeq;
     private int voteRegistSeq;
     private String voteOptionContents;
+    private int voteCnt;
 
 }
