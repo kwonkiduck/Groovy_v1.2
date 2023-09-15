@@ -47,14 +47,11 @@
         init(params){
             this.eGui = document.createElement('div');
             this.eGui.innerHTML = `
-                    <button class="modifyNotice">수정</button>
                     <button class="deleteNotice">삭제</button>
                 `;
             this.id = params.data.notiEtprCode;
-            this.modifyBtn= this.eGui.querySelector(".modifyNotice");
             this.deleteBtn= this.eGui.querySelector(".deleteNotice");
             /*ajax나 뭐 알아서 추가 하기~*/
-            this.modifyBtn.onclick = () => {location.href = "/notice/deleteNotice?notiEtprCode="+ this.id};
             this.deleteBtn.onclick = () => {location.href = "/notice/deleteNotice?notiEtprCode="+ this.id};
         }
         getGui() {

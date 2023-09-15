@@ -41,5 +41,8 @@
         <typeAlias type="kr.co.groovy.vo.SanctionBookmarkVO" alias="sanctionBookmarkVO"/>
         <typeAlias type="kr.co.groovy.vo.JobVO" alias="jobVO"/>
         <typeAlias type="kr.co.groovy.vo.JobProgressVO" alias="jobProgressVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteRegistVO" alias="voteRegistVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteOptionVO" alias="voteOptionVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteVO" alias="voteVO"/>
     </typeAliases>
 </configuration>

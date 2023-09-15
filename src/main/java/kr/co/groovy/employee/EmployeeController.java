@@ -143,14 +143,5 @@ public class EmployeeController {
         return service.loadBirthday();
     }
 
-    @GetMapping("/commute")
-    public String commute() {
-        return "employee/commute";
-    }
-
-    @GetMapping("/teamCommunity")
-    public String teamCommunity() {
-        return "employee/teamCommunity";
-    }
 }
 

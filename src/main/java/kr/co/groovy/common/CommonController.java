@@ -87,10 +87,15 @@ public class CommonController {
         }
     }
 
-    @GetMapping("loadNotice")
+    @GetMapping("/loadNotice")
     @ResponseBody
     public List<NoticeVO> loadNotice() {
         return service.loadNotice();
+    }
+    @GetMapping("/loadSanction/{emplId}")
+    @ResponseBody
+    List<SanctionVO> loadSanction(@PathVariable String emplId){
+        return service.loadSanction(emplId);
     }
 }
 
