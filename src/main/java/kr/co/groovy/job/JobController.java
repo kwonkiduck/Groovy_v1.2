@@ -99,7 +99,9 @@ public class JobController {
     public String jobMain(Principal principal, Model model) {
         String emplId = principal.getName();
         List<JobVO> requestJobList = service.getAllJobById(emplId);
+        List<JobVO> receiveJobList = service.getAllReceiveJobById(emplId);
         model.addAttribute("requestJobList", requestJobList);
+        model.addAttribute("receiveJobList", receiveJobList);
         return "employee/job/job";
     }
 

@@ -31,4 +31,6 @@ public interface JobMapper {
     List<JobVO> getAllJobById(String jobRequstEmplId);
 
     JobVO getJobByNo(int jobNo);
+
+    List<JobVO> getAllReceiveJobById(String jobRecptnEmplId);
 }
