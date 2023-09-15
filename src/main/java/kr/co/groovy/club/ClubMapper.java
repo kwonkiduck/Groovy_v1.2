@@ -1,5 +1,6 @@
 package kr.co.groovy.club;
 
+import kr.co.groovy.vo.ClubMbrVO;
 import kr.co.groovy.vo.ClubVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,9 +13,12 @@ public interface ClubMapper {
     List<ClubVO> loadClub(Map<String, Object> map);
     List<ClubVO> loadProposalList();
     List<ClubVO> loadRegistList();
+    ClubVO loadClubDetail(String clbEtprCode);
+    List<ClubMbrVO> loadClubMbr(String clbEtprCode);
     int getSeq();
     void inputClub(Map<String, Object> map);
     void updateClubAt(Map<String, Object> map);
     void inputClubMbr(Map<String, Object> map);
-    void deleteClubMbr(Map<String, Object> map);
+    void updateClubMbrAct(Map<String, Object> map);
+    void updateClubInfo(ClubVO vo);
 }

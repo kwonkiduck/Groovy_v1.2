@@ -87,7 +87,7 @@
                 acceptAjax(clbEtprCode,"3");
             };
             this.manageBtn.onclick = () => {
-                console.log(this);
+                window.location.href = "/club/admin/" + clbEtprCode;
             };
         }
 

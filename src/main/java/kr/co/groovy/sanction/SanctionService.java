@@ -16,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -176,8 +177,18 @@ public class SanctionService {
         return mapper.loadSanctionFile(elctrnSanctnEtprCode);
     }
 
-    public List<EmployeeVO> loadAllLine(String depCode, String emplId) {
-        return mapper.loadAllLine(depCode, emplId);
+    public List<EmployeeVO> loadAllLine(String emplId) {
+        List<String> departmentCodes = Arrays.asList("DEPT010", "DEPT011", "DEPT012", "DEPT013", "DEPT014", "DEPT015");
+        List<EmployeeVO> allEmployees = new ArrayList<>();
+        for (String deptCode : departmentCodes) {
+            List<EmployeeVO> deptEmployees = mapper.loadAllLine(deptCode, emplId);
+            for (EmployeeVO vo : deptEmployees) {
+                vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
+                vo.setCommonCodeClsf(ClassOfPosition.valueOf(vo.getCommonCodeClsf()).label());
+            }
+            allEmployees.addAll(deptEmployees);
+        }
+        return allEmployees;
     }
 
     public List<SanctionVO> loadReference(String emplId) {
