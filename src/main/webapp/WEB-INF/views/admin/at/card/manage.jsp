@@ -6,7 +6,7 @@
 
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
-    #modifyCardInfoBtn, #saveCardInfoBtn, #cancelModifyCardInfoBtn, #deleteCardBtn {
+    #modifyCardInfoBtn, #saveCardInfoBtn, #cancelModifyCardInfoBtn, #disabledCardBtn {
         display: none;
     }
 </style>
@@ -129,6 +129,9 @@
                         loadAllCard();
                         const newData = rowData.filter(item => item.cprCardResveSn !== assignData.cprCardResveSn);
                         gridOptions.api.setRowData(newData);
+                        let cntText = $("#waitingListCnt").text();
+                        let cnt = parseInt(cntText, 10);
+                        $("#waitingListCnt").text(cnt - 1);
                         alert("카드 지정 완료")
                     },
                     error : function (xhr) {
@@ -166,7 +169,7 @@
             headerName: "순번",
             valueGetter: "node.rowIndex + 1",
         },
-        { field: "cprCardResveSn", headerName:"예약순번", hide: true, getQuickFilterText: (params) => {
+        { field: "cprCardResveSn", headerName:"예약 순번", hide: true, getQuickFilterText: (params) => {
                 return getMedalString(params.value);
             }},
         { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},

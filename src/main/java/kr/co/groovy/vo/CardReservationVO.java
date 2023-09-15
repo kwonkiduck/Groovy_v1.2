@@ -16,6 +16,7 @@ public class CardReservationVO {
     private Date cprCardResveBeginDate;
     private Date cprCardResveClosDate;
     private String cprCardNo;
+    private String cprCardNm;
     private String cprCardResveEmplId;
     private String commonCodeResveAt;
     private String cprCardResveRturnAt;

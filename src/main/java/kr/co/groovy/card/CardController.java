@@ -26,15 +26,12 @@ public class CardController {
         List<CardReservationVO> loadCardWaitingList = service.loadCardWaitingList();
         model.addAttribute("loadCardWaitingList", loadCardWaitingList);
         model.addAttribute("waitingListCnt", loadCardWaitingList.size());
-        log.info("loadCardWaitingList:{}",loadCardWaitingList);
-        log.info("loadCardWaitingList:{}",loadCardWaitingList.size());
         return "admin/at/card/manage";
     }
 
     @PostMapping("/inputCard")
     @ResponseBody
     public int inputCard(CardVO cardVO) {
-        log.info("cardVO : {}", cardVO);
         int result = service.inputCard(cardVO);
         return result;
     }
@@ -60,14 +57,20 @@ public class CardController {
     @PostMapping("/assignCard")
     @ResponseBody
     public int assignCard(@RequestBody CardReservationVO cardReservationVO) {
-        log.info("cardRservationVO : {}", cardReservationVO);
-        log.info("result : {}", service.assignCard(cardReservationVO));
         return service.assignCard(cardReservationVO);
     }
 
     @GetMapping("/reservationRecords")
-    public String manageCardReservationRecords() {
+    public String manageCardReservationRecords(Model model) {
+        List<CardReservationVO> records = service.loadAllResveRecords();
+        model.addAttribute("records", records);
         return "admin/at/card/reservationRecords";
+    }
+
+    @PostMapping("/returnChecked")
+    @ResponseBody
+    public int returnChecked(@RequestBody CardReservationVO cardReservationVO) {
+        return service.returnChecked(cardReservationVO);
     }
 
 }

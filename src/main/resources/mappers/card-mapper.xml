@@ -59,4 +59,35 @@
             END}
     </update>
 
+    <select id="loadAllResveRecords" resultType="cardReservationVO">
+        SELECT CR.CPR_CARD_RESVE_SN,
+               CR.CPR_CARD_RESVE_BEGIN_DATE,
+               CR.CPR_CARD_RESVE_CLOS_DATE,
+               CR.CPR_CARD_NO,
+               C.CPR_CARD_NM,
+               CR.CPR_CARD_RESVE_EMPL_ID,
+               E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM,
+               CR.CPR_CARD_RESVE_RTURN_AT
+        FROM CPR_CARD_RESVE CR, CPR_CARD C, EMPL E
+        WHERE CR.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
+          AND CR.CPR_CARD_NO = C.CPR_CARD_NO
+          AND COMMON_CODE_RESVE_AT = 'RESVE011'
+        ORDER BY CR.CPR_CARD_RESVE_RTURN_AT ASC,
+                 CR.CPR_CARD_RESVE_SN DESC
+    </select>
+
+    <update id="returnChecked" parameterType="cardReservationVO">
+        {CALL
+            DECLARE
+            BEGIN
+                UPDATE CPR_CARD_RESVE
+                SET CPR_CARD_RESVE_RTURN_AT = 1
+                WHERE CPR_CARD_RESVE_SN = #{cprCardResveSn};
+
+                UPDATE CPR_CARD
+                SET CPR_CARD_STTUS = 0
+                WHERE CPR_CARD_NO = #{cprCardNo};
+            END}
+    </update>
+
 </mapper>

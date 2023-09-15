@@ -20,4 +20,8 @@ public interface CardMapper {
     List<CardReservationVO> loadCardWaitingList();
 
     int assignCard(CardReservationVO cardReservationVO);
+
+    List<CardReservationVO> loadAllResveRecords();
+
+    int returnChecked(CardReservationVO cardReservationVO);
 }

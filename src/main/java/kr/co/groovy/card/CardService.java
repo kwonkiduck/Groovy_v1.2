@@ -59,4 +59,12 @@ public class CardService {
         return mapper.assignCard(cardReservationVO);
     }
 
+    public List<CardReservationVO> loadAllResveRecords() {
+        return mapper.loadAllResveRecords();
+    }
+
+    public int returnChecked(CardReservationVO cardReservationVO) {
+        return mapper.returnChecked(cardReservationVO);
+    }
+
 }
