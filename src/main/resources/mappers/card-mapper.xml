@@ -44,4 +44,19 @@
         ORDER BY CPR_CARD_RESVE_SN
     </select>
 
+    <update id="assignCard" parameterType="cardReservationVO">
+        {CALL
+            DECLARE
+            BEGIN
+                UPDATE CPR_CARD_RESVE
+                SET CPR_CARD_NO = #{cprCardNo},
+                COMMON_CODE_RESVE_AT = 'RESVE011'
+                WHERE CPR_CARD_RESVE_SN = #{cprCardResveSn};
+
+                UPDATE CPR_CARD
+                SET CPR_CARD_STTUS = 1
+                WHERE CPR_CARD_NO = #{cprCardNo};
+            END}
+    </update>
+
 </mapper>

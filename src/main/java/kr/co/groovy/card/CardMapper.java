@@ -18,4 +18,6 @@ public interface CardMapper {
     int modifyCardStatusDisabled(String cprCardNo);
 
     List<CardReservationVO> loadCardWaitingList();
+
+    int assignCard(CardReservationVO cardReservationVO);
 }

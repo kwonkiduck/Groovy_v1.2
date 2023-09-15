@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -60,12 +59,13 @@ public class CardController {
 
     @PostMapping("/assignCard")
     @ResponseBody
-    public int assignCard(@RequestBody Map<String, Object> assignData) {
-        log.info("{}", assignData);
-        return 0;
+    public int assignCard(@RequestBody CardReservationVO cardReservationVO) {
+        log.info("cardRservationVO : {}", cardReservationVO);
+        log.info("result : {}", service.assignCard(cardReservationVO));
+        return service.assignCard(cardReservationVO);
     }
 
-    @GetMapping("/ReservationRecords")
+    @GetMapping("/reservationRecords")
     public String manageCardReservationRecords() {
         return "admin/at/card/reservationRecords";
     }

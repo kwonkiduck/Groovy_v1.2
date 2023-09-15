@@ -55,4 +55,8 @@ public class CardService {
         return mapper.loadCardWaitingList();
     }
 
+    public int assignCard(CardReservationVO cardReservationVO) {
+        return mapper.assignCard(cardReservationVO);
+    }
+
 }

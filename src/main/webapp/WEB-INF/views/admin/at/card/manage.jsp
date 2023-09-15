@@ -3,16 +3,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <%-- 동작 위한 스타일 외엔(예: display:none 등) 전부 제가 작업하면서 편하게 보려고 임시로 먹인겁니다 ! --%>
+
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
     #modifyCardInfoBtn, #saveCardInfoBtn, #cancelModifyCardInfoBtn, #deleteCardBtn {
         display: none;
     }
 </style>
-
 <header>
-    <h1>회사 카드 관리</h1>
-    <h1>대여 내역 관리</h1>
+    <h1><a href="${pageContext.request.contextPath}/card/manage">회사 카드 관리</a></h1>
+    <h1><a href="${pageContext.request.contextPath}/card/reservationRecords">대여 내역 관리</a></h1>
 </header>
 <main>
     <h1>카드 등록</h1>
@@ -48,7 +48,7 @@
         <button id="modifyCardInfoBtn">수정</button>
         <button id="saveCardInfoBtn">저장</button>
         <button id="cancelModifyCardInfoBtn">취소</button>
-        <button id="deleteCardBtn">삭제</button>
+        <button id="disabledCardBtn">사용불가 처리</button>
         <form id="cardInfoForm" method="post">
             <table border="1">
                 <tr>
@@ -69,30 +69,6 @@
     <hr/>
     <h1>카드 신청 미처리건 <span id="waitingListCnt" style="color: dodgerblue; font-weight: bolder">${waitingListCnt}</span></h1>
     <div id="cardWaitingList">
-        <table border="1">
-            <tr>
-                <th>순번</th>
-                <th>사원명(사번)</th>
-                <th>사용 시작 일자</th>
-                <th>사용 마감 일자</th>
-                <th>카드 지정</th>
-            </tr>
-            <c:forEach items="${loadCardWaitingList}" var="resve">
-                <tr>
-                    <td>${resve.cprCardResveSn}</td>
-                    <td>${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})</td>
-                    <td><fmt:formatDate value="${resve.cprCardResveBeginDate}" type="date" pattern="yyyy-MM-dd" /></td>
-                    <td><fmt:formatDate value="${resve.cprCardResveClosDate}" type="date" pattern="yyyy-MM-dd" /></td>
-                    <td>
-                        <select name="cprCardNo" class="selectedCard">
-
-                        </select>
-                        <button>저장</button>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-        <hr/>
         <div id="waitingListGrid" class="ag-theme-alpine"></div>
     </div>
     <hr/>
@@ -105,7 +81,7 @@
     const saveCardInfoBtn = $("#saveCardInfoBtn");
     const cancelModifyCardInfoBtn = $("#cancelModifyCardInfoBtn");
     const modifyCardInfoBtn = $("#modifyCardInfoBtn");
-    const deleteCardBtn = $("#deleteCardBtn");
+    const disabledCardBtn = $("#disabledCardBtn");
     const selectedCardName = $("#selectedCardName");
     const selectedCardCom = $("#selectedCardCom");
     const selectedCardNo = $("#selectedCardNo");
@@ -138,7 +114,7 @@
                 selectedCardNo = this.selectedOptionValue;
                 assignData = {
                     cprCardResveSn : cprCardResveSn,
-                    selectedCardNo : selectedCardNo,
+                    cprCardNo : selectedCardNo,
                 }
             });
 
@@ -150,19 +126,21 @@
                     data: JSON.stringify(assignData),
                     contentType: "application/json;charset:utf-8",
                     success : function (result) {
-                        alert("성공")
+                        loadAllCard();
+                        const newData = rowData.filter(item => item.cprCardResveSn !== assignData.cprCardResveSn);
+                        gridOptions.api.setRowData(newData);
+                        alert("카드 지정 완료")
                     },
                     error : function (xhr) {
                         alert("실패")
                         console.log(xhr.responseText);
                     }
                 })
-                alert(`선택한 옵션 값: \${this.selectedOptionValue}, cprCardResveSn 값: \${cprCardResveSn}`);
             };
         }
 
         constructor() {
-            this.selectedOptionValue = ''; // 선택한 옵션의 값을 저장할 변수
+            this.selectedOptionValue = '';
         }
 
         getGui() {
@@ -184,7 +162,11 @@
         gridOptions.api.setQuickFilter(document.getElementById('quickFilter').value);
     }
     const columnDefs = [
-        { field: "cprCardResveSn", headerName:"순번", getQuickFilterText: (params) => {
+        {
+            headerName: "순번",
+            valueGetter: "node.rowIndex + 1",
+        },
+        { field: "cprCardResveSn", headerName:"예약순번", hide: true, getQuickFilterText: (params) => {
                 return getMedalString(params.value);
             }},
         { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},
@@ -251,6 +233,7 @@
             dataType: "json",
             success: function (result) {
                 codeforList = "";
+                optionCode = "<option value='null'>카드 선택</option>";
                 $.each(result, function (idx, obj) {
                     codeforList += `<button class="cards" id="\${obj.cprCardNo}">
                     <p id="btnCardNm">\${obj.cprCardNm}</p>
@@ -264,9 +247,11 @@
                     if(cprCardSttus == 0) {
                         optionCode += `<option value="\${obj.cprCardNo}">\${obj.cprCardNm}</option>`;
                     }
+
                 });
                 cardListDiv.html(codeforList);
-                $(".selectedCard").append(optionCode);
+                $(".selectedCard").html(optionCode);
+
             },
             error: function (xhr) {
                 console.log(xhr.responseText);
@@ -276,29 +261,34 @@
     }
 
     cardListDiv.on("click", ".cards", function () {
+        let selectedCard = $(this);
+        let cardNo = selectedCard.attr("id");
+        let cardMarkNo = selectedCard.find("#btnCardNo").text();
+        let cardNm = selectedCard.find("#btnCardNm").text();
+        let cardCom = selectedCard.find("#btnCardCom").text();
+        let cardStatus = selectedCard.find("#btnCardStatus").val();
+
         saveCardInfoBtn.hide();
         cancelModifyCardInfoBtn.hide();
         modifyCardInfoBtn.show();
-        deleteCardBtn.show();
+        if(cardStatus != 2) {
+            disabledCardBtn.show();
+        } else {
+            disabledCardBtn.hide();
+        }
 
-        let selectedCard = $(this);
-        let selectedCardNo = selectedCard.attr("id");
-        let selectedCardMarkNo = selectedCard.find("#btnCardNo").text();
-        let selectedCardNm = selectedCard.find("#btnCardNm").text();
-        let selectedCardCom = selectedCard.find("#btnCardCom").text();
+        selectedCardName.text(cardNm);
+        selectedCardCom.text(cardCom);
+        selectedCardNo.text(cardMarkNo);
 
-        selectedCardName.text(selectedCardNm);
-        selectedCardCom.text(selectedCardCom);
-        selectedCardNo.text(selectedCardMarkNo);
-
-        currentCardNo = selectedCardNo;
-        currentCardNm = selectedCardNm;
+        currentCardNo = cardNo;
+        currentCardNm = cardNm;
     })
 
     modifyCardInfoBtn.on("click", function () {
         selectedCardName.html(`<input type='text' id='newCardNm' value='\${currentCardNm}'>`);
         $(this).hide();
-        deleteCardBtn.hide();
+        disabledCardBtn.hide();
         saveCardInfoBtn.show();
         cancelModifyCardInfoBtn.show();
     })
@@ -334,7 +324,7 @@
         $(this).hide();
         cancelModifyCardInfoBtn.hide();
         modifyCardInfoBtn.show();
-        deleteCardBtn.show();
+        disabledCardBtn.show();
     })
 
     cancelModifyCardInfoBtn.on("click", function () {
@@ -344,10 +334,10 @@
         $(this).hide();
         saveCardInfoBtn.hide();
         modifyCardInfoBtn.show();
-        deleteCardBtn.show();
+        disabledCardBtn.show();
     })
 
-    deleteCardBtn.on("click", function () {
+    disabledCardBtn.on("click", function () {
         if (confirm(`'\${currentCardNm}' 카드를 사용불가 처리하시겠습니까?`)) {
             $.ajax({
                 url: `/card/modifyCardStatusDisabled/\${currentCardNo}`,
