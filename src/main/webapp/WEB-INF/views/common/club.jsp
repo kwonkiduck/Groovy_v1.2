@@ -132,27 +132,29 @@
         const clbNm = document.querySelector("#clbNm");
         let clbEtprCode;
 
-        /* 이모지 처리   */
+        /*/!* 이모지 처리   *!/
         function containsWindowsEmoji(text) {
             const windowsEmojiRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/;
             return windowsEmojiRegex.test(text);
         }
         function convertImojiToUnicode(text) {
-            let unicodeText = '';
-            for (let i = 0; i < text.length; i++) {
-                const char = text.charAt(i);
-                const codePoint = text.charCodeAt(i);
+            const emojiRegex = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
+            const emojis = text.match(emojiRegex);
 
-                // Check if the character is an emoji (code points typically > 127)
-                if (codePoint > 127) {
-                    unicodeText += '\\u' + codePoint.toString(16).toUpperCase().padStart(4, '0');
-                } else {
-                    unicodeText += char;
-                }
+            if (!emojis) {
+                return text;
             }
 
-            return unicodeText;
-        }
+            return emojis.map(function(match) {
+                if (match.length === 2) {
+                    const codePoint1 = match.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0');
+                    const codePoint2 = match.charCodeAt(2).toString(16).toUpperCase().padStart(4, '0');
+                    return '\\u{' + codePoint1 + '}' + '\\u{' + codePoint2 + '}';
+                } else {
+                    return '\\u{' + match.codePointAt(0).toString(16).toUpperCase().padStart(4, '0') + '}';
+                }
+            }).join('');
+        }*/
         form.addEventListener("submit",e=>{
             e.preventDefault();
         })
@@ -160,10 +162,6 @@
             document.querySelector("#modal-proposal").style.display = "block";
         })
         proposalBtn.addEventListener("click",()=>{
-            if(containsWindowsEmoji(textArea.value)||containsWindowsEmoji(clbNm.value)){
-                textArea.value = convertImojiToUnicode(textArea.value);
-                clbNm.value = convertImojiToUnicode(clbNm.value);
-            }
             form.submit();
             return false;
         })
