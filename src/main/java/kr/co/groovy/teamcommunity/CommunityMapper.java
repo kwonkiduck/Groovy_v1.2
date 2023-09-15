@@ -16,7 +16,6 @@ public interface CommunityMapper {
     int modifyPost(Map<String, Object> map);
     void deletePost(Map<String, Object> map);
     List<SntncVO> loadPost(String emplId);
-    List<EmployeeVO> loadEmpl(String emplId);
     int loadRecomend(String sntncEtprCode);
     int findRecomend(HashMap<String, Object> map);
 

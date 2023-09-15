@@ -74,13 +74,9 @@
                 <tr data-idx="${sntncVO.sntncEtprCode}" class="post">
                     <td class="sntncEtprCode">${sntncVO.sntncEtprCode}</td>
                     <td class="postWriter">
-                        <c:forEach var="employee" items="${employeeList}">
-                            <c:if test="${employee.emplId == sntncVO.sntncWrtingEmplId}">
-                                <img src="/uploads/profile/${employee.proflPhotoFileStreNm}" width="50px;"/>
-                                ${employee.emplNm}
-                                <span class="postWriterInfo" data-id="${employee.emplId}" style="display: none"></span>
-                            </c:if>
-                        </c:forEach>
+                                <img src="/uploads/profile/${sntncVO.proflPhotoFileStreNm}" width="50px;"/>
+                                ${sntncVO.sntncWrtingEmplNm}
+                                <span class="postWriterInfo" data-id="${sntncVO.sntncWrtingEmplId}" style="display: none"></span>
                     </td>
                     <td>${sntncVO.sntncWrtingDate}</td>
                     <td class="sntncCn">${sntncVO.sntncCn}</td>
@@ -89,7 +85,6 @@
                     <td>
                         <c:choose>
                             <c:when test="${sntncVO.uploadFileSn != null && sntncVO.uploadFileSn != 0.0}">
-
                                 <a href="/file/download/teamCommunity?uploadFileSn=${sntncVO.uploadFileSn}">
                                         ${sntncVO.uploadFileOrginlNm}
                                 </a>
@@ -359,6 +354,7 @@
                         data.forEach(item => {
                             code += `<td>
                 <img src="/uploads/profile/\${item.proflPhotoFileStreNm}" style="width: 50px; height: 50px;"/> <br />
+                \${item.answerWrtingEmplNm}<br />
                 \${item.answerCn}<br />
                 \${item.answerDate}
                 </td><br/>`
@@ -376,7 +372,6 @@
             post.forEach((item) => {
                 item.addEventListener("click", function (e) {
                     e.preventDefault();
-                    console.log(e.target);
                     const target = e.target;
                     const recomendEmplId = "${CustomUser.employeeVO.emplId}";
                     const sntncEtprCode = `\${item.getAttribute("data-idx")}`;

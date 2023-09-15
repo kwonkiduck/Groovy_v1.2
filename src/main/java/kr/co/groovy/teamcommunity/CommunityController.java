@@ -41,12 +41,11 @@ public class CommunityController {
     public ModelAndView teamComminity(Principal principal, ModelAndView mav) {
         emplId = principal.getName();
         List<SntncVO> sntncList = service.loadPost(emplId);
-        List<EmployeeVO> employeeList = service.loadEmpl(emplId);
         Map<String, Integer> recomendPostCnt = new HashMap<>();
         Map<String, Integer> recomendedEmpleChk = new HashMap<>();
         Map<String, Integer> answerPostCnt = new HashMap<>();
         HashMap<String, Object> map = new HashMap<>();
-
+        log.info("sntncList ==> " + sntncList);
         for (SntncVO post : sntncList) {
             String sntncEtprCode = post.getSntncEtprCode();
 
@@ -64,7 +63,6 @@ public class CommunityController {
 
         }
         mav.addObject("sntncList", sntncList);
-        mav.addObject("employeeList", employeeList);
         mav.addObject("recomendPostCnt", recomendPostCnt);
         mav.addObject("recomendedEmpleChk", recomendedEmpleChk);
         mav.addObject("answerPostCnt", answerPostCnt);

@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.teamcommunity.CommunityMapper">
-    <select id="loadEmpl" resultType="employeeVO" parameterType="String">
-        SELECT
-            E.EMPL_ID,
-            E.EMPL_NM,
-            UF.UPLOAD_FILE_STRE_NM AS PROFL_PHOTO_FILE_STRE_NM
-        FROM EMPL E
-                 JOIN PROFL PF ON PF.PROFL_EMPL_ID = E.EMPL_ID
-                 JOIN UPLOAD_FILE UF ON PF.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
-        WHERE E.COMMON_CODE_DEPT = (
-            SELECT e1.COMMON_CODE_DEPT
-            FROM EMPL e1
-            WHERE e1.EMPL_ID = #{emplId}
-        )
-    </select>
     <insert id="inputPost" parameterType="sntncVO">
         INSERT INTO SNTNC(SNTNC_ETPR_CODE,
                           SNTNC_WRTING_EMPL_ID,
@@ -42,17 +28,19 @@
     </select>
 
     <select id="loadPost" resultType="sntncVO" parameterType="String">
-        SELECT s.SNTNC_ETPR_CODE,
-               s.SNTNC_CN,
-               s.SNTNC_WRTING_EMPL_ID,
-               s.SNTNC_WRTING_DATE,
-               s.COMMON_CODE_SNTNC_CTGRY,
-               u.UPLOAD_FILE_ORGINL_NM,
-               u.UPLOAD_FILE_SN,
-               u.UPLOAD_FILE_SIZE
-        FROM SNTNC s
-                 JOIN EMPL e ON s.SNTNC_WRTING_EMPL_ID = e.EMPL_ID
-                 LEFT JOIN UPLOAD_FILE u ON s.SNTNC_ETPR_CODE = u.UPLOAD_FILE_ETPR_CODE
+        SELECT S.SNTNC_ETPR_CODE,
+               S.SNTNC_CN,
+               S.SNTNC_WRTING_EMPL_ID,
+               E.EMPL_NM AS sntncWrtingEmplNm,
+               S.SNTNC_WRTING_DATE,
+               S.COMMON_CODE_SNTNC_CTGRY,
+               UF.UPLOAD_FILE_ORGINL_NM,
+               UF.UPLOAD_FILE_SN,
+               UF.UPLOAD_FILE_SIZE,
+               E.PROFL_ETPR_CODE
+        FROM SNTNC S
+                 JOIN EMPL E ON S.SNTNC_WRTING_EMPL_ID = E.EMPL_ID
+                 LEFT JOIN UPLOAD_FILE UF ON s.SNTNC_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
         WHERE s.COMMON_CODE_SNTNC_CTGRY = 'SNTNC010'
           AND e.COMMON_CODE_DEPT = (
             SELECT e1.COMMON_CODE_DEPT
@@ -120,11 +108,13 @@
             A.ANSWER_CN,
             A.ANSWER_DATE,
             A.ANSWER_WRTING_EMPL_ID,
+            E.EMPL_NM AS answerWrtingEmplNm,
             UF.UPLOAD_FILE_STRE_NM AS proflPhotoFileStreNm
-        FROM ANSWER A
-                 JOIN PROFL P ON A.ANSWER_WRTING_EMPL_ID = P.PROFL_EMPL_ID
-                 JOIN UPLOAD_FILE UF ON UF.UPLOAD_FILE_ETPR_CODE = P.PROFL_ETPR_CODE
+        FROM ANSWER A,
+             EMPL E
+                 JOIN UPLOAD_FILE UF ON UF.UPLOAD_FILE_ETPR_CODE = E.PROFL_ETPR_CODE
         WHERE A.SNTNC_ETPR_CODE = #{sntncEtprCode}
+          AND A.ANSWER_WRTING_EMPL_ID = E.EMPL_ID
         ORDER BY A.ANSWER_NO
     </select>
     <!--팀공지-->
