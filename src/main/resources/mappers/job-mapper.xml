@@ -12,6 +12,7 @@
     <resultMap id="jobMap" type="jobVO">
         <result property="jobNo" column="JOB_NO"/>
         <result property="jobRequstEmplId" column="JOB_REQUST_EMPL_ID"/>
+        <result property="jobRequstEmplNm" column="JOB_REQUST_EMPL_NM"/>
         <result property="jobRequstEmplProfl" column="UPLOAD_FILE_STRE_NM"/>
         <result property="jobSj" column="JOB_SJ"/>
         <result property="jobCn" column="JOB_CN"/>
@@ -21,7 +22,7 @@
         <result property="commonCodeDutyKind" column="COMMON_CODE_DUTY_KIND"/>
         <collection property="jobProgressVOList" ofType="jobProgressVO">
             <result column="JOB_RECPTN_EMPL_ID" property="jobRecptnEmplId"/>
-            <result column="EMPL_NM" property="jobRecptnEmplNm"/>
+            <result column="JOB_RECPTN_EMPL_NM" property="jobRecptnEmplNm"/>
             <result column="COMMON_CODE_DUTY_STTUS" property="commonCodeDutySttus"/>
             <result column="COMMON_CODE_DUTY_PROGRS" property="commonCodeDutyProgrs"/>
         </collection>
@@ -148,7 +149,7 @@
                J.JOB_CLOS_DATE,
                J.COMMON_CODE_DUTY_KIND,
                P.JOB_RECPTN_EMPL_ID,
-               E.EMPL_NM,
+               E.EMPL_NM AS JOB_RECPTN_EMPL_NM,
                P.COMMON_CODE_DUTY_STTUS,
                P.COMMON_CODE_DUTY_PROGRS
         FROM JOB J,
@@ -160,23 +161,39 @@
     </select>
 
     <select id="getAllReceiveJobById" resultMap="jobMap" parameterType="String">
-        SELECT J.JOB_SJ,
-               J.JOB_CN,
-               J.JOB_BEGIN_DATE,
-               J.JOB_CLOS_DATE,
-               J.COMMON_CODE_DUTY_KIND,
-               P.JOB_RECPTN_EMPL_ID,
-               E.EMPL_NM,
-               U.UPLOAD_FILE_STRE_NM,
-               P.COMMON_CODE_DUTY_STTUS,
-               P.COMMON_CODE_DUTY_PROGRS
+        SELECT J.JOB_NO,
+               J.JOB_SJ,
+               J.JOB_REQUST_DATE,
+               E.EMPL_NM AS JOB_REQUST_EMPL_NM,
+               U.UPLOAD_FILE_STRE_NM
         FROM JOB J,
              JOB_PROGRS P,
              EMPL E,
              UPLOAD_FILE U
         WHERE J.JOB_NO = P.JOB_NO
           AND E.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
-          AND P.JOB_RECPTN_EMPL_ID = E.EMPL_ID
-          AND P.JOB_RECPTN_EMPL_ID = #{jobRequstEmplProfl}
+          AND J.JOB_REQUST_EMPL_ID = E.EMPL_ID
+          and (P.COMMON_CODE_DUTY_STTUS = 'DUTY020' OR P.COMMON_CODE_DUTY_STTUS = 'DUTY021')
+          AND P.JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
     </select>
+
+    <select id="getReceiveJobByNo" parameterType="int" resultMap="jobMap">
+        SELECT J.JOB_SJ,
+               J.JOB_CN,
+               J.JOB_BEGIN_DATE,
+               J.JOB_CLOS_DATE,
+               J.COMMON_CODE_DUTY_KIND,
+               E.EMPL_NM AS JOB_REQUST_EMPL_NM
+        FROM JOB J,
+             EMPL E
+        WHERE J.JOB_REQUST_EMPL_ID = E.EMPL_ID
+          AND J.JOB_NO = #{jobNo}
+    </select>
+
+    <update id="updateJobStatus" parameterType="jobProgressVO">
+        UPDATE JOB_PROGRS
+        SET COMMON_CODE_DUTY_STTUS = #{commonCodeDutySttus}
+        WHERE JOB_NO = #{jobNo}
+          AND JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
+    </update>
 </mapper>

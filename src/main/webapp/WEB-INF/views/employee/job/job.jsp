@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
     .border {
         border: 1px solid #333333;
@@ -295,13 +296,14 @@
         </div>
     </div>
 </div>
-<div id="receiveJob">
+<div id="receiveJobContainer">
     <h1>들어온 업무 요청</h1>
-    <h1>${receiveJobList}</h1>
     <c:forEach var="receiveJobVO" items="${receiveJobList}" >
-        <button class="receiveJob">
-            <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile">
-                ${receiveJobVO.jobSj}
+        <button class="receiveJob" data-seq="${receiveJobVO.jobNo}">
+            <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile" style="width: 50px;">
+            <span>${receiveJobVO.jobRequstEmplNm}</span>
+            <span> | ${receiveJobVO.jobSj}</span>
+            <span>&nbsp;&nbsp;<fmt:formatDate value="${receiveJobVO.jobRequstDate}" pattern="yy년 MM월 dd일" /></span>
         </button>
     </c:forEach>
 </div>
@@ -311,7 +313,7 @@
     <c:forEach var="requestJobVO" items="${requestJobList}" >
         <button type="button" class="requestJobDetail" data-seq="${requestJobVO.jobNo}">
                 ${requestJobVO.jobSj}
-                 ${requestJobVO.jobRequstDate}
+            <fmt:formatDate value="${requestJobVO.jobRequstDate}" pattern="yy년 MM월 dd일" />
         </button>
         <br/>
     </c:forEach>
@@ -331,56 +333,45 @@
                     <li class="form-data-list">
                         <h5>📚 업무 제목</h5>
                         <div class="data-box">
-                            <p></p>
+                            <p class="receive-sj"></p>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5>✅ 업무 내용</h5>
                         <div class="data-box">
-                            <p></p>
+                            <p class="receive-cn"></p>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5>📅 업무 기간</h5>
                         <div>
                             <div class="data-box">
-                                <p></p>
+                                <p class="receive-begin"></p>
                             </div>
                             <div class="data-box">
-                                <p></p>
+                                <p class="receive-close"></p>
                             </div>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5 for="">💭 업무 분류</h5>
                         <div class="input-data">
-                            <input type="radio" name="" id="">
+                            <input type="radio" class="receive-kind" value="회의">
                             <label for="">회의</label>
-                            <input type="radio" name="" id="">
+                            <input type="radio" class="receive-kind" value="팀">
                             <label for="">팀</label>
-                            <input type="radio" name="" id="">
+                            <input type="radio" class="receive-kind" value="개인">
                             <label for="">개인</label>
-                            <input type="radio" name="" id="">
+                            <input type="radio" class="receive-kind" value="교육">
                             <label for="">교육</label>
-                            <input type="radio" name="" id="">
+                            <input type="radio" class="receive-kind" value="기타">
                             <label for="">기타</label>
-                        </div>
-                    </li>
-                    <li class="form-data-list">
-                        <h5 for="">🔥 업무 상태</h5>
-                        <div class="input-data">
-                            <input type="radio" name="" id="">
-                            <label for="">업무 전</label>
-                            <input type="radio" name="" id="">
-                            <label for="">업무 중</label>
-                            <input type="radio" name="" id="">
-                            <label for="">업무 완료</label>
                         </div>
                     </li>
                     <li class="form-data-list">
                         <h5 for="">💌 보낸 사람</h5>
                         <div class="data-box">
-                            <p></p>
+                            <p class="receive-request"></p>
                         </div>
                     </li>
                 </ul>
@@ -458,7 +449,6 @@
                 <button type="submit" id="request">요청</button>
             </div>
         </div>
-        <!-- 업무 요청하기 (상세) -->
         <div id="modal-requestDetail-job" class="modal-common">
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 요청하기(상세)</h4>

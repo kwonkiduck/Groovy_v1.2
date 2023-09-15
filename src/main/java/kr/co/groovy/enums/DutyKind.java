@@ -17,4 +17,13 @@ public enum DutyKind {
         }
         return null;
     }
+
+    public static String getLabelByValue( String value ) {
+        for (DutyKind dutyKind : values()) {
+            if (dutyKind.name().equals(value)) {
+                return dutyKind.getLabel();
+            }
+        }
+        return null;
+    }
 }

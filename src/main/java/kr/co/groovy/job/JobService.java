@@ -57,4 +57,12 @@ public class JobService {
     List<JobVO> getAllReceiveJobById(String jobRecptnEmplId) {
         return mapper.getAllReceiveJobById(jobRecptnEmplId);
     }
+
+    JobVO getReceiveJobByNo(int jobNo) {
+        return mapper.getReceiveJobByNo(jobNo);
+    }
+
+    void updateJobStatus(JobProgressVO jobProgressVO) {
+        mapper.updateJobStatus(jobProgressVO);
+    }
 }

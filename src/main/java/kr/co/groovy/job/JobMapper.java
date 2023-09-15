@@ -33,4 +33,8 @@ public interface JobMapper {
     JobVO getJobByNo(int jobNo);
 
     List<JobVO> getAllReceiveJobById(String jobRecptnEmplId);
+
+    JobVO getReceiveJobByNo(int jobNo);
+
+    void updateJobStatus(JobProgressVO jobProgressVO);
 }
