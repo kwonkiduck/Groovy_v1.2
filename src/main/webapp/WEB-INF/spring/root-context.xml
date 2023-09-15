@@ -38,6 +38,10 @@
     <bean id="uploadTest" class="java.lang.String">
         <constructor-arg value="/Users/uploads"/>
     </bean>
+    <!-- 개발/테스트용 (수인이 거) -->
+    <bean id="uploadSuin" class="java.lang.String">
+        <constructor-arg value="E:/ddit/uploads" />
+    </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="kr.co.groovy"/>
     </bean>
