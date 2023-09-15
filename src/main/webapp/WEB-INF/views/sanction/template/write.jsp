@@ -120,7 +120,7 @@
             };
 
             $.ajax({
-                url: "/sanction/inputSanction",
+                url: "/sanction/api/sanction",
                 type: "POST",
                 data: JSON.stringify(jsonData),
                 contentType: "application/json",
@@ -172,7 +172,7 @@
                 }
             };
             $.ajax({
-                url: `/sanction/startApprove`,
+                url: `/sanction/reflection`,
                 type: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json",
