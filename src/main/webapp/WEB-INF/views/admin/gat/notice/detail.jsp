@@ -70,11 +70,13 @@
             <div class="box-date">
                 ${noticeDetail.notiDate}
             </div>
-            <c:forEach var="notiFile" items="${notiFiles}" varStatus="stat">
-                <input><a href="/file/download/notice?uploadFileSn=${notiFile.uploadFileSn}">${notiFile.uploadFileOrginlNm}</a>
+            <c:if test="${notiFiles != null}">
+                <c:forEach var="notiFile" items="${notiFiles}" varStatus="stat">
+                    <a href="/file/download/notice?uploadFileSn=${notiFile.uploadFileSn}">${notiFile.uploadFileOrginlNm}</a>
                     <fmt:formatNumber value="${notiFile.uploadFileSize / 1024.0}"
                                       type="number" minFractionDigits="1" maxFractionDigits="1"/> KB</p>
-            </c:forEach>
+                </c:forEach>
+            </c:if>
         </div>
     </div>
 </div>

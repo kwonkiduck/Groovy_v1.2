@@ -57,7 +57,7 @@
 </style>
 <h1 class="font-36 font-md color-font-high">공지사항</h1>
 <div class="box-sort-search">
-    <form action="/notice/findNotice" method="get">
+    <form action="${pageContext.request.contextPath}/notice/findNotice" method="get">
         <select name="sortBy" id="" class="stroke">
             <option value="DESC">최신순</option>
             <option value="ASC">오래된순</option>

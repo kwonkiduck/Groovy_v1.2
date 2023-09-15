@@ -52,11 +52,14 @@ public class NoticeController {
     }
 
     @GetMapping("/detailForAdmin")
-    public String loadNoticeDetailForAdmin(Model model, String notiSeq) {
-        NoticeVO vo = service.loadNoticeDetail(notiSeq);
-        List<UploadFileVO> list = service.loadNotiFiles(notiSeq);
+    public String loadNoticeDetailForAdmin(Model model, String notiEtprCode) {
+        NoticeVO vo = service.loadNoticeDetail(notiEtprCode);
+        log.info(vo.toString());
+        List<UploadFileVO> list = service.loadNotiFiles(notiEtprCode);
         model.addAttribute("noticeDetail", vo);
-        model.addAttribute("notiFiles", list);
+        if (list != null) {
+            model.addAttribute("notiFiles", list);
+        }
         return "admin/gat/notice/detail";
     }
 
