@@ -200,8 +200,7 @@
                COMMON_CODE_CLSF,
                COMMON_CODE_HFFC_STTUS,
                COMMON_CODE_LAST_ACDMCR
-        FROM EMPL E,
-             UPLOAD_FILE U
+        FROM EMPL
         WHERE EMPL_ID = #{emplId}
     </select>
     <!--  메인 - 이번 달 생일인 사원  -->

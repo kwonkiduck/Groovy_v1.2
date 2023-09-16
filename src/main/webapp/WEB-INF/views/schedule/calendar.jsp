@@ -61,26 +61,24 @@ $(document).ready(function(){
 				},
 				initialView : 'dayGridMonth',
 				navLinks : true, 
-				editable : true,
 				selectable : true, 
-				droppable : true, 
 				events : data,
 				locale : 'ko',    
 				select: function(arg){ 
 
 				let title = prompt('일정을 입력해주세요');
-				    if(title !== null && title.trim() !== ''){
-				    	calendar.addEvent({
-				    		title : title,
-				    		start : arg.start,
-				    		end : arg.end,
-				    		allDay : arg.allDay
-				    	})
-				    }else{
-				    	 alert('일정이 입력되지 않았습니다');
-				    	 location.reload(); 
-				    	 return;
+				if (title !== null) {
+				    if (title.trim() !== '') {
+				        calendar.addEvent({
+				            title: title,
+				            start: arg.start,
+				            end: arg.end,
+				            allDay: arg.allDay
+				        });
+				    } else {
+				        alert('일정이 입력되지 않았습니다');
 				    }
+				} else {}
 				    
 				    let events = new Array(); 
 				    let obj = new Object(); 

@@ -14,6 +14,7 @@ import java.sql.Date;
 public class SntncVO {
     private String sntncEtprCode;
     private String sntncWrtingEmplId;
+    private String sntncWrtingEmplNm;
     private String sntncSj;
     private String sntncCn;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
@@ -23,5 +24,7 @@ public class SntncVO {
     private int uploadFileSn;
     private String uploadFileOrginlNm;
     private int uploadFileSize;
+    private String proflPhotoFileStreNm;
+    private String proflEtprCode;
 
 }

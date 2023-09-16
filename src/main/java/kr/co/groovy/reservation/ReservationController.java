@@ -1,13 +1,17 @@
 package kr.co.groovy.reservation;
 
+import kr.co.groovy.vo.CardReservationVO;
 import kr.co.groovy.vo.CardVO;
 import kr.co.groovy.vo.VehicleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Controller
 @RequestMapping("/reserve")
@@ -61,45 +65,6 @@ public class ReservationController {
             todayReservedVehicles.get(i).setVhcleResveNo(i + 1);
         }
         return todayReservedVehicles;
-    }
-
-    @GetMapping("/manageCard")
-    public String manageCard() {
-        return "admin/at/card/manage";
-    }
-
-    @PostMapping("/inputCard")
-    @ResponseBody
-    public int inputCard(CardVO cardVO) {
-        log.info("cardVO : {}", cardVO);
-        int result = service.inputCard(cardVO);
-        return result;
-    }
-
-    @GetMapping("/loadAllCard")
-    @ResponseBody
-    public List<CardVO> loadAllCard() {
-        log.info("{}", service.loadAllCard());
-        return service.loadAllCard();
-    }
-
-    @PostMapping("/modifyCardNm")
-    @ResponseBody
-    public int modifyCardNm(@RequestBody CardVO cardVO) {
-        log.info("cardVO : {}", cardVO);
-        return service.modifyCardNm(cardVO);
-    }
-
-    @GetMapping("/modifyCardUseAt/{cprCardNo}")
-    @ResponseBody
-    public int modifyCardUseAt(@PathVariable String cprCardNo) {
-        log.info("cprCardNo : {}", cprCardNo);
-        return service.modifyCardStatusDisabled(cprCardNo);
-    }
-
-    @GetMapping("/manageCardReservationRecords")
-    public String manageCardReservationRecords() {
-        return "admin/at/card/reservationRecords";
     }
 
 }

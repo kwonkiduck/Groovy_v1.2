@@ -4,8 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>메일 | 보낸메일함</title>
-    <script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
+    <title>메일 | 내게쓴메일함</title>
 </head>
 <style>
     ul {
@@ -58,10 +57,10 @@
             </th>
             <th style="width: 100px">
                 중요
-                <button><span>삭제</span></button>
+                <button onclick="modifyDeleteAtByBtn()"><span>삭제</span></button>
             </th>
             <th style="width: 100px">파일여부</th>
-            <th>받는이</th>
+            <th>보낸이</th>
             <th>제목</th>
             <th>날짜</th>
         </tr>
@@ -70,10 +69,12 @@
         <c:forEach var="emailVO" items="${list}">
             <tr>
                 <td><input type="checkbox" class="selectmail"></td>
-                <td onclick="modifyTableAt(this)"
-                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
+                <td onclick="modifyTableAt(this)" data-type="redng">
+                        ${emailVO.emailRedngAt}
+                    <input type="hidden" value="${emailVO.emailDeleteAt}">
+                </td>
+                <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
-
                 <td>${emailVO.emailFromAddr}</td>
                 <td><a href="#">${emailVO.emailFromSj}</a></td>
                 <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
@@ -84,7 +85,6 @@
         </tbody>
     </table>
 </div>
-
-
+<script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </body>
 </html>

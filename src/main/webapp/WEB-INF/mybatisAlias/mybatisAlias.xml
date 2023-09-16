@@ -28,7 +28,6 @@
         <typeAlias type="kr.co.groovy.vo.SanctionLineVO" alias="sanctionLineVO"/>
         <typeAlias type="kr.co.groovy.vo.SanctionVO" alias="sanctionVO"/>
         <typeAlias type="kr.co.groovy.vo.ReferenceVO" alias="referenceVO"/>
-        <typeAlias type="kr.co.groovy.vo.RecomendVO" alias="recomendVO"/>
         <typeAlias type="kr.co.groovy.vo.AlarmVO" alias="alarmVO"/>
         <typeAlias type="kr.co.groovy.vo.AnswerVO" alias="answerVO"/>
         <typeAlias type="kr.co.groovy.vo.VacationUseVO" alias="vacationUseVO"/>
@@ -41,5 +40,13 @@
         <typeAlias type="kr.co.groovy.vo.SanctionBookmarkVO" alias="sanctionBookmarkVO"/>
         <typeAlias type="kr.co.groovy.vo.JobVO" alias="jobVO"/>
         <typeAlias type="kr.co.groovy.vo.JobProgressVO" alias="jobProgressVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteOptionVO" alias="voteOptionVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteVO" alias="voteVO"/>
+        <typeAlias type="kr.co.groovy.vo.AnnualSalaryVO" alias="annualSalaryVO"/>
+        <typeAlias type="kr.co.groovy.vo.TariffVO" alias="tariffVO"/>
+
+        <!--윤하늘 문제아-->
+        <typeAlias type="kr.co.groovy.vo.RecommendVO" alias="recommendVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteRegisterVO" alias="voteRegisterVO"/>
     </typeAliases>
 </configuration>

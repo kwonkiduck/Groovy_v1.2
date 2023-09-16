@@ -14,6 +14,8 @@ import java.util.List;
 public class JobVO {
     private int jobNo;
     private String jobRequstEmplId;
+    private String jobRequstEmplNm;
+    private String jobRequstEmplProfl;
     private String jobSj;
     private String jobCn;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -24,6 +26,6 @@ public class JobVO {
     private Date jobRequstDate;
     private String commonCodeDutyKind;
 
-
-    private List<String> selectedEmplIds;//수신 사원 리스트
+    private List<String> selectedEmplIds; //수신 사원 리스트
+    private List<JobProgressVO> jobProgressVOList;
 }

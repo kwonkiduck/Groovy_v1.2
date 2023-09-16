@@ -16,18 +16,20 @@ public interface EmailMapper {
 
     void inputReceivedStatus(EmailVO emailVO);
 
-    List<EmailVO> getAllReceivedMailsToMe(String emailAddr);
+    List<EmailVO> getAllReceivedMailsToMe(Map<String, String> map);
 
-    List<EmailVO> getAllReferencedMailsToMe(String emailAddr);
+    List<EmailVO> getAllReferencedMailsToMe(Map<String, String> map);
 
-    List<EmailVO> getAllSentMailsToMe(String emailAddr);
+    List<EmailVO> getAllSentMailsToMe(Map<String, String> map);
 
-    List<EmailVO> getAllSentMailsByMe(String emailAddr);
+    List<EmailVO> getAllSentMailsByMe(Map<String, String> map);
 
     int getEmployeeByEmailAddr(String emailAddr);
 
     int existsMessageNumber(Map<String, Object> map);
 
-    int modifyEmailRedngAt(Map<String, String> map);
+    void modifyEmailRedngAt(Map<String, String> map);
+
+    void deleteMails(String emailEtprCode);
 
 }

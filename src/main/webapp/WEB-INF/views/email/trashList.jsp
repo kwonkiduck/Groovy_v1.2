@@ -4,8 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>메일 | 받은메일함</title>
-    <script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
+    <title>메일 | 휴지통</title>
 </head>
 <style>
     ul {
@@ -58,11 +57,11 @@
             </th>
             <th style="width: 100px">
                 읽음표시
-                <button onclick="modifyRedngAtByBtn()"><span>읽음</span></button>
+                <button onclick="modifyDeleteAtByBtn()"><span>복구</span></button>
             </th>
             <th style="width: 100px">
                 중요
-                <button><span>삭제</span></button>
+                <button onclick="deleteMail()"><span>영구삭제</span></button>
             </th>
             <th style="width: 100px">파일여부</th>
             <th>보낸이</th>
@@ -72,16 +71,17 @@
         </thead>
         <tbody>
         <c:forEach var="emailVO" items="${list}">
-            <tr>
+            <tr data-id="${emailVO.emailEtprCode}">
                 <td><input type="checkbox" class="selectmail"></td>
-                <td onclick="modifyTableAt(this)" data-id="${emailVO.emailEtprCode}"
-                    data-type="redng">${emailVO.emailRedngAt}</td>
-                <td onclick="modifyTableAt(this)"
-                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
+                <td onclick="modifyTableAt(this)" data-type="redng">
+                        ${emailVO.emailRedngAt}
+                    <input type="hidden" value="${emailVO.emailDeleteAt}">
+                </td>
+                <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
 
                 <td>${emailVO.emailFromAddr}</td>
-                <td><a href="#">${emailVO.emailFromSj}</a></td>
+                <td><span>[${emailVO.emailBoxName}] </span><a href="#">${emailVO.emailFromSj}</a></td>
                 <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
                 <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
                 <td>${sendDate}</td>
@@ -90,7 +90,33 @@
         </tbody>
     </table>
 </div>
+<script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
+<script>
+    function deleteMail() {
+        checkboxes = document.querySelectorAll(".selectmail:checked");
+        checkboxes.forEach(function (checkbox) {
+            let tr = checkbox.closest("tr");
+            let emailEtprCode = tr.getAttribute("data-id");
 
-
+            let isDelete = confirm("휴지통에서 메일을 삭제하면 복구할 수 없습니다. 정말로 삭제하시겠습니까?");
+            if (isDelete) {
+                $.ajax({
+                    url: `/email/\${emailEtprCode}`,
+                    type: "put",
+                    success: function (result) {
+                        tr.remove();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("code: " + xhr.status);
+                        console.log("message: " + xhr.responseText);
+                        console.log("error: " + xhr.error);
+                    }
+                });
+            }
+            checkbox.checked = false;
+            allCheck.checked = false;
+        });
+    }
+</script>
 </body>
 </html>

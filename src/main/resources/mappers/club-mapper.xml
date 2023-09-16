@@ -29,18 +29,19 @@
                 #{clbEtprCode},
                 #{clbNm},
                 #{clbDc},
-                TO_CHAR(SYSDATE, 'yyyy-MM-dd'),
+                SYSDATE,
                 #{clbPsncpa},
                 #{clbChirmnEmplId},
                 #{clbKind},
                 '0'
              )INTO CLB_MBR (
                 CLB_ETPR_CODE,
-                CLB_MBR_EMPL_ID
+                CLB_MBR_EMPL_ID,
+                CLB_MBR_ACT_AT
             ) VALUES (
                  #{clbEtprCode},
-                 #{clbMbrEmplId}
-                     )
+                 #{clbMbrEmplId},
+                     '0')
             SELECT 1 FROM DUAL
     </insert>
     <update id="updateClubAt" parameterType="map">
@@ -104,17 +105,57 @@
             ORDER BY C.CLB_DATE DESC
         ]]>
     </select>
+    <select id="loadClubDetail" resultType="clubVO" parameterType="String">
+        SELECT
+            C.CLB_ETPR_CODE,
+            C.CLB_NM,
+            C.CLB_DC,
+            C.CLB_DATE,
+            C.CLB_PSNCPA,
+            C.CLB_CHIRMN_EMPL_ID,
+            (SELECT EMPL_NM FROM EMPL WHERE EMPL_ID = C.CLB_CHIRMN_EMPL_ID) AS CLBCHIRMNEMPLNM,
+            C.CLB_KIND,
+            C.CLB_CONFM_AT
+        FROM CLB C
+        WHERE C.CLB_ETPR_CODE = #{clbEtprCode}
+    </select>
+    <select id="loadClubMbr" resultType="clubMbrVO" parameterType="String">
+        SELECT
+            CM.CLB_ETPR_CODE,
+            CM.CLB_MBR_EMPL_ID,
+            E.EMPL_NM AS clbMbrEmplNm,
+            E.COMMON_CODE_DEPT AS clbMbrDept,
+            E.COMMON_CODE_CLSF AS clbMbrClsf,
+            CM.CLB_MBR_ACT_AT
+        FROM CLB_MBR CM,
+             CLB C,
+             EMPL E
+        WHERE C.CLB_ETPR_CODE = CM.CLB_ETPR_CODE
+          AND CM.CLB_MBR_EMPL_ID = E.EMPL_ID
+          AND CM.CLB_ETPR_CODE = #{clbEtprCode}
+    </select>
     <insert id="inputClubMbr" parameterType="map">
         INSERT INTO CLB_MBR(
             CLB_ETPR_CODE,
-            CLB_MBR_EMPL_ID
+            CLB_MBR_EMPL_ID,
+            CLB_MBR_ACT_AT
         )VALUES (
                 #{clbEtprCode},
-                #{clbMbrEmplId})
+                #{clbMbrEmplId},
+                 '0')
     </insert>
-    <delete id="deleteClubMbr" parameterType="map">
-        DELETE
-        FROM CLB_MBR
+    <update id="updateClubMbrAct" parameterType="map">
+        UPDATE CLB_MBR
+        SET CLB_MBR_ACT_AT = '1'
         WHERE CLB_ETPR_CODE =#{clbEtprCode} AND CLB_MBR_EMPL_ID = #{clbMbrEmplId}
-    </delete>
+    </update>
+    <update id="updateClubInfo" parameterType="clubVO">
+        UPDATE CLB
+        SET CLB_NM = #{clbNm},
+            CLB_DC = #{clbDc},
+            CLB_CHIRMN_EMPL_ID = #{clbChirmnEmplId},
+            CLB_KIND = #{clbKind},
+            CLB_PSNCPA = #{clbPsncpa}
+        WHERE CLB_ETPR_CODE = #{clbEtprCode}
+    </update>
 </mapper>

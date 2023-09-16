@@ -22,7 +22,7 @@
     </delete>
 
     <select id="getVehicles" resultType="vehicleVO">
-        select (VHCLE_NO, VHCLE_VHCTY, VHCLE_PSNCPA, COMMON_CODE_HIPASS_ASN_AT)
+        select VHCLE_NO, VHCLE_VHCTY, VHCLE_PSNCPA, COMMON_CODE_HIPASS_ASN_AT
         from VHCLE
     </select>
     <select id="getReservedVehicleByVhcleNo" resultType="vehicleVO" parameterType="String">

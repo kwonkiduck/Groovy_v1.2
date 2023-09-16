@@ -41,7 +41,7 @@
                DIET_DISH3,
                DIET_DESSERT
         FROM DIET
-        WHERE TO_CHAR(DIET_DATE,'yyyy-MM-dd') = #{today}
+        WHERE TO_CHAR(DIET_DATE, 'yyyy-MM-dd') = #{today}
     </select>
 
     <select id="loadNotice" resultType="noticeVO">
@@ -55,5 +55,13 @@
         FROM NOTI
         WHERE ROWNUM &lt;= 2
         ORDER BY NOTI_DATE DESC
+    </select>
+    <select id="loadSanction" parameterType="String" resultType="sanctionVO">
+        SELECT ELCTRN_SANCTN_SJ,
+        ELCTRN_SANCTN_RECOM_DATE
+        FROM ELCTRN_SANCTN
+        WHERE ROWNUM &lt;= 10
+        AND ELCTRN_SANCTN_DRFT_EMPL_ID = #{emplId}
+        AND COMMON_CODE_SANCT_PROGRS = 'SANCTN011'
     </select>
 </mapper>

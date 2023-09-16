@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>메일 | 전체 메일</title>
+    <title>메일 | 보낸메일함</title>
 </head>
 <style>
     ul {
@@ -56,15 +56,11 @@
                 <input type="checkbox" id="selectAll" onclick="checkAll()">
             </th>
             <th style="width: 100px">
-                읽음표시
-                <button onclick="modifyRedngAtByBtn()"><span>읽음</span></button>
-            </th>
-            <th style="width: 100px">
                 중요
                 <button><span>삭제</span></button>
             </th>
             <th style="width: 100px">파일여부</th>
-            <th>보낸이</th>
+            <th>받는이</th>
             <th>제목</th>
             <th>날짜</th>
         </tr>
@@ -72,15 +68,13 @@
         <tbody>
         <c:forEach var="emailVO" items="${list}">
             <tr>
-                <td><input type="checkbox" class="selectMail"></td>
-                <td onclick="modifyTableAt(this)" data-id="${emailVO.emailEtprCode}"
-                    data-type="redng">${emailVO.emailRedngAt}</td>
+                <td><input type="checkbox" class="selectmail"></td>
                 <td onclick="modifyTableAt(this)"
                     data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
 
                 <td>${emailVO.emailFromAddr}</td>
-                <td><span>[${emailVO.emailBoxName}] </span><a href="#">${emailVO.emailFromSj}</a></td>
+                <td><a href="#">${emailVO.emailFromSj}</a></td>
                 <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
                 <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
                 <td>${sendDate}</td>
@@ -89,51 +83,6 @@
         </tbody>
     </table>
 </div>
-<script>
-    const allCheck = document.querySelector("#selectAll");
-    let checkboxes = document.querySelectorAll('.selectMail:checked');
-
-    function checkAll() {
-        let allCheckboxes = document.querySelectorAll(".selectmail");
-        allCheckboxes.forEach(function (checkbox) {
-            checkbox.checked = allCheck.checked;
-        });
-    }
-
-    function modifyAt(code, td) {
-        let at = td.innerText;
-        let emailEtprCode = td.getAttribute("data-id");
-        $.ajax({
-            url: `/email/\${code}/\${emailEtprCode}`,
-            type: 'put',
-            data: at,
-            success: function (result) {
-                at = result;
-                td.innerText = at;
-            },
-            error: function (xhr, status, error) {
-                console.log("code: " + xhr.status);
-                console.log("message: " + xhr.responseText);
-                console.log("error: " + xhr.error);
-            }
-        });
-    }
-
-    function modifyTableAt(td) {
-        let code = td.getAttribute("data-type");
-        modifyAt(code, td);
-    }
-
-    function modifyRedngAtByBtn() {
-        checkboxes = document.querySelectorAll(".selectmail:checked");
-        checkboxes.forEach(function (checkbox) {
-            let td = checkbox.parentNode.nextElementSibling;
-            modifyTableAt(td);
-            checkbox.checked = false;
-            allCheck.checked = false;
-        });
-    }
-
-</script>
+<script src="${pageContext.request.contextPath}/resources/js/mailAt.js"></script>
 </body>
 </html>

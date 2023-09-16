@@ -29,6 +29,7 @@ public class EmailVO {
     private String emailReceivedEmplId;
     private String emailRedngAt;
     private String emailDeleteAt;
+    private String emailRealDeleteAt;
     private String emailImprtncAt;
 
     private String emailBoxName;

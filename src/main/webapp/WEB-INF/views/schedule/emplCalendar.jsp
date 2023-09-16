@@ -40,9 +40,7 @@ $(document).ready(function(){
 				},
 				initialView : 'dayGridMonth',
 				navLinks : true, 
-				editable : true,
 				selectable : true, 
-				droppable : true, 
 				events : data,
 				locale : 'ko' 
 			});

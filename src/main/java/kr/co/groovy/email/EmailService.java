@@ -32,28 +32,32 @@ public class EmailService {
         return mapper.existsMessageNumber(map);
     }
 
-    public List<EmailVO> getAllReceivedMailsToMe(String emailAddr) {
-        return mapper.getAllReceivedMailsToMe(emailAddr);
+    public List<EmailVO> getAllReceivedMailsToMe(Map<String, String> map) {
+        return mapper.getAllReceivedMailsToMe(map);
     }
 
-    public List<EmailVO> getAllReferencedMailsToMe(String emailAddr) {
-        return mapper.getAllReferencedMailsToMe(emailAddr);
+    public List<EmailVO> getAllReferencedMailsToMe(Map<String, String> map) {
+        return mapper.getAllReferencedMailsToMe(map);
     }
 
-    public List<EmailVO> getAllSentMailsToMe(String emailAddr) {
-        return mapper.getAllSentMailsToMe(emailAddr);
+    public List<EmailVO> getAllSentMailsToMe(Map<String, String> map) {
+        return mapper.getAllSentMailsToMe(map);
     }
 
-    public List<EmailVO> getAllSentMailsByMe(String emailAddr) {
-        return mapper.getAllSentMailsByMe(emailAddr);
+    public List<EmailVO> getAllSentMailsByMe(Map<String, String> map) {
+        return mapper.getAllSentMailsByMe(map);
     }
 
     public int getEmployeeByEmailAddr(String emailAddr) {
         return mapper.getEmployeeByEmailAddr(emailAddr);
     }
 
-    public int modifyEmailRedngAt(Map<String, String> map) {
-        return mapper.modifyEmailRedngAt(map);
+    public void modifyEmailRedngAt(Map<String, String> map) {
+        mapper.modifyEmailRedngAt(map);
+    }
+
+    public void deleteMails(String emailEtprCode) {
+        mapper.deleteMails(emailEtprCode);
     }
 
 }

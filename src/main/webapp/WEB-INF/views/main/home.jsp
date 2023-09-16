@@ -1,5 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<link href="/resources/css/schedule/calendar.css" rel="stylesheet"/>
+<script src="/resources/fullcalendar/main.js"></script>
+<script src="/resources/fullcalendar/ko.js"></script>
+
+<!-- 캘린더에 시간 안 보이게 하기, 크기 조정 -->
+<style>
+    .fc-event-time {
+        display: none;
+    }
+
+    #calendar {
+        width: 500px;
+    }
+</style>
 
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
@@ -52,41 +66,28 @@
     <br/>
     <hr/>
 
-    <h3>결재함</h3>
-    <table border="1" style="width: 50%;">
-        <thead>
-        <tr>
-            <th>카테고리</th>
-            <th>제목</th>
-            <th>날짜</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>휴가</td>
-            <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-            <td>2023-07-30</td>
-        </tr>
-        <tr>
-            <td>일정</td>
-            <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-            <td>2023-07-30</td>
-        </tr>
-        </tbody>
-    </table>
+    <h3>진행 중인 결재</h3>
+    <div id="sanctionBox">
+    </div>
+
     <br/>
     <hr/>
     <h3>오늘의 식단</h3>
     <div id="dietWrap">
-
     </div>
 
     <br/>
     <hr/>
     <h3>이번달 생일</h3>
     <div id="birthdayWrap">
-
     </div>
+
+    <br/>
+    <hr/>
+    <h3>일정</h3>
+    <div id="calendar">
+    </div>
+
     <br/>
     <hr/>
     <h3>날씨</h3>
@@ -102,13 +103,35 @@
 
 </sec:authorize>
 <script>
-    let dclzEmplId = `${CustomUser.employeeVO.emplId}`;
+    let dclzEmplId = "${CustomUser.employeeVO.emplId}";
 
     $(document).ready(function () {
 
+        // 진행 중인 결재 불러오기 (10개)
+        $.ajax({
+            url: `/common/loadSanction/\${dclzEmplId}`,
+            type: "get",
+            success: function (data) {
+                console.log(data)
+                code = `<table border="1">`;
+
+                $.each(data, function (index, item) {
+                    code += `<tr>
+                             <td>\${item.elctrnSanctnSj}</td>
+                             <td>\${item.elctrnSanctnRecomDate}</td>
+                             </tr>`
+                })
+                code += `</table>`
+                $("#sanctionBox").html(code);
+            },
+            error: function (xhr, status, error) {
+                console.log("code: " + xhr.status)
+            }
+        })
+
         // 공지사항 불러오기 (최신 2개)
         $.ajax({
-            url: "/main/loadNotice",
+            url: "/common/loadNotice",
             type: "get",
             success: function (data) {
                 code = `<table border="1">`;
@@ -274,6 +297,37 @@
             error: function (xhr, status, error) {
                 console.log("code: " + xhr.status)
             }
+        })
+
+        //달력
+        $(document).ready(function () {
+            $(function () {
+                var request = $.ajax({
+                    url: "/calendar/schedule",
+                    method: "GET",
+                    dataType: "json"
+                });
+
+                request.done(function (data) {
+                    let calendarEl = document.getElementById('calendar');
+                    calendar = new FullCalendar.Calendar(calendarEl, {
+                        height: '500px',
+                        slotMinTime: '08:00',
+                        slotMaxTime: '20:00',
+                        headerToolbar: {
+                            left: false,
+                            center: false,
+                            right: false
+                        },
+                        initialView: 'dayGridMonth',
+                        navLinks: true,
+                        selectable: true,
+                        events: data,
+                        locale: 'ko'
+                    });
+                    calendar.render();
+                });
+            });
         })
 
         // 오늘의 식단

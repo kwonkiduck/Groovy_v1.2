@@ -9,6 +9,6 @@ public class VoteRegistVO {
     private String voteRegistTitle;
     private Date voteRegistStartDate;
     private Date voteRegistEndDate;
-    private List<VoteOptionVO> voteOptions;
+    private List<VoteOptionVO> voteOptionList;
 
 }

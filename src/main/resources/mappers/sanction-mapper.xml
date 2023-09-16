@@ -3,12 +3,12 @@
 <mapper namespace="kr.co.groovy.sanction.SanctionMapper">
     <select id="loadFormat" resultType="sanctionFormatVO">
         /* 결재 템플릿 불러오기 */
-        SELECT COMMON_CODE_SANCTN_FORMAT,
-               FORMAT_SANCTN_KND,
-               FORMAT_SJ,
-               FORMAT_CN,
-               FORMAT_USE_AT
-        FROM SANCTN_FORMAT
+        SELECT F.COMMON_CODE_SANCTN_FORMAT,
+               F.FORMAT_SANCTN_KND,
+               F.FORMAT_SJ,
+               F.FORMAT_CN,
+               F.FORMAT_USE_AT
+        FROM SANCTN_FORMAT F
         WHERE COMMON_CODE_SANCTN_FORMAT = #{format}
     </select>
     <select id="getSeq" parameterType="String" resultType="String">
@@ -31,14 +31,14 @@
     </select>
     <select id="loadRequest" parameterType="String" resultType="sanctionVO">
         /* 기안 문서함(상신) 불러오기 */
-        SELECT ELCTRN_SANCTN_ETPR_CODE,
-               ELCTRN_SANCTN_FORMAT_CODE,
-               ELCTRN_SANCTN_SJ,
-               ELCTRN_SANCTN_DC,
-               ELCTRN_SANCTN_DRFT_EMPL_ID,
-               ELCTRN_SANCTN_RECOM_DATE,
-               COMMON_CODE_SANCT_PROGRS
-        FROM ELCTRN_SANCTN
+        SELECT E.ELCTRN_SANCTN_ETPR_CODE,
+               E.ELCTRN_SANCTN_FORMAT_CODE,
+               E.ELCTRN_SANCTN_SJ,
+               E.ELCTRN_SANCTN_DC,
+               E.ELCTRN_SANCTN_DRFT_EMPL_ID,
+               E.ELCTRN_SANCTN_RECOM_DATE,
+               E.COMMON_CODE_SANCT_PROGRS
+        FROM ELCTRN_SANCTN E
         WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
         ORDER BY COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
     </select>
@@ -108,13 +108,13 @@
 
     <insert id="inputSanction" parameterType="sanctionVO">
         /* 결재 기안 - 결재 등록 */
-        INSERT INTO ELCTRN_SANCTN( ELCTRN_SANCTN_ETPR_CODE
-                                 , ELCTRN_SANCTN_FORMAT_CODE
-                                 , ELCTRN_SANCTN_SJ
-                                 , ELCTRN_SANCTN_DC
-                                 , ELCTRN_SANCTN_DRFT_EMPL_ID
-                                 , ELCTRN_SANCTN_RECOM_DATE
-                                 , COMMON_CODE_SANCT_PROGRS)
+        INSERT INTO ELCTRN_SANCTN(ELCTRN_SANCTN_ETPR_CODE,
+                                  ELCTRN_SANCTN_FORMAT_CODE,
+                                  ELCTRN_SANCTN_SJ,
+                                  ELCTRN_SANCTN_DC,
+                                  ELCTRN_SANCTN_DRFT_EMPL_ID,
+                                  ELCTRN_SANCTN_RECOM_DATE,
+                                  COMMON_CODE_SANCT_PROGRS)
         VALUES (#{elctrnSanctnEtprCode},
                 #{elctrnSanctnFormatCode},
                 #{elctrnSanctnSj},
@@ -125,11 +125,11 @@
     </insert>
     <insert id="inputLine" parameterType="sanctionLineVO">
         /* 결재 기안 - 결재 라인 등록 */
-        INSERT INTO SANCTN_LINE( ELCTRN_SANCTN_ETPR_CODE
-                               , ELCTRN_SANCTNEMPL_ID
-                               , SANCTN_LINE_ORDR
-                               , COMMON_CODE_SANCT_PROGRS
-                               , ELCTRN_SANCTN_FINAL_AT)
+        INSERT INTO SANCTN_LINE(ELCTRN_SANCTN_ETPR_CODE,
+                                ELCTRN_SANCTNEMPL_ID,
+                                SANCTN_LINE_ORDR,
+                                COMMON_CODE_SANCT_PROGRS,
+                                ELCTRN_SANCTN_FINAL_AT)
         VALUES (#{elctrnSanctnEtprCode},
                 #{elctrnSanctnemplId},
                 #{sanctnLineOrdr},
@@ -145,12 +145,12 @@
     </insert>
     <insert id="uploadFile" parameterType="uploadFileVO">
         /* 결재 기안 - 첨부 파일 업로드 */
-        INSERT INTO UPLOAD_FILE( UPLOAD_FILE_SN
-                               , UPLOAD_FILE_ETPR_CODE
-                               , UPLOAD_FILE_ORGINL_NM
-                               , UPLOAD_FILE_STRE_NM
-                               , UPLOAD_FILE_SIZE,
-                                 UPLOAD_FILE_RGSDE)
+        INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN,
+                                UPLOAD_FILE_ETPR_CODE,
+                                UPLOAD_FILE_ORGINL_NM,
+                                UPLOAD_FILE_STRE_NM,
+                                UPLOAD_FILE_SIZE,
+                                UPLOAD_FILE_RGSDE)
         VALUES (UPLOAD_FILE_SEQ.nextval,
                 #{sanctnEtprCode},
                 #{originalFileName},
@@ -160,17 +160,17 @@
     </insert>
     <select id="loadLine" parameterType="String" resultType="sanctionLineVO">
         /* 결재 문서 불러오기 - 결재선 */
-        SELECT L.ELCTRN_SANCTN_ETPR_CODE
-             , L.ELCTRN_SANCTNEMPL_ID
-             , L.SANCTN_LINE_ORDR
-             , L.SANCTN_LINE_RETURN_RESN
-             , L.SANCTN_LINE_DATE
-             , L.COMMON_CODE_SANCT_PROGRS
-             , L.ELCTRN_SANCTN_FINAL_AT
-             , U.UPLOAD_FILE_STRE_NM
-             , E.EMPL_NM
-             , E.COMMON_CODE_DEPT
-             , E.COMMON_CODE_CLSF
+        SELECT L.ELCTRN_SANCTN_ETPR_CODE,
+               L.ELCTRN_SANCTNEMPL_ID,
+               L.SANCTN_LINE_ORDR,
+               L.SANCTN_LINE_RETURN_RESN,
+               L.SANCTN_LINE_DATE,
+               L.COMMON_CODE_SANCT_PROGRS,
+               L.ELCTRN_SANCTN_FINAL_AT,
+               U.UPLOAD_FILE_STRE_NM,
+               E.EMPL_NM,
+               E.COMMON_CODE_DEPT,
+               E.COMMON_CODE_CLSF
         FROM SANCTN_LINE L,
              UPLOAD_FILE U,
              EMPL E
@@ -181,11 +181,11 @@
     </select>
     <select id="loadRefrn" parameterType="String" resultType="referenceVO">
         /* 결재 문서 불러오기 - 참조 */
-        SELECT R.SANCTN_REFRN_EMPL_ID
-             , R.ELCTRN_SANCTN_ETPR_CODE
-             , E.EMPL_NM
-             , E.COMMON_CODE_DEPT
-             , E.COMMON_CODE_CLSF
+        SELECT R.SANCTN_REFRN_EMPL_ID,
+               R.ELCTRN_SANCTN_ETPR_CODE,
+               E.EMPL_NM,
+               E.COMMON_CODE_DEPT,
+               E.COMMON_CODE_CLSF
         FROM SANCTN_REFRN R,
              EMPL E
         WHERE R.SANCTN_REFRN_EMPL_ID = E.EMPL_ID
@@ -193,18 +193,18 @@
     </select>
     <select id="loadSanction" parameterType="String" resultType="sanctionVO">
         /* 결재 문서 불러오기 - 결재 문서 */
-        SELECT S.ELCTRN_SANCTN_ETPR_CODE
-             , S.ELCTRN_SANCTN_FORMAT_CODE
-             , S.ELCTRN_SANCTN_SJ
-             , S.ELCTRN_SANCTN_DC
-             , S.ELCTRN_SANCTN_DRFT_EMPL_ID
-             , S.ELCTRN_SANCTN_RECOM_DATE
-             , S.COMMON_CODE_SANCT_PROGRS
-             , S.ELCTRN_SANCTN_FINAL_DATE
-             , E.EMPL_NM
-             , E.COMMON_CODE_CLSF
-             , E.COMMON_CODE_DEPT
-             , U.UPLOAD_FILE_STRE_NM
+        SELECT S.ELCTRN_SANCTN_ETPR_CODE,
+               S.ELCTRN_SANCTN_FORMAT_CODE,
+               S.ELCTRN_SANCTN_SJ,
+               S.ELCTRN_SANCTN_DC,
+               S.ELCTRN_SANCTN_DRFT_EMPL_ID,
+               S.ELCTRN_SANCTN_RECOM_DATE,
+               S.COMMON_CODE_SANCT_PROGRS,
+               S.ELCTRN_SANCTN_FINAL_DATE,
+               E.EMPL_NM,
+               E.COMMON_CODE_CLSF,
+               E.COMMON_CODE_DEPT,
+               U.UPLOAD_FILE_STRE_NM
         FROM ELCTRN_SANCTN S,
              EMPL E,
              UPLOAD_FILE U
@@ -284,11 +284,11 @@
     </insert>
     <select id="loadBookmark" parameterType="String" resultType="sanctionBookmarkVO">
         /* 나의 결재선 조회 */
-        SELECT SANCTION_LINE_BOOKMARK_SN,
-               ELCTRN_SANCTN_DRFT_EMPL_ID,
-               ELCTRN_SANCTN_BOOKMARK_NAME,
-               ELCTRN_SANCTN_LINE_BOOKMARK
-        FROM SANCTN_LINE_BOOKMARK
+        SELECT B.SANCTION_LINE_BOOKMARK_SN,
+               B.ELCTRN_SANCTN_DRFT_EMPL_ID,
+               B.ELCTRN_SANCTN_BOOKMARK_NAME,
+               B.ELCTRN_SANCTN_LINE_BOOKMARK
+        FROM SANCTN_LINE_BOOKMARK B
         WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{emplId}
     </select>
     <delete id="deleteBookmark" parameterType="String">

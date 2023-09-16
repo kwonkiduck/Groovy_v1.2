@@ -11,4 +11,6 @@ public interface CommonMapper {
     List<EmployeeVO> loadOrgChart (String depCode);
     DietVO loadMenu(String today);
     List<NoticeVO> loadNotice();
+
+    List<SanctionVO> loadSanction(String emplId);
 }

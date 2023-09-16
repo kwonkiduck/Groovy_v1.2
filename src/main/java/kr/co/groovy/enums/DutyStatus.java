@@ -18,5 +18,14 @@ public enum DutyStatus {
         return null;
     }
 
+    public static String getLabelByValue( String value ) {
+        for (DutyStatus dutyStatus : values()) {
+            if (dutyStatus.name().equals(value)) {
+                return dutyStatus.getLabel();
+            }
+        }
+        return null;
+    }
+
 
 }

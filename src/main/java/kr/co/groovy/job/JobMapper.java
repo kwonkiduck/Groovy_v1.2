@@ -29,4 +29,12 @@ public interface JobMapper {
     void insertJobProgress(JobProgressVO jobProgressVO);
 
     List<JobVO> getAllJobById(String jobRequstEmplId);
+
+    JobVO getJobByNo(int jobNo);
+
+    List<JobVO> getAllReceiveJobById(String jobRecptnEmplId);
+
+    JobVO getReceiveJobByNo(int jobNo);
+
+    void updateJobStatus(JobProgressVO jobProgressVO);
 }

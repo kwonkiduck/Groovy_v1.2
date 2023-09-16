@@ -132,6 +132,9 @@ public class EmployeeController {
         return mav;
     }
 
+
+
+
     /* 다시 매핑~ */
 
     @ResponseBody
@@ -140,14 +143,5 @@ public class EmployeeController {
         return service.loadBirthday();
     }
 
-    @GetMapping("/commute")
-    public String commute() {
-        return "employee/commute";
-    }
-
-    @GetMapping("/teamCommunity")
-    public String teamCommunity() {
-        return "employee/teamCommunity";
-    }
 }
 

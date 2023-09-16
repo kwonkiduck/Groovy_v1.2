@@ -37,11 +37,11 @@
 
             function sendAjaxRequest(index) {
                 $.ajax({
+                    url: "/sanction/api/status",
                     type: "GET",
-                    url: "/sanction/getStatus",
                     data: {
-                        elctrnSanctnDrftEmplId: "${CustomUser.employeeVO.emplId}",
-                        commonCodeSanctProgrs: commonCodeSanctProgrsValues[index]
+                        emplId: "${CustomUser.employeeVO.emplId}",
+                        progrs: commonCodeSanctProgrsValues[index]
                     },
                     success: function (data) {
                         results.push(data);
@@ -53,12 +53,9 @@
                     }
                 });
             }
-
             sendAjaxRequest(0);
-
             function handleResults(results) {
                 let status = $("#sanctionStatus");
-
                 for (let i = 0; i < 3; i++) { //
                     let $li = status.find("li:eq(" + i + ")");
                     let result = results[i]

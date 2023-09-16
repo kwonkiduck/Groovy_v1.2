@@ -25,4 +25,7 @@ public class ClubVO {
     private List<ClubMbrVO> clubMbr;
     private int joinChk;
 
+    public void setClubMbr(List<ClubMbrVO> clubMbr) {
+        this.clubMbr = clubMbr;
+    }
 }

@@ -52,11 +52,11 @@ public class ClubController {
         return "가입 성공~";
     };
     @ResponseBody
-    @DeleteMapping("/deleteClubMbr")
-    public String deleteClubMbr(@RequestBody Map<String, Object> map){
+    @PutMapping("/updateClubMbrAct")
+    public String updateClubMbrAct(@RequestBody Map<String, Object> map){
         map.put("clbMbrEmplId",emplId);
         log.info("map ==> " + map);
-        service.deleteClubMbr(map);
+        service.updateClubMbrAct(map);
         return "탈퇴 성공~~";
     };
 
@@ -67,6 +67,8 @@ public class ClubController {
         List<ClubVO> clubRegistList = service.loadAllClub("1");
         model.addAttribute("clubList",clubList);
         model.addAttribute("clubRegistList",clubRegistList);
+        log.info("clubList ===> " + clubList);
+        log.info("clubRegistList ===> " + clubRegistList);
         return "admin/gat/club/manage";
     }
     @ResponseBody
@@ -92,6 +94,7 @@ public class ClubController {
     @PostMapping("/admin/proposalList")
     public List<ClubVO> loadProposalList(){
         List<ClubVO> clubList = service.loadProposalList();
+        log.info("clubList ==> " + clubList);
         return clubList;
     }
     @GetMapping("/admin/registList")
@@ -105,7 +108,27 @@ public class ClubController {
         return clubList;
     }
     @GetMapping("/admin/{clbEtprCode}")
-    public String loadClubDetail(Model model){
+    public String loadClubDetail(@PathVariable String clbEtprCode, Model model){
+        ClubVO clubDetail = service.loadClubDetail(clbEtprCode);
+        model.addAttribute("clubDetail",clubDetail);
         return "admin/gat/club/detail";
     }
+    @ResponseBody
+    @PostMapping("/admin/updateClubInfo")
+    public String updateClubInfo(ClubVO vo){
+        log.info("vo===>"+vo);
+        String clbEtprCode = vo.getClbEtprCode();
+        service.updateClubInfo(vo);
+        return "success";
+    }
+    @ResponseBody
+    @PutMapping("/admin/{clbEtprCode}/{clbMbrEmplId}")
+    public String updateClubMbrAct(@PathVariable String clbEtprCode,@PathVariable String clbMbrEmplId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("clbEtprCode",clbEtprCode);
+        map.put("clbMbrEmplId",clbMbrEmplId);
+        service.updateClubMbrAct(map);
+        return "success";
+    }
+
 }
