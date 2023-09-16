@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.salary.SalaryMapper">
+    <select id="loadSalary" resultType="annualSalaryVO">
+        SELECT ANSLRY_STDR_YEAR,
+               COMMON_CODE_DEPT_CRSF,
+               ANSLRY_ALLWNC
+        FROM ANSLRY
+        WHERE COMMON_CODE_DEPT_CRSF LIKE 'DEPT%'
+    </select>
+    <select id="loadBonus" resultType="annualSalaryVO">
+        SELECT ANSLRY_STDR_YEAR,
+               COMMON_CODE_DEPT_CRSF,
+               ANSLRY_ALLWNC
+        FROM ANSLRY
+        WHERE COMMON_CODE_DEPT_CRSF LIKE 'CLSF%'
+        ORDER BY COMMON_CODE_DEPT_CRSF ASC
+    </select>
+    <select id="loadTariff" resultType="tariffVO">
+        SELECT TARAT_STDR_YEAR,
+               TARAT_STDR_NM,
+               TARAT_STDR_VALUE,
+               TARAT_STDR_CODE,
+               TARAT_STDR_USE_AT
+        FROM TARAT_STDR
+    </select>
+</mapper>
