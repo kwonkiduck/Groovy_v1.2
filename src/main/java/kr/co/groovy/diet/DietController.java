@@ -67,7 +67,7 @@ public class DietController {
 			
 			log.info(""+dietVO);
 			
-			dietService.insertDiert(dietVO);
+			dietService.insertDiet(dietVO);
 		
 		} 
 		map.put("res", "ok");
