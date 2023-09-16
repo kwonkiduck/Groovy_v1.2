@@ -23,5 +23,55 @@
                TARAT_STDR_CODE,
                TARAT_STDR_USE_AT
         FROM TARAT_STDR
+        WHERE TARAT_STDR_YEAR = TO_CHAR(SYSDATE, 'yyyy')
+    </select>
+    <select id="loadEmpList" resultType="employeeVO">
+        SELECT EMPL_ID,
+               EMPL_NM,
+               COMMON_CODE_DEPT,
+               COMMON_CODE_CLSF,
+               COMMON_CODE_DEPT AS DEPT_NM,
+               COMMON_CODE_CLSF AS CLSF_NM
+        FROM EMPL
+    </select>
+    <insert id="inputSalary" parameterType="String">
+        INSERT INTO SALARY(SALARY_PYMNT_DATE, SALARY_EMPL_ID, SALARY_BSLRY, SALARY_OVTIME_ALLWNC)
+        WITH TOTAL_OVERTIME AS (SELECT SUM(CASE
+                                               WHEN D.DCLZ_DAIL_WORK_TIME > 8 THEN D.DCLZ_DAIL_WORK_TIME - 8
+                                               ELSE 0 END) AS TOTAL_OVERTIME
+                                FROM DCLZ D
+                                WHERE TO_CHAR(D.DCLZ_WORK_DE, 'YYYY-MM') =
+                                      TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM')
+                                  AND D.DCLZ_EMPL_ID = #{emplId})
+        SELECT TO_DATE(TO_CHAR(LAST_DAY(ADD_MONTHS(SYSDATE, -1)), 'YYYY-MM') || '-10',
+                       'YYYY-MM-DD') AS SALARY_PYMNT_DATE,
+               #{emplId}             AS SALARY_EMPL_ID,
+               SUM(TRUNC((CASE
+                              WHEN A.COMMON_CODE_DEPT_CRSF = E.COMMON_CODE_DEPT
+                                  OR A.COMMON_CODE_DEPT_CRSF = E.COMMON_CODE_CLSF
+                                  THEN A.ANSLRY_ALLWNC
+                              ELSE 0
+                   END) / 12, 0))    AS SALARY_BSLRY,
+               SUM(TRUNC((CASE
+                              WHEN A.COMMON_CODE_DEPT_CRSF = E.COMMON_CODE_DEPT
+                                  OR A.COMMON_CODE_DEPT_CRSF = E.COMMON_CODE_CLSF
+                                  THEN A.ANSLRY_ALLWNC
+                              ELSE 0
+                   END) / 12 / 30 / 8 * ((TOTAL_OVERTIME * 1.5)), 0
+                   ))                AS SALARY_OVTIME_ALLWNC
+        FROM EMPL E
+                 JOIN ANSLRY A ON A.COMMON_CODE_DEPT_CRSF = E.COMMON_CODE_DEPT
+                 CROSS JOIN TOTAL_OVERTIME
+        WHERE E.EMPL_ID = #{emplId}
+        GROUP BY TO_DATE(TO_CHAR(LAST_DAY(ADD_MONTHS(SYSDATE, -1)), 'YYYY-MM') || '-10', 'YYYY-MM-DD'), #{emplId};
+    </insert>
+    <select id="loadPaymentList" parameterType="String" resultType="salaryVO">
+        SELECT SALARY_PYMNT_DATE,
+               SALARY_EMPL_ID,
+               SALARY_BSLRY,
+               SALARY_OVTIME_ALLWNC
+        FROM SALARY
+        WHERE SALARY_EMPL_ID = #{emplId}
+          AND TO_CHAR(SALARY_PYMNT_DATE,'YYYY') = #{year}
     </select>
 </mapper>

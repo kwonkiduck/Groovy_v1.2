@@ -48,7 +48,7 @@
                 <ul>
                     <li class="nav-list"><a href="#"><i class="icon i-sanction"></i>결재 관리</a></li>
                     <li class="nav-list"><a href="#"><i class="icon i-card"></i>회사 카드 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-todo"></i>급여 명세서 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/salary/list"><i class="icon i-todo"></i>급여 명세서 관리</a></li>
                 </ul>
             </ul>
         </div>
