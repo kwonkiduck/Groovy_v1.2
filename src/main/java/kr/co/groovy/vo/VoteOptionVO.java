@@ -8,8 +8,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class VoteOptionVO {
-    private int voteOptionSeq;
-    private int voteRegistSeq;
+    private int voteOptionNo;
+    private int voteRegistNo;
     private String voteOptionContents;
     private int voteTotalCnt;
     private int votedAt;

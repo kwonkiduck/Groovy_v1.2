@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">--%>
 <style>
-    .recomend-icon-btn {
+    .recommend-icon-btn {
         width: calc((48 / 1920) * 100vw);
         height: calc((48 / 1920) * 100vw);
         background-color: transparent;
@@ -11,11 +11,11 @@
         cursor: pointer;
     }
 
-    .recomendBtn {
+    .recommendBtn {
         background: url("/resources/images/icon/heart-on.svg") 100% center / cover;
     }
 
-    .unRecomendBtn {
+    .unRecommendBtn {
         background: url("/resources/images/icon/heart-off.svg") 100% center / cover;
     }
     .options {
@@ -24,6 +24,16 @@
     .option-btn.on {
         background-color: var(--color-main);
         color: white;
+    }
+    .option-body {
+        display: flex;
+        flex-direction: column;
+    }
+    .endBtn{
+        display: none;
+    }
+    .endBtn.on {
+        display: block;
     }
 </style>
 <sec:authorize access="isAuthenticated()">
@@ -99,23 +109,23 @@
                     </td>
 
                     <td>
-                        <c:forEach var="recomendedChk" items="${recomendedEmpleChk}">
-                            <c:if test="${recomendedChk.key == sntncVO.sntncEtprCode}">
+                        <c:forEach var="recommendedChk" items="${recommendedEmpleChk}">
+                            <c:if test="${recommendedChk.key == sntncVO.sntncEtprCode}">
                                 <c:choose>
-                                    <c:when test="${recomendedChk.value == 0}">
-                                        <button class="recomend-icon-btn unRecomendBtn"
+                                    <c:when test="${recommendedChk.value == 0}">
+                                        <button class="recommend-icon-btn unRecommendBtn"
                                                 data-idx="${sntncVO.sntncEtprCode}"></button>
                                     </c:when>
                                     <c:otherwise>
-                                        <button class="recomend-icon-btn recomendBtn"
+                                        <button class="recommend-icon-btn recommendBtn"
                                                 data-idx="${sntncVO.sntncEtprCode}"></button>
                                     </c:otherwise>
                                 </c:choose>
                             </c:if>
                         </c:forEach>
-                        <c:forEach var="recomendCnt" items="${recomendPostCnt}">
-                            <c:if test="${recomendCnt.key == sntncVO.sntncEtprCode}">
-                                <span class="recomentCnt">${recomendCnt.value}</span>
+                        <c:forEach var="recommendCnt" items="${recommendPostCnt}">
+                            <c:if test="${recommendCnt.key == sntncVO.sntncEtprCode}">
+                                <span class="recommendCnt">${recommendCnt.value}</span>
                             </c:if>
                         </c:forEach>
                     </td>
@@ -140,14 +150,6 @@
     <br/>
     <hr/>
     <h2>팀 공지</h2>
-    <div id="modal-insert-notice" style="display: none;">
-        <label for="notisntncSj">공지 제목</label> <br/>
-        <input type="text" name="notisntncSj" id="notisntncSj"> <br/>
-        <label for="notisntncCn">공지 내용</label><br/>
-        <textarea name="notisntncCn" id="notisntncCn" cols="30" rows="10"></textarea><br/>
-        <button type="button" id="insertNotice">등록</button>
-        <button type="button" id="modifyNotice" style="display: none;">수정</button>
-    </div>
     <button type="button" id="teamVote" class="on">진행중인 투표</button>
     <button type="button" id="teamNotice">팀 공지 보기</button>
     <section class="team-enter">
@@ -155,6 +157,43 @@
 
     <br/>
     <hr/>
+    <div id="modal">
+        <div id="modal-insert-notice" style="display: none;">
+            <label for="notisntncSj">공지 제목</label> <br/>
+            <input type="text" name="notisntncSj" id="notisntncSj"> <br/>
+            <label for="notisntncCn">공지 내용</label><br/>
+            <textarea name="notisntncCn" id="notisntncCn" cols="30" rows="10"></textarea><br/>
+            <button type="button" id="insertNotice">등록</button>
+            <button type="button" id="modifyNotice" style="display: none;">수정</button>
+        </div>
+        <div id="modal-insert-vote" style="display: none;">
+            <form id="inputVoteRegister" method="post" >
+                <label for="voteRegistTitle">투표 제목</label> <br/>
+                <input type="text" name="voteRegistTitle" id="voteRegistTitle"> <br/>
+                <div class="option-wrapper">
+                    <div class="option-header">
+                        <span>옵션 추가</span>
+                        <button id="add-option">+ 항목 추가하기</button>
+                    </div>
+                    <div class="option-body">
+                        <div class="option">
+                            <input type="text" name="voteOptionContents" id="voteOptionContents0">
+                        </div>
+                    </div>
+                </div>
+                <label>투표 기간</label> <br/>
+                <input type="date" name="voteRegistStartDate" id="voteRegistStartDate" placeholder="시작날짜" readonly> <br/>
+                <input type="date" name="voteRegistEndDate" id="voteRegistEndDate" placeholder="종료날짜"> <br/>
+            </form>
+            <button type="button" id="inputVoteRegisterBtn">확인</button>
+            <button type="button" class="cancel">취소</button>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        const emplId = ${CustomUser.employeeVO.emplId};
+        const emplNm = ${CustomUser.employeeVO.emplNm};
+        const emplDept = ${CustomUser.employeeVO.commonCodeDept};
+    </script>
     <script src="/resources/js/teamCommunity.js"></script>
 </sec:authorize>

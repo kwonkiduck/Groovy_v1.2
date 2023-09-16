@@ -17,7 +17,7 @@ public interface CommunityMapper {
     void deletePost(Map<String, Object> map);
     List<SntncVO> loadPost(String emplId);
     int loadRecommend(String sntncEtprCode);
-    int findRecommend(HashMap<String, Object> map);
+    int findRecommend(Map<String, Object> map);
 
     void inputRecommend(RecommendVO vo);
     void deleteRecommend(RecommendVO vo);
@@ -36,4 +36,8 @@ public interface CommunityMapper {
     List<VoteOptionVO> loadVoteOption(Map<String, Object> map);
     void inputVote(Map<String, Object> map);
     void deleteVote(Map<String, Object> map);
+    int inputVoteRegist(VoteRegisterVO vo);
+    int inputVoteOptions(VoteOptionVO vo);
+    void updateVoteRegistAt(String voteRegistNo);
+    int getVoteSeq();
 }

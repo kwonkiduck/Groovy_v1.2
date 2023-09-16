@@ -35,13 +35,13 @@ public class CommunityController {
     }
 
     @GetMapping("")
-    public ModelAndView teamComminity(Principal principal, ModelAndView mav) {
+    public ModelAndView teamCommunity(Principal principal, ModelAndView mav) {
         emplId = principal.getName();
         List<SntncVO> sntncList = service.loadPost(emplId);
         Map<String, Integer> recommendPostCnt = new HashMap<>();
         Map<String, Integer> recommendedEmpleChk = new HashMap<>();
         Map<String, Integer> answerPostCnt = new HashMap<>();
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         for (SntncVO post : sntncList) {
             String sntncEtprCode = post.getSntncEtprCode();
 
@@ -49,11 +49,11 @@ public class CommunityController {
             recommendPostCnt.put(sntncEtprCode, recommendCnt);
 
             map.put("sntncEtprCode", sntncEtprCode);
-            map.put("recommendEmplId", emplId);
-
+            map.put("recomendEmplId", emplId);
+            log.info("map ==> " + map);
             int recommendedChk = service.findRecommend(map);
             recommendedEmpleChk.put(sntncEtprCode, recommendedChk);
-
+            log.info("recommendedEmpleChk ==> " + recommendedEmpleChk);
             int answerCnt = service.loadAnswerCnt(sntncEtprCode);
             answerPostCnt.put(sntncEtprCode, answerCnt);
 
@@ -63,6 +63,7 @@ public class CommunityController {
         mav.addObject("recommendedEmpleChk", recommendedEmpleChk);
         mav.addObject("answerPostCnt", answerPostCnt);
         mav.setViewName("community/teamCommunity");
+        log.info("recommendedEmpleChk ===> " + recommendedEmpleChk);
         return mav;
     }
 
@@ -78,6 +79,7 @@ public class CommunityController {
     @ResponseBody
     @PutMapping("/modifyPost")
     public String modifyPost(@RequestBody Map<String, Object> map){
+        map.put("sntncWrtingEmplId",emplId);
         return Integer.toString(service.modifyPost(map));
     }
     /*  포스트 삭제 */
@@ -91,17 +93,20 @@ public class CommunityController {
     @ResponseBody
     @PostMapping("/inputRecommend")
     public int inputRecommend(RecommendVO vo){
+        vo.setRecomendEmplId(emplId);
         service.inputRecommend(vo);
         String sntncEtprCode = vo.getSntncEtprCode();
         int recommendCnt = service.loadRecommend(sntncEtprCode);
         return recommendCnt;
     }
     @ResponseBody
-    @PostMapping("/deleterecommend")
-    public int deleterecommend(RecommendVO vo){
+    @PostMapping("/deleteRecommend")
+    public int deleteRecommend(RecommendVO vo){
+        vo.setRecomendEmplId(emplId);
         service.deleteRecommend(vo);
         String sntncEtprCode = vo.getSntncEtprCode();
         int recommendCnt = service.loadRecommend(sntncEtprCode);
+        log.info("recommendCnt ==>" + recommendCnt);
         return recommendCnt;
     }
 
@@ -160,6 +165,23 @@ public class CommunityController {
     public String deleteVote(@RequestBody Map<String, Object> map){
         map.put("votePartcptnEmpId",emplId);
         service.deleteVote(map);
+        return "success";
+    }
+
+    @PostMapping("/inputVoteRegist")
+    @ResponseBody
+    public String inputVoteRegist(VoteRegisterVO vo){
+        vo.setVoteRegistEmpId(emplId);
+        log.info("VoteRegisterVO ===> " + vo);
+        service.inputVoteRegist(vo);
+        return "success";
+    }
+
+    @ResponseBody
+    @PutMapping("/updateVoteRegistAt")
+    public String updateVoteRegistAt(@RequestBody String voteRegistNo){
+        log.info("voteRegistNodddddd ==> " + voteRegistNo);
+        service.updateVoteRegistAt(voteRegistNo);
         return "success";
     }
 }

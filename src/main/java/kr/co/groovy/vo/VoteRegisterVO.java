@@ -12,13 +12,15 @@ import java.util.List;
 @Setter
 @ToString
 public class VoteRegisterVO {
-    private int voteRegistSeq;
+    private int voteRegistNo;
     private String voteRegistEmpId;
     private String voteRegistTitle;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date voteRegistStartDate;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date voteRegistEndDate;
+    private String voteRegistAt;
     private List<VoteOptionVO> voteOptionList;
 
+    private List<String> voteOptionNames;
 }

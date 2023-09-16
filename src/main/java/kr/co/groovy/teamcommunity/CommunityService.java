@@ -3,6 +3,7 @@ package kr.co.groovy.teamcommunity;
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -96,12 +97,11 @@ public class CommunityService {
         return mapper.loadRecommend(sntncEtprCode);
     }
 
-    public int findRecommend(HashMap<String, Object> map) {
+    public int findRecommend(Map<String, Object> map) {
         return mapper.findRecommend(map);
     }
 
     public void inputRecommend(RecommendVO vo) {
-        log.info("RecommendVO ==> " + vo);
         mapper.inputRecommend(vo);
     }
 
@@ -128,8 +128,8 @@ public class CommunityService {
         Map<String, Object> map = new HashMap<>();
         map.put("emplId", emplId);
         for (VoteRegisterVO vo : voteRegistList) {
-            String voteRegistSeq = String.valueOf(vo.getVoteRegistSeq());
-            map.put("voteRegistSeq", voteRegistSeq);
+            String voteRegistNo = String.valueOf(vo.getVoteRegistNo());
+            map.put("voteRegistNo", voteRegistNo);
             List<VoteOptionVO> voteOptionList = mapper.loadVoteOption(map);
             vo.setVoteOptionList(voteOptionList);
         }
@@ -141,6 +141,23 @@ public class CommunityService {
     }
     public void deleteVote(Map<String, Object> map){
         mapper.deleteVote(map);
+    }
+
+    @Transactional
+    public void inputVoteRegist(VoteRegisterVO vo) {
+        mapper.inputVoteRegist(vo);
+        //  현재 시퀀스
+        int voteRegistSeq = mapper.getVoteSeq();
+        List<String> options = vo.getVoteOptionNames();
+        VoteOptionVO voteOptionVO = new VoteOptionVO();
+        for (String option : options) {
+            voteOptionVO.setVoteRegistNo(voteRegistSeq);
+            voteOptionVO.setVoteOptionContents(option);
+            mapper.inputVoteOptions(voteOptionVO);
+        }
+    }
+    public void updateVoteRegistAt(String voteRegistNo){
+        mapper.updateVoteRegistAt(voteRegistNo);
     }
 
     public String makeSntncEtprCode() {

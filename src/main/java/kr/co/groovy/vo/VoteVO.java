@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class VoteVO {
     private String votePartcptnEmpId;
-    private int voteOptionSeq;
-    private int voteRegistSeq;
+    private int voteOptionNo;
+    private int voteRegistNo;
 }
