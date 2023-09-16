@@ -28,6 +28,18 @@
              )
     </select>
 
+    <select id="getMaxWeeklyWorkTimeByDay" parameterType="commuteVO" resultType="int">
+        SELECT COALESCE(MAX(DCLZ_WIK_WORK_TIME), 0) AS MAX_WEEKLY_WORK_TIME
+        FROM (
+                 SELECT DCLZ_EMPL_ID,
+                        DCLZ_WORK_DE,
+                        DCLZ_WIK_WORK_TIME
+                 FROM DCLZ
+                 WHERE DCLZ_WORK_DE BETWEEN TRUNC(TO_DATE(#{dclzWorkDe}), 'IW')  AND TRUNC(TO_DATE(#{dclzWorkDe}), 'IW') + 4
+                   AND DCLZ_EMPL_ID = #{dclzEmplId}
+             )
+    </select>
+
     <select id="getWeeklyAttendTime" parameterType="String" resultType="String">
         SELECT to_char(DCLZ_ATTEND_TM, 'DY HH24:MI')
         FROM DCLZ
@@ -140,4 +152,30 @@
             DCLZ_EMPL_ID = #{dclzEMplId}
           AND TRUNC(DCLZ_ATTEND_TM) = TRUNC(SYSDATE)
     </update>
+
+    <select id="getWorkWik" parameterType="String" resultType="String">
+        SELECT
+            TO_CHAR(TO_DATE(#{currentDate}, 'YYYY-MM-DD'), 'IYYY-IW') AS YEAR
+        FROM
+            DUAL
+    </select>
+
+    <insert id="insertCommute" parameterType="commuteVO">
+        INSERT INTO DCLZ (DCLZ_WORK_DE,
+                          DCLZ_EMPL_ID,
+                          DCLZ_ATTEND_TM,
+                          DCLZ_LVFFC_TM,
+                          DCLZ_DAIL_WORK_TIME,
+                          DCLZ_WIK_WORK_TIME,
+                          COMMON_CODE_LABOR_STTUS,
+                          DCLZ_WORK_WIK)
+        VALUES (#{dclzWorkDe},
+                #{dclzEmplId},
+                #{dclzAttendTm},
+                #{dclzLvffcTm},
+                #{dclzDailWorkTime},
+                #{dclzWikWorkTime},
+                #{commonCodeLaborSttus},
+                #{dclzWorkWik})
+    </insert>
 </mapper>

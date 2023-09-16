@@ -106,16 +106,22 @@ public class JobController {
     @ResponseBody
     public void insertJob(JobVO jobVO, JobProgressVO jobProgressVO, Principal principal) {
         int maxJobNo = service.getMaxJobNo() + 1;
+        String emplId = principal.getName();
         jobVO.setJobNo(maxJobNo);
-        jobVO.setJobRequstEmplId(principal.getName());
+         jobVO.setJobRequstEmplId(emplId);
         service.insertJob(jobVO);
 
         jobProgressVO.setJobNo(maxJobNo);
-        List<String> selectedEmplIds = jobVO.getSelectedEmplIds();
-        for (String selectedEmplId : selectedEmplIds) {
-            jobProgressVO.setJobNo(maxJobNo);
-            jobProgressVO.setJobRecptnEmplId(selectedEmplId);
-            jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel("대기"));
+        if (jobVO.getSelectedEmplIds() != null) { //나 -> 다른이
+            List<String> selectedEmplIds = jobVO.getSelectedEmplIds();
+            for (String selectedEmplId : selectedEmplIds) {
+                jobProgressVO.setJobRecptnEmplId(selectedEmplId);
+                jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel("대기"));
+                service.insertJobProgress(jobProgressVO);
+            }
+        } else { //나 -> 나
+            jobProgressVO.setJobRecptnEmplId(emplId);
+            jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel("승인"));
             service.insertJobProgress(jobProgressVO);
         }
     }
@@ -153,4 +159,10 @@ public class JobController {
 
         service.updateJobStatus(jobProgressVO);
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "employee/job/yryctest";
+    }
+
 }

@@ -45,4 +45,10 @@ public class VacationService {
     public List<VacationUseVO> loadTeamMemVacation(String emplId) {
         return mapper.loadTeamMemVacation(emplId);
     }
+
+    public void modifyVacationCount(VacationUseVO vacationUseVO) {mapper.modifyVacationCount(vacationUseVO);}
+
+    public VacationUseVO loadVacationBySn(int yrycUseDtlsSn) {
+        return mapper.loadVacationBySn(yrycUseDtlsSn);
+    }
 }
