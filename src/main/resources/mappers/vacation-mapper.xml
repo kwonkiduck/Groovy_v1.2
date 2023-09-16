@@ -66,4 +66,21 @@
         SET ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
         WHERE YRYC_USE_DTLS_SN = #{approveId}
     </update>
+
+    <select id="loadTeamMemVacation" parameterType="String" resultType="vacationUseVO">
+        SELECT Y.YRYC_USE_DTLS_SN,
+               Y.YRYC_USE_DTLS_EMPL_ID,
+               Y.YRYC_USE_DTLS_BEGIN_DATE,
+               Y.YRYC_USE_DTLS_END_DATE,
+               Y.COMMON_CODE_YRYC_USE_KIND,
+               E.EMPL_NM AS YRYC_USE_DTLS_EMPL_NM,
+               UF.UPLOAD_FILE_STRE_NM AS PROFILE_FILE_NAME
+        FROM YRYC_USE_DTLS Y
+            JOIN EMPL E ON Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
+            JOIN UPLOAD_FILE UF ON E.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
+        WHERE E.COMMON_CODE_DEPT = (SELECT E1.COMMON_CODE_DEPT FROM EMPL E1 WHERE E1.EMPL_ID = #{emplId})
+          AND TO_CHAR(SYSDATE,'YYYY-MM-DD') BETWEEN Y.YRYC_USE_DTLS_BEGIN_DATE AND Y.YRYC_USE_DTLS_END_DATE
+          AND Y.COMMON_CODE_YRYC_STATE = 'YRYC032'
+          AND Y.YRYC_USE_DTLS_EMPL_ID != #{emplId}
+    </select>
 </mapper>

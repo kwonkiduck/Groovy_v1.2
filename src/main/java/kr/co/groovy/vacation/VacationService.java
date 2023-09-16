@@ -13,18 +13,18 @@ import java.util.List;
 @Service
 public class VacationService {
 
-    private final VacationMapper vacationMapper;
+    private final VacationMapper mapper;
 
-    public VacationService(VacationMapper vacationMapper, SanctionMapper sanctionMapper) {
-        this.vacationMapper = vacationMapper;
+    public VacationService(VacationMapper vacationMapper) {
+        this.mapper = vacationMapper;
     }
 
     public VacationVO loadVacationCnt(String emplId) {
-        return vacationMapper.loadVacationCnt(emplId);
+        return mapper.loadVacationCnt(emplId);
     }
 
     public List<VacationUseVO> loadVacationRecord(String emplId) {
-        List<VacationUseVO> list = vacationMapper.loadVacationRecord(emplId);
+        List<VacationUseVO> list = mapper.loadVacationRecord(emplId);
         for(VacationUseVO vo : list ){
             vo.setCommonCodeYrycUseKind(VacationKind.valueOf(vo.getCommonCodeYrycUseKind()).label());
             vo.setCommonCodeYrycUseSe(VacationKind.valueOf(vo.getCommonCodeYrycUseSe()).label());
@@ -32,13 +32,17 @@ public class VacationService {
         return list;
     }
     public int inputVacation(VacationUseVO vo){
-        return vacationMapper.inputVacation(vo);
+        return mapper.inputVacation(vo);
     }
 
     public VacationUseVO loadVacationDetail(int yrycUseDtlsSn){
-        VacationUseVO vo = vacationMapper.loadVacationDetail(yrycUseDtlsSn);
+        VacationUseVO vo = mapper.loadVacationDetail(yrycUseDtlsSn);
         vo.setCommonCodeYrycUseKind(VacationKind.valueOf(vo.getCommonCodeYrycUseKind()).label());
         vo.setCommonCodeYrycUseSe(VacationKind.valueOf(vo.getCommonCodeYrycUseSe()).label());
         return vo;
+    }
+
+    public List<VacationUseVO> loadTeamMemVacation(String emplId) {
+        return mapper.loadTeamMemVacation(emplId);
     }
 }

@@ -20,8 +20,9 @@ public class VacationUseVO {
     private String commonCodeYrycUseKind;
     private String commonCodeYrycUseSe;
     private String yrycUseDtlsEmplId;
+    private String yrycUseDtlsEmplNm;
     private String elctrnSanctnEtprCode;
-
+    private String profileFileName;
     private int generatedKey;
 
 }
