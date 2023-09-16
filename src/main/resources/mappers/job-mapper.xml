@@ -129,17 +129,22 @@
     </insert>
 
     <select id="getAllJobById" parameterType="String" resultType="jobVO">
-        SELECT JOB_NO,
-               JOB_REQUST_EMPL_ID,
-               JOB_SJ,
-               JOB_CN,
-               JOB_BEGIN_DATE,
-               JOB_CLOS_DATE,
-               JOB_REQUST_DATE,
-               COMMON_CODE_DUTY_KIND
-        FROM JOB
-        WHERE JOB_REQUST_EMPL_ID = #{jobRequstEmplId}
-        ORDER BY JOB_NO
+        SELECT J.JOB_NO,
+               J.JOB_REQUST_EMPL_ID,
+               J.JOB_SJ,
+               J.JOB_CN,
+               J.JOB_BEGIN_DATE,
+               J.JOB_CLOS_DATE,
+               J.JOB_REQUST_DATE,
+               J.COMMON_CODE_DUTY_KIND
+        FROM JOB J
+        WHERE J.JOB_REQUST_EMPL_ID = #{jobRequstEmplId}
+          AND J.JOB_NO NOT IN (
+            SELECT P.JOB_NO
+            FROM JOB_PROGRS P
+            WHERE P.JOB_RECPTN_EMPL_ID = #{jobRequstEmplId}
+        )
+        ORDER BY J.JOB_NO
     </select>
 
     <select id="getJobByNo" resultMap="jobMap" parameterType="int">
@@ -173,7 +178,7 @@
         WHERE J.JOB_NO = P.JOB_NO
           AND E.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
           AND J.JOB_REQUST_EMPL_ID = E.EMPL_ID
-          and (P.COMMON_CODE_DUTY_STTUS = 'DUTY020' OR P.COMMON_CODE_DUTY_STTUS = 'DUTY021')
+          AND (P.COMMON_CODE_DUTY_STTUS = 'DUTY020' OR P.COMMON_CODE_DUTY_STTUS = 'DUTY021')
           AND P.JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
     </select>
 

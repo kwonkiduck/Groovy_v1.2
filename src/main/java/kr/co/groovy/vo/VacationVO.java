@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class VacationVO {
     private String yrycEmpId;
-    private double yrycUseCo;
-    private double yrycNowCo;
+    private double yrycUseCo;//사용연차개수
+    private double yrycNowCo;//현재연차개수
 }

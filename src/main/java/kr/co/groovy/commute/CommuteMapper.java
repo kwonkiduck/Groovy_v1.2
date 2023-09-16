@@ -12,6 +12,8 @@ public interface CommuteMapper {
 
     int getMaxWeeklyWorkTime(String dclzEmplId);
 
+    int getMaxWeeklyWorkTimeByDay(CommuteVO commuteVO);
+
     int insertAttend(CommuteVO commuteVO);
 
     int updateCommute(String dclzEmplId);
@@ -28,5 +30,7 @@ public interface CommuteMapper {
 
     List<CommuteVO> getCommuteByYearMonth(Map<String, Object> map);
 
+    void insertCommute(CommuteVO commuteVO);
 
+    String getWorkWik(String currentDate);
 }

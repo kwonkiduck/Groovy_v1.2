@@ -52,8 +52,7 @@ document.querySelector("#receiveJobContainer").addEventListener("click", (event)
                 });
 
                 jobProgressVO = {
-                    "jobNo": jobNo,
-                    "commonCodeDutySttus": "거절"
+                    "jobNo": jobNo
                 };
             },
             error: function (xhr) {
@@ -63,11 +62,18 @@ document.querySelector("#receiveJobContainer").addEventListener("click", (event)
     }
 });
 
-document.querySelector("#reject").addEventListener("click", ()=> {
-    reject(jobProgressVO);
+document.querySelector("#reject").addEventListener("click", () => {
+    jobProgressVO["commonCodeDutySttus"] = "거절"
+    rejectOrAgree(jobProgressVO);
 })
-//요청 상태 변경 (거절, 승인)
-function reject(jobProgressVO) {
+
+document.querySelector("#agree").addEventListener("click", () => {
+    jobProgressVO["commonCodeDutySttus"] = "승인"
+    rejectOrAgree(jobProgressVO);
+})
+
+//요청 상태 변경 함수(거절, 승인)
+function rejectOrAgree(jobProgressVO) {
     $.ajax({
         type:'put',
         url:'/job/updateJobStatus',
@@ -130,9 +136,41 @@ document.getElementById("requestJobContainer").addEventListener("click", (event)
         });
     }
 });
+
 document.querySelector(".addJob").addEventListener("click", () => {
     openModal("#modal-newJob");
+    //신규 등록
+    document.querySelector("#tab-new-request").addEventListener("click", () => {
+        document.querySelector(".new-job").classList.remove("on");
+        openModal(".new-request");
+    });
+    //요청 받은 업무 목록
+    document.querySelector("#tab-new-job").addEventListener("click", () => {
+        document.querySelector(".new-request").classList.remove("on");
+        openModal(".new-job");
+    })
 });
+//신규 등록
+document.querySelector(".new-job .regist").addEventListener("click", () => {
+    let formData = new FormData(document.querySelector("#registNewJob"));
+    console.log(formData);
+    $.ajax({
+        url: '/job/insertJob',
+        type: 'post',
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function() {
+            location.href = "/job/main";
+        },
+        error: function(xhr) {
+            console.log(xhr.status);
+        }
+    });
+})
+
+
 document.querySelector(".myjob").addEventListener("click", () => {
     openModal("#modal-job-detail");
 });
