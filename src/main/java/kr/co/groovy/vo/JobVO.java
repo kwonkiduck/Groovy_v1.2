@@ -14,6 +14,7 @@ import java.util.List;
 public class JobVO {
     private int jobNo;
     private String jobRequstEmplId;
+    private String jobRequstEmplNm;
     private String jobRequstEmplProfl;
     private String jobSj;
     private String jobCn;

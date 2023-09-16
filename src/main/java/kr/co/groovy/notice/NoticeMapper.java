@@ -15,7 +15,7 @@ public interface NoticeMapper {
 
     NoticeVO loadNoticeDetail(String notiSeq);
 
-    List<UploadFileVO> loadNotiFiles(String notiEtprCode);
+    List<UploadFileVO> loadNotiFiles(String notiEt$prCode);
 
     UploadFileVO downloadNotiFile(int uploadFileSn);
 

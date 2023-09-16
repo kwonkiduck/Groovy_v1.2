@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.diet.DietMapper">
 
-<insert id="insertDiert" parameterType="dietVO">
+<insert id="insertDiet" parameterType="dietVO">
 	INSERT INTO 
 	DIET(
 		DIET_DATE, 
@@ -15,11 +15,41 @@
 	VALUES(
 		#{dietDate}, 
 		#{dietRice},  
-		#{dietSoup}', 
+		#{dietSoup}, 
 		#{dietDish1}, 
 		#{dietDish2}, 
 		#{dietDish3}, 
 		#{dietDessert})
 </insert>
+
+<select id="getAllDiet" resultType="dietVO">
+	SELECT 
+		DIET_DATE, 
+		DIET_RICE, 
+		DIET_SOUP, 
+		DIET_DISH1, 
+		DIET_DISH2, 
+		DIET_DISH3, 
+		DIET_DESSERT 
+	FROM 
+		DIET 
+	ORDER BY 
+		DIET_DATE ASC
+</select>
+
+<select id="getOneDiet" resultType="dietVO" parameterType="date">
+	SELECT 
+		DIET_DATE, 
+		DIET_RICE, 
+		DIET_SOUP, 
+		DIET_DISH1, 
+		DIET_DISH2, 
+		DIET_DISH3, 
+		DIET_DESSERT 
+	FROM 
+		DIET
+	WHERE 
+		DIET_DATE = #{dietDate}
+</select>
 
 </mapper>

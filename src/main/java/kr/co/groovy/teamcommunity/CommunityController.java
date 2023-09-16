@@ -1,10 +1,7 @@
 package kr.co.groovy.teamcommunity;
 
 import kr.co.groovy.common.CommonService;
-import kr.co.groovy.vo.AnswerVO;
-import kr.co.groovy.vo.EmployeeVO;
-import kr.co.groovy.vo.RecomendVO;
-import kr.co.groovy.vo.SntncVO;
+import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -41,29 +38,29 @@ public class CommunityController {
     public ModelAndView teamComminity(Principal principal, ModelAndView mav) {
         emplId = principal.getName();
         List<SntncVO> sntncList = service.loadPost(emplId);
-        Map<String, Integer> recomendPostCnt = new HashMap<>();
-        Map<String, Integer> recomendedEmpleChk = new HashMap<>();
+        Map<String, Integer> recommendPostCnt = new HashMap<>();
+        Map<String, Integer> recommendedEmpleChk = new HashMap<>();
         Map<String, Integer> answerPostCnt = new HashMap<>();
         HashMap<String, Object> map = new HashMap<>();
         for (SntncVO post : sntncList) {
             String sntncEtprCode = post.getSntncEtprCode();
 
-            int recomendCnt = service.loadRecomend(sntncEtprCode);
-            recomendPostCnt.put(sntncEtprCode, recomendCnt);
+            int recommendCnt = service.loadRecommend(sntncEtprCode);
+            recommendPostCnt.put(sntncEtprCode, recommendCnt);
 
             map.put("sntncEtprCode", sntncEtprCode);
-            map.put("recomendEmplId", emplId);
+            map.put("recommendEmplId", emplId);
 
-            int recomendedChk = service.findRecomend(map);
-            recomendedEmpleChk.put(sntncEtprCode, recomendedChk);
+            int recommendedChk = service.findRecommend(map);
+            recommendedEmpleChk.put(sntncEtprCode, recommendedChk);
 
             int answerCnt = service.loadAnswerCnt(sntncEtprCode);
             answerPostCnt.put(sntncEtprCode, answerCnt);
 
         }
         mav.addObject("sntncList", sntncList);
-        mav.addObject("recomendPostCnt", recomendPostCnt);
-        mav.addObject("recomendedEmpleChk", recomendedEmpleChk);
+        mav.addObject("recommendPostCnt", recommendPostCnt);
+        mav.addObject("recommendedEmpleChk", recommendedEmpleChk);
         mav.addObject("answerPostCnt", answerPostCnt);
         mav.setViewName("community/teamCommunity");
         return mav;
@@ -92,20 +89,20 @@ public class CommunityController {
     }
     /* 좋아요 구현 */
     @ResponseBody
-    @PostMapping("/inputRecomend")
-    public int inputRecomend(RecomendVO vo){
-        service.inputRecomend(vo);
+    @PostMapping("/inputRecommend")
+    public int inputRecommend(RecommendVO vo){
+        service.inputRecommend(vo);
         String sntncEtprCode = vo.getSntncEtprCode();
-        int recomendCnt = service.loadRecomend(sntncEtprCode);
-        return recomendCnt;
+        int recommendCnt = service.loadRecommend(sntncEtprCode);
+        return recommendCnt;
     }
     @ResponseBody
-    @PostMapping("/deleteRecomend")
-    public int deleteRecomend(RecomendVO vo){
-        service.deleteRecomend(vo);
+    @PostMapping("/deleterecommend")
+    public int deleterecommend(RecommendVO vo){
+        service.deleteRecommend(vo);
         String sntncEtprCode = vo.getSntncEtprCode();
-        int recomendCnt = service.loadRecomend(sntncEtprCode);
-        return recomendCnt;
+        int recommendCnt = service.loadRecommend(sntncEtprCode);
+        return recommendCnt;
     }
 
     @ResponseBody
@@ -145,5 +142,24 @@ public class CommunityController {
         return "success";
     }
 
-
+    @ResponseBody
+    @PostMapping("/loadAllRegistVote")
+    public List<VoteRegisterVO> loadAllRegistVote(){
+        List<VoteRegisterVO> voteList = service.loadAllRegistVote(emplId);
+        return voteList;
+    }
+    @ResponseBody
+    @PostMapping("/inputVote")
+    public String inputVote(@RequestBody Map<String, Object> map){
+        map.put("votePartcptnEmpId",emplId);
+        service.inputVote(map);
+        return "success";
+    }
+    @ResponseBody
+    @DeleteMapping("/deleteVote")
+    public String deleteVote(@RequestBody Map<String, Object> map){
+        map.put("votePartcptnEmpId",emplId);
+        service.deleteVote(map);
+        return "success";
+    }
 }

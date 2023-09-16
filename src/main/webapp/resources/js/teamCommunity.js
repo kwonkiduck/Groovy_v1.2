@@ -1,0 +1,526 @@
+    const post = document.querySelectorAll(".post");
+    const teamEnter = document.querySelector(".team-enter");
+    const notisntncSj = document.querySelector("#notisntncSj");
+    const notisntncCn = document.querySelector("#notisntncCn");
+    const teamVote = document.querySelector("#teamVote");
+    const addTeamNotice = document.querySelector("#addTeamNotice");
+    const insertNotice = document.querySelector("#insertNotice");
+    const modifyNotice = document.querySelector("#modifyNotice");
+    const deleteNotice = document.querySelector("#deleteNotice");
+    const addVoteBtn = document.querySelector("#addVote");
+    const voteTitle = document.querySelector("#voteRegistTitle");
+    const insertOptionBtn = document.querySelector("#insertOption");
+    const insertVoteBtn = document.querySelector("#insertPostBtn");
+    const voteRegistStartDate = document.querySelector("#voteRegistStartDate");
+    const sntncSj = document.querySelector("#sntncSj");
+    const sntncCn = document.querySelector("#sntncCn");
+    const noticeFile = document.querySelector("#noticeFile");
+    const modifyVoteBtn = document.querySelector(".modifyVote");
+    const deleteVoteBtn = document.querySelector("#deleteVoteBtn");
+    let deleteOptionBtn = document.querySelectorAll(".deleteOption");
+    let optionContainers = document.querySelectorAll(".option");
+    const options = document.querySelector(".options");
+    let voteList = document.querySelectorAll(".voteList");
+    let isLiked = true;
+    let formData = undefined;
+    let selectedFile = undefined;
+    let num = 2;
+    const emplId = "${CustomUser.employeeVO.emplId}";
+    const emplNm = "${CustomUser.employeeVO.emplNm}";
+    const emplDept = "${CustomUser.employeeVO.commonCodeDept}";
+    let sntncEtprCode;
+
+    function loadAnswerFn(sntncEtprCode, item) {
+        $.ajax({
+            url: "/teamCommunity/loadAnswer",
+            type: "POST",
+            data: {sntncEtprCode: sntncEtprCode},
+            success: function (data) {
+                let code = "";
+                data.forEach(item => {
+                    code += `<td>
+                <img src="/uploads/profile/${item.proflPhotoFileStreNm}" style="width: 50px; height: 50px;"/> <br />
+                ${item.answerWrtingEmplNm}<br />
+                ${item.answerCn}<br />
+                ${item.answerDate}
+                </td><br/>`
+                })
+                item.querySelector(".answerBox").innerHTML = code;
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+            }
+        })
+    }
+
+    /*  포스트에서 기능 */
+    post.forEach((item) => {
+        item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = e.target;
+            const recommendEmplId = "${CustomUser.employeeVO.emplId}";
+            const sntncEtprCode = `${item.getAttribute("data-idx")}`;
+            const sntncCnbox = item.querySelector(".sntncCn");
+            let recommendVo = {
+                "recommendEmplId": recommendEmplId,
+                "sntncEtprCode": sntncEtprCode
+            }
+            let sntncVO = {
+                "sntncWrtingEmplId": recommendEmplId,
+                "sntncEtprCode": sntncEtprCode
+            }
+            /*  좋아요 */
+            if (target.classList.contains("unRecommendBtn")) {
+                const btn = item.querySelector(".unRecommendBtn");
+                console.log(recommendVo);
+                $.ajax({
+                    url: "/teamCommunity/inputrecommend",
+                    type: "POST",
+                    data: recommendVo,
+                    dataType: "text",
+                    success: function (data) {
+                        const like = item.querySelector(".recomentCnt");
+                        like.innerText = data;
+                        if (btn.classList.contains("unRecommendBtn")) {
+                            btn.classList.remove("unRecommendBtn");
+                            btn.classList.add("recommendBtn");
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                    }
+                })
+                return;
+            }
+            /*  좋아요 취소 */
+            if (target.classList.contains("recommendBtn")) {
+                const btn = item.querySelector(".recommendBtn");
+                $.ajax({
+                    url: "/teamCommunity/deleterecommend",
+                    type: "POST",
+                    data: recommendVo,
+                    dataType: "text",
+                    success: function (data) {
+                        const like = item.querySelector(".recomentCnt");
+                        like.innerText = data;
+                        if (btn.classList.contains("recommendBtn")) {
+                            btn.classList.remove("recommendBtn");
+                            btn.classList.add("unRecommendBtn");
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                    }
+                })
+                return;
+            }
+            /*  포스트 수정  */
+            if (target.classList.contains("modifyBtn")) {
+
+                const content = sntncCnbox.innerText;
+                const textArea = document.createElement("textarea");
+                textArea.classList = "modifySntncCn";
+                textArea.value = content;
+
+                const saveBtn = document.createElement("button");
+                saveBtn.classList = "saveMoidfyBtn";
+                saveBtn.innerText = "수정";
+
+                sntncCnbox.innerHTML = "";
+                sntncCnbox.appendChild(textArea);
+                sntncCnbox.appendChild(saveBtn);
+            }
+            if (target.classList.contains("saveMoidfyBtn")) {
+                const modisntncCn = document.querySelector(".modifySntncCn").value;
+                sntncVO.sntncCn = modisntncCn;
+                $.ajax({
+                    url: "/teamCommunity/modifyPost",
+                    type: "PUT",
+                    data: JSON.stringify(sntncVO),
+                    contentType: "application/json",
+                    dataType: "text",
+                    success: function (data) {
+                        item.querySelector(".modifySntncCn").remove();
+                        sntncCnbox.innerText = sntncVO.sntncCn;
+                        target.remove();
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                    }
+                })
+            }
+            /*  포스트 삭제  */
+            if (target.classList.contains("deleteBtn")) {
+                $.ajax({
+                    url: "/teamCommunity/deletePost",
+                    type: "Delete",
+                    data: JSON.stringify({sntncEtprCode: sntncEtprCode}),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        item.remove();
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                    }
+                })
+            }
+
+            /*  댓글 등록   */
+            if (target.classList.contains("inputAnswer")) {
+                const answerCnt = item.querySelector(".answerCnt")
+                const answerContent = item.querySelector(".answerCn");
+                const answerValue = answerContent.value;
+                const answerVO = {
+                    "sntncEtprCode": sntncEtprCode,
+                    "answerCn": answerValue,
+                }
+                if (answerValue !== "") {
+                    $.ajax({
+                        url: "/teamCommunity/inputAnswer",
+                        type: "POST",
+                        data: JSON.stringify(answerVO),
+                        contentType: "application/json",
+                        dataType: "text",
+                        success: function (data) {
+                            answerCnt.innerText = data;
+                            answerContent.value = "";
+                            loadAnswerFn(sntncEtprCode, item);
+
+                            //알림 보내기
+                            $.get("/alarm/getMaxAlarm")
+                                .then(function (maxNum) {
+                                    maxNum = parseInt(maxNum) + 1;
+                                    console.log("최대 알람 번호:", maxNum);
+
+                                    let postWriterId = target.closest("tr").querySelector(".postWriterInfo").getAttribute("data-id");
+                                    let subject = target.closest("tr").querySelector(".sntncCn").innerText;
+                                    let url = '/teamCommunity';
+                                    let content = `<div class="alarmBox">
+                                                                <a href="${url}" class="aTag" data-seq="${maxNum}">
+                                                                    <h1>[팀 커뮤니티]</h1>
+                                                                    <p>[<span style="white-space: nowrap;
+                                                                      display: inline-block;
+                                                                      overflow: hidden;
+                                                                      text-overflow: ellipsis;
+                                                                      max-width: 15ch;">${subject}</span>]에
+                                                                      ${emplNm}님이 댓글을 등록하셨습니다.</p>
+                                                                </a>
+                                                                <button type="button" class="readBtn">읽음</button>
+                                                            </div>`;
+                                    let alarmVO = {
+                                        "ntcnEmplId": postWriterId,
+                                        "ntcnSn": maxNum,
+                                        "ntcnUrl": url,
+                                        "ntcnCn": content,
+                                        "commonCodeNtcnKind": 'NTCN011'
+                                    };
+
+                                    //알림 생성 및 페이지 이동
+                                    $.ajax({
+                                        type: 'post',
+                                        url: '/alarm/insertAlarmTarget',
+                                        data: alarmVO,
+                                        success: function (rslt) {
+                                            console.log(rslt);
+                                            if (socket) {
+                                                //알람번호,카테고리,url,보낸사람이름,받는사람아이디
+                                                let msg = maxNum + ",answer," + url + "," + emplNm + "," + postWriterId + "," + subject;
+                                                socket.send(msg);
+                                            }
+                                        },
+                                        error: function (xhr) {
+                                            console.log(xhr.status);
+                                        }
+                                    });
+                                })
+                                .catch(function (error) {
+                                    console.log("최대 알람 번호 가져오기 오류:", error);
+                                });
+                        },
+                        error: function (request, status, error) {
+                            console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                        }
+                    })
+                }
+            }
+
+            /*  댓글 불러오기 */
+            if (target.classList.contains("loadAnswer")) {
+                loadAnswerFn(sntncEtprCode, item);
+            }
+        })
+    })
+
+    function loadTeamNotiFnc() {
+        $.ajax({
+            url: "/teamCommunity/loadTeamNoti",
+            type: "POST",
+            success: function (data) {
+                let code = '<button type="button" id="addTeamNotice">팀 공지 추가하기</button>' +
+                    '<div class="inner">';
+                data.forEach(item => {
+                    code += `<div class="card" id="${item.sntncEtprCode}">`;
+                    if (emplId == item.sntncWrtingEmplId) {
+                        code +=
+                            `<button type="button" class="notimodifyBtn">수정</button>
+                                    <button type="button" class="notideleteBtn">삭제</button>`
+                    }
+                    code += `
+                                    <div class="accordion">
+                                    <div class="accordion-item">
+                                    <details>
+                                    <summary><span class="noti-title">${item.sntncSj}</span> ${item.sntncWrtingDate}
+                                    </summary>
+                                    <p class="noti-content">${item.sntncCn}</p>
+                                    </details>
+                                    </div>
+                                    </div>
+                                    </div>`
+                })
+                teamEnter.innerHTML = code;
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+            }
+        })
+    }
+
+    /*  팀 공지 관련 */
+    document.querySelector("#teamNotice").addEventListener("click", () => {
+        loadTeamNotiFnc();
+    })
+    teamEnter.addEventListener("click", function (e) {
+        const target = e.target;
+        if (target.id == "addTeamNotice") {
+            document.querySelector("#modal-insert-notice").style.display = "block";
+        }
+        if (target.classList.contains("notimodifyBtn")) {
+            const card = target.closest(".card");
+            sntncEtprCode = target.closest(".card").id;
+            modifyNotice.style.display = "block";
+            insertNotice.style.display = "none";
+            document.querySelector("#modal-insert-notice").style.display = "block";
+            notisntncSj.value = card.querySelector(".noti-title").innerText;
+            console.log(card.querySelector(".noti-content").innerText);
+            notisntncCn.value = card.querySelector(".noti-content").innerHTML;
+        }
+        if (target.classList.contains("notideleteBtn")) {
+            const card = target.closest(".card");
+            sntncEtprCode = target.closest(".card").id;
+            console.log(sntncEtprCode);
+            $.ajax({
+                url: "/teamCommunity/deletePost",
+                type: "Delete",
+                data: JSON.stringify({sntncEtprCode: sntncEtprCode}),
+                contentType: 'application/json',
+                success: function (data) {
+                    loadTeamNotiFnc();
+                },
+                error: function (request, status, error) {
+                    console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                }
+            })
+        }
+    });
+    insertNotice.addEventListener("click", () => {
+        const notiSntncVO = {
+            sntncSj: notisntncSj.value,
+            sntncCn: notisntncCn.value,
+        }
+        $.ajax({
+            url: "/teamCommunity/inputTeamNoti",
+            type: "POST",
+            data: JSON.stringify(notiSntncVO),
+            contentType: "application/json",
+            dataType: "text",
+            success: function (data) {
+                notisntncSj.value = "";
+                notisntncCn.value = "";
+                document.querySelector("#modal-insert-notice").style.display = "none";
+                loadTeamNotiFnc();
+
+                $.get("/alarm/getMaxAlarm")
+                    .then(function (maxNum) {
+                        maxNum = parseInt(maxNum) + 1;
+
+                        let url = '/teamCommunity';
+                        let content = `<div class="alarmBox">
+                                                    <a href="${url}" class="aTag" data-seq="${maxNum}">
+                                                    <h1>[팀 커뮤니티]</h1>
+                                                    <p>${emplNm}님이 팀 공지사항을 등록하셨습니다.</p>
+                                                    </a>
+                                                    <button type="button" class="readBtn">읽음</button>
+                                                </div>`;
+                        let alarmVO = {
+                            "ntcnSn": maxNum,
+                            "ntcnUrl": url,
+                            "ntcnCn": content,
+                            "commonCodeNtcnKind": 'NTCN012',
+                            "dept": emplDept
+                        };
+                        //알림 생성 및 페이지 이동
+                        $.ajax({
+                            type: 'post',
+                            url: '/alarm/insertAlarm',
+                            data: alarmVO,
+                            success: function () {
+                                if (socket) {
+                                    let msg = maxNum + ",teamNoti," + url + "," + emplNm;
+                                    socket.send(msg);
+                                }
+                            },
+                            error: function (xhr) {
+                                console.log(xhr.status);
+                            }
+                        });
+                    })
+                    .catch(function (error) {
+                        console.log("최대 알람 번호 가져오기 오류:", error);
+                    });
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+            }
+        })
+    })
+    modifyNotice.addEventListener("click", () => {
+        const notiSntncVO = {
+            sntncEtprCode: sntncEtprCode,
+            sntncSj: notisntncSj.value,
+            sntncCn: notisntncCn.value
+        }
+        $.ajax({
+            url: "/teamCommunity/modifyTeamNoti",
+            type: "Put",
+            data: JSON.stringify(notiSntncVO),
+            contentType: "application/json",
+            dataType: "text",
+            success: function (data) {
+                notisntncSj.value = "";
+                notisntncCn.value = "";
+                document.querySelector("#modal-insert-notice").style.display = "none";
+                loadTeamNotiFnc();
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+            }
+        })
+    })
+
+    /*  투표 관련   */
+    function loadTeamVote() {
+        $.ajax({
+            url: "/teamCommunity/loadAllRegistVote",
+            type: "POST",
+            success: function (data) {
+                let code = '<button type="button" id="addVote">+ 투표 등록하기</button>' +
+                    '<div class="inner">';
+                data.forEach(item => {
+                    code += `<div class="inner">
+                                 <div class="card" id="${item.voteRegistSeq}">
+                                     <div class="card-header">
+                                         <h3 class="voteTitle">${item.voteRegistTitle}</h3>
+                                         <p class="voteDate">
+                                             <span class="voteRegistStartDate">${item.voteRegistStartDate}</span>~
+                                             <span class="voteRegistEndDate">${item.voteRegistEndDate}</span>
+                                         </p>
+                                     </div>
+                                     <div class="card-body">
+                                         <div class="btnWrapper">
+                                             <div class="options">`;
+                    item.voteOptionList.forEach(item => {
+                        console.log(item);
+                        code += `
+                                                    <div>
+                                                        <button type="button" class="option-btn ${item.votedAt == 1 ? 'on' : ''}">${item.voteOptionContents}</button>
+                                                        <input type="checkbox" name="${item.voteOptionSeq}" id="${item.voteOptionSeq}" class="optionChkBox" style="display:none;">
+                                                    </div>`
+                    });
+                    code +=`
+                                             </div>
+                                         </div>
+                                        <div class="vote-result">`;
+                    item.voteOptionList.forEach(item => {
+                        code +=`<div class="vote-option">
+                                            <span class="option-title">${item.voteOptionContents}</span>
+                                            <span class="option-total" data-target="${item.voteOptionSeq}">${item.voteTotalCnt}</span>
+                                        </div>`;
+                    })
+                    code +=`     </div>
+                                     </div>
+                                 </div>
+                             </div>`
+                })
+                teamEnter.innerHTML = code;
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+            }
+        })
+    }
+    teamVote.addEventListener("click",()=>{
+        loadTeamVote();
+    })
+    teamEnter.addEventListener("click",e => {
+        e.preventDefault();
+        const target = e.target;
+
+        if(target.classList.contains("option-btn")){
+            const checkBox = target.nextElementSibling;
+            const voteRegistSeq = target.closest(".card").id;
+            const voteOptionSeq = checkBox.id;
+            const voteOptionVO = {
+                voteRegistSeq : voteRegistSeq,
+                voteOptionSeq : voteOptionSeq
+            };
+            if(target.classList.contains("on")){
+                $.ajax({
+                    url: "/teamCommunity/deleteVote",
+                    type: "Delete",
+                    data: JSON.stringify(voteOptionVO),
+                    contentType: "application/json",
+                    dataType: "text",
+                    success: function (data) {
+                        if (data == "success") {
+                            checkBox.checked = false;
+                            target.classList.remove("on");
+                            let totalCntElement = $('.option-total[data-target="' + voteOptionSeq + '"]');
+                            let currentTotalCnt = parseInt(totalCntElement.text());
+                            totalCntElement.text(currentTotalCnt - 1);
+                        } else {
+                            console.error('투표 업데이트에 실패했습니다.');
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                    }
+                })
+                return false;
+            }else {
+                $.ajax({
+                    url: "/teamCommunity/inputVote",
+                    type: "POST",
+                    data: JSON.stringify(voteOptionVO),
+                    contentType: "application/json",
+                    dataType: "text",
+                    success: function (data) {
+                        if (data == "success") {
+                            checkBox.checked = true;
+                            target.classList.add("on");
+                            let totalCntElement = $('.option-total[data-target="' + voteOptionSeq + '"]');
+                            let currentTotalCnt = parseInt(totalCntElement.text());
+                            totalCntElement.text(currentTotalCnt + 1);
+                        } else {
+                            console.error('투표 업데이트에 실패했습니다.');
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
+                    }
+                })
+            }
+            console.log(checkBox.checked)
+        }
+    })
+    if(teamVote.classList.contains("on"))loadTeamVote();

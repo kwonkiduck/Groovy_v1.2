@@ -37,8 +37,8 @@
     <div class="serviceWrap">
         <div class="serviceWrap">
             <div class="writeWrap">
-                <a href="#">메일 쓰기</a>
-                <a href="#">내게 쓰기</a>
+                <a href="/email/sent">메일 쓰기</a>
+                <a href="/email/mine">내게 쓰기</a>
             </div>
             <div class="filterWrap">
                 <label>필터</label>
@@ -81,7 +81,10 @@
                 <td>파일존재여부</td>
 
                 <td>${emailVO.emailFromAddr}</td>
-                <td><span>[${emailVO.emailBoxName}] </span><a href="#">${emailVO.emailFromSj}</a></td>
+                <td>
+                    <span>[${emailVO.emailBoxName}] </span>
+                    <a href="/email/${emailVO.emailEtprCode}">${emailVO.emailFromSj}</a>
+                </td>
                 <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
                 <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
                 <td>${sendDate}</td>

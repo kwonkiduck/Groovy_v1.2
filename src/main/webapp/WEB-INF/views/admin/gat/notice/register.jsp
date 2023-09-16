@@ -22,8 +22,8 @@
     let maxNum;
     
     $("#submitBtn").on("click", function () {
-        var form = $('#uploadForm')[0];
-        var formData = new FormData(form);
+        let form = $('#uploadForm')[0];
+        let formData = new FormData(form);
 
         $.ajax({
             url: "/notice/inputNotice",

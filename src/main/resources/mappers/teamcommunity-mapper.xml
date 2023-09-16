@@ -64,26 +64,27 @@
                 SYSDATE)
     </insert>
 
-    <select id="loadRecomend" resultType="int" parameterType="String">
+    <select id="loadRecommend" resultType="int" parameterType="String">
         SELECT COUNT(SNTNC_ETPR_CODE)
         FROM RECOMEND
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode}
     </select>
-    <select id="findRecomend" resultType="int" parameterType="map">
+    <select id="findRecommend" resultType="int" parameterType="map">
         SELECT COUNT(SNTNC_ETPR_CODE)
         FROM RECOMEND
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
     </select>
 
-    <insert id="inputRecomend" parameterType="recomendVO">
+    <insert id="inputRecommend" parameterType="recommendVO">
         INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN)
         VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL)
     </insert>
-    <delete id="deleteRecomend" parameterType="recomendVO">
+    <delete id="deleteRecommend" parameterType="recommendVO">
         DELETE
         FROM RECOMEND
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
     </delete>
+
     <!--댓글-->
     <insert id="inputAnswer" parameterType="map">
         INSERT INTO ANSWER( ANSWER_NO,
@@ -152,6 +153,73 @@
         UPDATE SNTNC
         SET SNTNC_SJ = #{sntncSj},
             SNTNC_CN = #{sntncCn}
-        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND SNTNC_WRTING_EMPL_ID = #{sntncWrtingEmplId}
+        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode}
+          AND SNTNC_WRTING_EMPL_ID = #{sntncWrtingEmplId}
     </update>
+    <delete id="deleteTeamNoti" parameterType="map">
+        DELETE SNTNC
+        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode}
+            AND SNTNC_WRTING_EMPL_ID = #{sntncWrtingEmplId}
+            AND COMMON_CODE_SNTNC_CTGRY = 'SNTNC011'
+    </delete>
+    <select id="loadAllRegistVote" resultType="voteRegisterVO" parameterType="String">
+        SELECT
+            VR.VOTE_REGIST_SEQ,
+            VR.VOTE_REGIST_EMP_ID,
+            VR.VOTE_REGIST_TITLE,
+            VR.VOTE_REGIST_START_DATE,
+            VR.VOTE_REGIST_END_DATE
+        FROM VOTE_REGIST VR,
+             EMPL E
+        WHERE
+            E.EMPL_ID = VR.VOTE_REGIST_EMP_ID
+          AND E.COMMON_CODE_DEPT = (
+            SELECT E1.COMMON_CODE_DEPT
+            FROM EMPL E1
+            WHERE E1.EMPL_ID = #{emplId}
+        )
+    </select>
+    <select id="loadVoteOption" resultType="voteOptionVO" parameterType="map">
+        SELECT
+            VO.VOTE_REGIST_SEQ,
+            VO.VOTE_OPTION_SEQ,
+            VO.VOTE_OPTION_CONTENTS,
+            COALESCE(VOTES.VOTECNT_BY_EMP, 0) AS VOTEDAT,
+            COALESCE(VOTE_TOTAL_COUNT, 0) AS VOTETOTALCNT
+        FROM VOTE_OPTION VO
+                 LEFT JOIN (
+            SELECT
+                VOTE_OPTION_SEQ,
+                COUNT(*) AS VOTECNT_BY_EMP
+            FROM VOTE
+            WHERE VOTE_PARTCPTN_EMP_ID = #{emplId}
+            GROUP BY VOTE_OPTION_SEQ
+        ) VOTES ON VO.VOTE_OPTION_SEQ = VOTES.VOTE_OPTION_SEQ
+                 LEFT JOIN (
+            SELECT
+                VOTE_OPTION_SEQ,
+                COUNT(*) AS VOTE_TOTAL_COUNT
+            FROM VOTE
+            GROUP BY VOTE_OPTION_SEQ
+        ) TOTAL_VOTES ON VO.VOTE_OPTION_SEQ = TOTAL_VOTES.VOTE_OPTION_SEQ
+        WHERE VO.VOTE_REGIST_SEQ = #{voteRegistSeq}
+    </select>
+
+    <insert id="inputVote" parameterType="map">
+        INSERT INTO VOTE(
+            VOTE_OPTION_SEQ,
+            VOTE_REGIST_SEQ,
+            VOTE_PARTCPTN_EMP_ID
+        ) VALUES (
+                     #{voteOptionSeq},
+                     #{voteRegistSeq},
+                     #{votePartcptnEmpId}
+                 )
+    </insert>
+    <delete id="deleteVote" parameterType="map">
+        DELETE VOTE
+        WHERE   VOTE_OPTION_SEQ = #{voteOptionSeq}
+            AND VOTE_REGIST_SEQ = #{voteRegistSeq}
+            AND VOTE_PARTCPTN_EMP_ID = #{votePartcptnEmpId}
+    </delete>
 </mapper>

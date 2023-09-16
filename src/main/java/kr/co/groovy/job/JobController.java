@@ -1,10 +1,7 @@
 package kr.co.groovy.job;
 
 import kr.co.groovy.common.CommonService;
-import kr.co.groovy.enums.ClassOfPosition;
-import kr.co.groovy.enums.Department;
-import kr.co.groovy.enums.DutyProgress;
-import kr.co.groovy.enums.DutyStatus;
+import kr.co.groovy.enums.*;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
 import kr.co.groovy.vo.JobProgressVO;
@@ -68,9 +65,9 @@ public class JobController {
         employeeVO.setEmplId(emplId);
         try {
             if (employeeVO.getCommonCodeClsf().equals(ClassOfPosition.CLSF012.name())) {
-                list= service.getDiaryByDept(employeeVO.getCommonCodeDept());
+                list = service.getDiaryByDept(employeeVO.getCommonCodeDept());
             } else {
-                list= service.getDiaryByInfo(employeeVO);
+                list = service.getDiaryByInfo(employeeVO);
             }
         } catch (Exception e) {
 
@@ -135,5 +132,25 @@ public class JobController {
             jobProgressVO.setCommonCodeDutyProgrs(dutyProgress);
         }
         return jobVO;
+    }
+
+    @GetMapping("/getReceiveJobByNo")
+    @ResponseBody
+    public JobVO getReceiveJobByNo(int jobNo) {
+        JobVO jobVO = service.getReceiveJobByNo(jobNo);
+        String dutyKind = DutyKind.getLabelByValue(jobVO.getCommonCodeDutyKind());
+        jobVO.setCommonCodeDutyKind(dutyKind);
+        return jobVO;
+    }
+
+    @PutMapping(value = "/updateJobStatus")
+    @ResponseBody
+    public void updateJobStatus(@RequestBody JobProgressVO jobProgressVO, Principal principal) {
+        jobProgressVO.setJobRecptnEmplId(principal.getName());
+        String dutyStatus = jobProgressVO.getCommonCodeDutySttus();
+        jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel(dutyStatus));
+        System.out.println("jobProgressVO = " + jobProgressVO);
+
+        service.updateJobStatus(jobProgressVO);
     }
 }

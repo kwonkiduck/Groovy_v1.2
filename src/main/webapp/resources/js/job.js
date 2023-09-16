@@ -1,14 +1,95 @@
-document.querySelector(".receiveJob").addEventListener("click",()=>{
+// 모달 열기 함수
+function openModal(modalId) {
     document.querySelector("#modal").style.display = "flex";
-    document.querySelector("#modal-receive-job").classList.add("on");
+    document.querySelector(modalId).classList.add("on");
+}
+
+// 모달 닫기 함수
+function closeModal() {
+    const modalCommon = document.querySelectorAll(".modal-common");
+    modalCommon.forEach(item => item.classList.remove("on"));
+    document.querySelector("#modal").style.display = "none";
+}
+
+let jobProgressVO;
+
+//들어온 업무 요청
+document.querySelector("#receiveJobContainer").addEventListener("click", (event) => {
+    const target = event.target;
+    let jobNo = null;
+
+    if (target.classList.contains("receiveJob")) {
+        jobNo = target.getAttribute("data-seq");
+    } else if (target.closest(".receiveJob")) {
+        jobNo = target.closest(".receiveJob").getAttribute("data-seq");
+    }
+
+    if (jobNo !== null) {
+        event.preventDefault();
+        openModal("#modal-receive-job");
+        let checkboxes = document.querySelectorAll(".receive-kind");
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        $.ajax({
+            type: 'get',
+            url: '/job/getReceiveJobByNo?jobNo=' + jobNo,
+            success: function (rslt) {
+                document.querySelector(".receive-sj").innerText = rslt.jobSj;
+                document.querySelector(".receive-cn").innerText = rslt.jobCn;
+                document.querySelector(".receive-begin").innerText = rslt.jobBeginDate;
+                document.querySelector(".receive-close").innerText = rslt.jobClosDate;
+                document.querySelector(".receive-request").innerText = rslt.jobRequstEmplNm;
+                let kind = rslt.commonCodeDutyKind;
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.disabled = true;
+                    if (checkbox.value === kind) {
+                        checkbox.checked = true;
+                    }
+                });
+
+                jobProgressVO = {
+                    "jobNo": jobNo,
+                    "commonCodeDutySttus": "거절"
+                };
+            },
+            error: function (xhr) {
+                console.log(xhr.status);
+            }
+        });
+    }
 });
+
+document.querySelector("#reject").addEventListener("click", ()=> {
+    reject(jobProgressVO);
+})
+//요청 상태 변경 (거절, 승인)
+function reject(jobProgressVO) {
+    $.ajax({
+        type:'put',
+        url:'/job/updateJobStatus',
+        data: JSON.stringify(jobProgressVO),
+        contentType: 'application/json; charset=utf-8',
+        success: function () {
+            location.href = "/job/main";
+        },
+        error: function (xhr) {
+            console.log(xhr.status);
+        }
+    })
+}
+
+
 document.querySelector(".requestJob").addEventListener("click", () => {
-    document.querySelector("#modal").style.display = "flex";
-    document.querySelector("#modal-request-job").classList.add("on");
+    openModal("#modal-request-job");
 });
+
+//업무 요청하기(상세)
 document.getElementById("requestJobContainer").addEventListener("click", (event) => {
-    document.querySelector("#modal").style.display = "flex";
-    document.querySelector("#modal-requestDetail-job").classList.add("on");
+    openModal("#modal-requestDetail-job");
 
     if (event.target.classList.contains("requestJobDetail")) {
         let checkboxes = document.querySelectorAll(".data-kind");
@@ -50,23 +131,19 @@ document.getElementById("requestJobContainer").addEventListener("click", (event)
     }
 });
 document.querySelector(".addJob").addEventListener("click", () => {
-    document.querySelector("#modal").style.display = "flex";
-    document.querySelector("#modal-newJob").classList.add("on")
+    openModal("#modal-newJob");
 });
 document.querySelector(".myjob").addEventListener("click", () => {
-    document.querySelector("#modal").style.display = "flex";
-    document.querySelector("#modal-job-detail").classList.add("on")
+    openModal("#modal-job-detail");
 });
 
 const close = document.querySelectorAll(".close");
 
 close.forEach(item => {
-    item.addEventListener("click",()=>{
-        const modalCommon = document.querySelectorAll(".modal-common")
-        modalCommon.forEach(item => item.classList.remove("on"))
-        document.querySelector("#modal").style.display = "none";
-    })
-})
+    item.addEventListener("click", () => {
+        closeModal();
+    });
+});
 
 //날짜 유효성 검사
 function validateDate() {

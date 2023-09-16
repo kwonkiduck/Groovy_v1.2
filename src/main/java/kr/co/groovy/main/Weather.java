@@ -56,7 +56,6 @@ public class Weather {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
-        log.info("Response code: " + conn.getResponseCode());
 
         BufferedReader rd;
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -74,7 +73,6 @@ public class Weather {
         rd.close();
         conn.disconnect();
         String result = sb.toString();
-        log.info(result);
 
         return result;
     }
