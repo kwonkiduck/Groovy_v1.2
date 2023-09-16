@@ -369,6 +369,10 @@
                             status = "지각";
                         } else if(status == "LABOR_STTUS015") {
                             status = "무단결근";
+                        } else if(status == "LABOR_STTUS011") {
+                            status = "연차";
+                        } else if(status == "LABOR_STTUS014") {
+                            status = "공가";
                         }
 
                         code += `<tr>
