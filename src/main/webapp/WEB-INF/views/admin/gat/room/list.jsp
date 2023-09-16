@@ -39,6 +39,7 @@ ul {
 	</div>
 </div>
 <script>
+	
     const returnValue = (params) => params.value;
 
     class ClassBtn {
@@ -49,7 +50,7 @@ ul {
                 `;
             this.id = params.value;
             this.btnReturn = this.eGui.querySelector(".cancelRoom");
-
+			
             this.btnReturn.onclick = () => alert(this.id + "ddd 예약 취소 완료");
         }
 
@@ -99,16 +100,7 @@ ul {
             chk:"${room.fcltyResveSn}"
         })
         </c:forEach>
-       /* {
-            fcltyResveSn: "1",
-            commonCodeFcltyKindParent: "회의실",
-            commonCodeFcltyKind: "A101",
-            fcltyResveBeginTime: "09:00",
-            fcltyResveEndTime: "13:00",
-            fcltyResveEmplNm: "강서주",
-            fcltyResveEmplId: "202308001",
-            fcltyResveRequstMatter : "요청사항",
-        }*/
+        
     const gridOptions = {
         columnDefs: columnDefs,
         rowData: rowData,
@@ -120,4 +112,42 @@ ul {
         new agGrid.Grid(gridDiv, gridOptions);
 
     });
+    function delClickEvent() {
+        let delEvents = document.querySelectorAll("#myGrid");
+        delEvents.forEach(function (delEvent) {
+            delEvent.addEventListener("click", function () {
+                console.log("취소가 되니?");
+                if (confirm("정말 취소하시겠습니까?")) { // 사용자에게 확인 메시지 표시
+                    const fcltyResveSn = this.getAttribute("data-fcltyResveSn");
+    					console.log(fcltyResveSn);
+
+                    // 값이 비어있으면 요청을 보내지 않도록 확인
+                    if (fcltyResveSn) {
+                        const xhr = new XMLHttpRequest();
+                     // 삭제 요청을 보낼때 중요한 정보가 아니므로 get을 사용하고, 파라미터 값을 가져올때 순번으로 가져오는데
+                     // 쿼리에서 orderBy를 한번에 순번에 적용하지 말고,
+                     // from밑에 orderBy를 하고 순번을 가져올때 카운트랑 별개로 가져와야 하므로,
+                     // varStatus="stat"를 추가해서 카운트는 순번과 별개로 화면에 보여지고,버튼을 누르면 순번만 인식해서 지워짐!
+                        xhr.open("get", "/reservation/deleteReserved?fcltyResveSn=" +fcltyResveSn, true);  
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                console.log("삭제가 완료되었습니다. 상태 코드: " + xhr.responseText);
+                                location.reload(); // 페이지 리로드
+                            } else {
+                                console.log("삭제 요청이 실패했습니다. 상태 코드: " + xhr.status);
+                            }
+                        };
+
+                        xhr.onerror = function () {
+                            console.error("네트워크 오류로 인해 삭제 요청이 실패했습니다.");
+                        };
+
+                        xhr.send("fcltyResveSn=" + fcltyResveSn);
+                    }
+                }
+            });
+        });
+    }
 </script>
