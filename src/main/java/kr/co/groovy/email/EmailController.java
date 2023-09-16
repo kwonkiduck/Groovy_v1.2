@@ -1,15 +1,25 @@
 package kr.co.groovy.email;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.co.groovy.employee.EmployeeService;
 import kr.co.groovy.vo.EmailVO;
 import kr.co.groovy.vo.EmployeeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.*;
 
@@ -122,14 +132,67 @@ public class EmailController {
         return "email/sendMail";
     }
 
-    @PostMapping("/write")
+    @PostMapping("/sent")
     @ResponseBody
-    public String inputWrite(Model model, @RequestBody EmailVO request) throws JsonProcessingException {
-        List<String> emailToAddrList = request.getEmailToAddrList();
-        for (String emailToAddr : emailToAddrList) {
-            request.setEmailToAddr(emailToAddr);
+    public String inputSentEmail(Principal principal, EmailVO emailVO, MultipartFile[] emailFiles) {
+        EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
+        String emplEmail = employeeVO.getEmplEmail();
+        JavaMailSenderImpl mailSender = null;
+        if (emplEmail.contains("naver.com")) {
+            mailSender = emailService.naverMailSender(emplEmail, "BowwowBowwow402");
+        } else if (emplEmail.contains("gmail.com")) {
+            mailSender = emailService.googleMailSender(emplEmail, "zwhfanbijftbggwx");
+        } else if (emplEmail.contains("daum.net")) {
+            mailSender = emailService.daumMailSender(emplEmail, "groovy402dditfinal");
         }
-        return "";
+
+        List<String> emplIdToList = emailVO.getEmplIdToList();
+        for (String emplId : emplIdToList) {
+            EmployeeVO emailToEmpl = employeeService.loadEmp(emplId);
+            emplIdToList.clear();
+            emplIdToList.add(emailToEmpl.getEmplEmail());
+        }
+        List<String> toList = new ArrayList<>(emplIdToList);
+        toList.addAll(emailVO.getEmailToAddrList());
+        String[] toArr = new String[toList.size()];
+        toArr = toList.toArray(new String[0]);
+
+        List<String> emplIdCcList = emailVO.getEmplIdCcList();
+        for (String emplId : emplIdCcList) {
+            EmployeeVO emailCcEmpl = employeeService.loadEmp(emplId);
+            emplIdCcList.clear();
+            emplIdCcList.add(emailCcEmpl.getEmplEmail());
+        }
+        List<String> ccList = new ArrayList<>(emplIdCcList);
+        ccList.addAll(emailVO.getEmailCcAddrList());
+        String[] ccArr = new String[toList.size()];
+        ccArr = ccList.toArray(new String[0]);
+
+        try {
+            assert mailSender != null;
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(toArr);
+            helper.setCc(ccArr);
+            helper.setFrom(emplEmail);
+            helper.setSubject(emailVO.getEmailFromSj());
+            helper.setText(emailVO.getEmailFromCn(), true);
+
+            for (MultipartFile emailFile : emailFiles) {
+                String fileName = StringUtils.cleanPath(emailFile.getOriginalFilename());
+                helper.addAttachment(MimeUtility.encodeText(fileName, "UTF-8", "B"), new ByteArrayResource(IOUtils.toByteArray(emailFile.getInputStream())));
+            }
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 
     public String getUnreadMailCount(Principal principal, Model model) {
@@ -140,19 +203,13 @@ public class EmailController {
     }
 
 
-    @PostMapping("/email/sent")
-    @ResponseBody
-    public String inputSentEmail() {
-        return null;
-    }
-
-    @PostMapping("/email/mine")
+    @PostMapping("/mine")
     @ResponseBody
     public String inputMineEmail() {
         return null;
     }
 
-    @GetMapping("/email/{emailEtprCode")
+    @GetMapping("/{emailEtprCode")
     public EmailVO getEmail(@PathVariable String emailEtprCode) {
         return null;
     }

@@ -31,7 +31,7 @@
                 <tr>
                     <th>파일첨부</th>
                     <td>
-                        <input type="file" name="file" id="file" multiple>
+                        <input type="file" name="emailFiles" id="file" multiple>
                     </td>
                 </tr>
                 <tr>
@@ -69,8 +69,7 @@
     let emailToAddrInput = document.querySelector("#emailToAddr");
     let emailCcAddrInput = document.querySelector("#emailCcAddr");
 
-    const mailForm = document.querySelector("#mailForm");
-    console.log(mailForm);
+
     getOrgChart(orgBtnTo, receiveTo);
     getOrgChart(orgBtnCc, receiveCc);
 
@@ -79,50 +78,49 @@
 
     document.querySelector("#sendBtn").addEventListener("click", function () {
         let emplIdToArr = document.querySelectorAll("input[name=emplIdToArr]");
-        let emplIdTo = [];
+        let emplIdToList = [];
         emplIdToArr.forEach((emplId) => {
-            emplIdTo.push(emplId.value);
+            emplIdToList.push(emplId.value);
         });
         let emplIdCcArr = document.querySelectorAll("input[name=emplIdCcArr]");
-        let emplIdCc = [];
+        let emplIdCcList = [];
         emplIdCcArr.forEach((emplId) => {
-            emplIdCc.push(emplId.value);
+            emplIdCcList.push(emplId.value);
         });
         let emailToAddrArr = document.querySelectorAll("input[name=emailToAddrArr]");
-        let emailToAddr = [];
+        let emailToAddrList = [];
         emailToAddrArr.forEach((emailAddr) => {
-            emailToAddr.push(emailAddr.value);
+            emailToAddrList.push(emailAddr.value);
         });
         let emailCcAddrArr = document.querySelectorAll("input[name=emailCcAddrArr]");
-        let emailCcAddr = [];
+        let emailCcAddrList = [];
         emailCcAddrArr.forEach((emailAddr) => {
-            emailCcAddr.push(emailAddr.value);
+            emailCcAddrList.push(emailAddr.value);
         });
-        console.log(mailForm);
 
-        let request = {
-            emplIdToList: emplIdTo,
-            emplIdCcList: emplIdCc,
-            emailToAddrList: emailToAddr,
-            emailCcAddrList: emailCcAddr,
-            emailFromSj: document.querySelector("input[name=emailFromSj]").value,
-            emailFromCn: CKEDITOR.instances.editor.getData(),
-            emailFromAddr: "${CustomUser.employeeVO.emplEmail}",
-            emailFromTmprStreAt: 'N',
-            emailFromSendDate: new Date(),
-        }
+        const mailForm = document.querySelector("#mailForm");
+        let formData = new FormData(mailForm);
+        formData.append("emplIdToList", emplIdToList);
+        formData.append("emplIdCcList", emplIdCcList);
+        formData.append("emailToAddrList", emailToAddrList);
+        formData.append("emailCcAddrList", emailCcAddrList);
 
-        if (request.emplIdToList || request.emplIdCcList || request.emailCcAddrList || request.emailToAddrList) {
-            let xhr = new XMLHttpRequest();
-            xhr.open("post", "/email/write", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log(xhr.responseText);
-                }
+        $.ajax({
+            url: "/email/sent",
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+            },
+            error: function (xhr, status, error) {
+                console.log("code: " + xhr.status);
+                console.log("message: " + xhr.responseText);
+                console.log("error: " + xhr.error);
             }
-            xhr.send(JSON.stringify(request));
-        }
+        });
     });
 
     document.addEventListener("click", function (event) {

@@ -112,7 +112,7 @@ public class EmailService {
         return getMailSender(email, password, mailSender);
     }
 
-    private JavaMailSenderImpl getMailSender(String email, String password, JavaMailSenderImpl mailSender) {
+    public JavaMailSenderImpl getMailSender(String email, String password, JavaMailSenderImpl mailSender) {
         mailSender.setPort(465);
         mailSender.setUsername(email);
         mailSender.setPassword(password);
@@ -204,6 +204,7 @@ public class EmailService {
                 emailVO.setEmailRedngAt("N");
                 emailVO.setEmailDeleteAt("N");
                 emailVO.setEmailImprtncAt("N");
+                emailVO.setEmailRealDeleteAt("N");
                 emailMapper.inputReceivedStatus(emailVO);
 
                 // 수신부
@@ -240,6 +241,7 @@ public class EmailService {
         String emailPassword = null;
         String emailAddr = employeeVO.getEmplEmail();
         if (employeeVO.getEmplEmail().contains("gmail.com")) {
+            emailPassword = "zwhfanbijftbggwx";
             host = "pop.gmail.com";
         } else if (employeeVO.getEmplEmail().contains("daum.net")) {
             emailPassword = "groovy402dditfinal";
