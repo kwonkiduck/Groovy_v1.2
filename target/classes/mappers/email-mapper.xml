@@ -53,15 +53,22 @@
                                         , email_sn
                                         , email_redng_at
                                         , email_delete_at
-                                        , email_imprtnc_at)
+                                        , email_imprtnc_at
+                                        , EMAIL_REAL_DELETE_AT)
         VALUES ( 'EMAIL-' || EMAIL_SEQ.currval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
                , #{emailFromAddr}
                , #{emailReceivedEmplId}
                , #{emailSn}
                , #{emailRedngAt}
                , #{emailDeleteAt}
-               , #{emailImprtncAt})
+               , #{emailImprtncAt}
+               , #{emailRealDeleteAt})
     </insert>
+    <update id="deleteMails" parameterType="String">
+        update EMAIL_RECEIVED_STTUS
+        set EMAIL_REAL_DELETE_AT = 'Y'
+        where EMAIL_ETPR_CODE = #{emailEtprCode}
+    </update>
 
     <select id="existsMessageNumber" resultType="int" parameterType="Map">
         SELECT COUNT(ef.EMAIL_SN)
@@ -73,7 +80,7 @@
     </select>
 
     <!-- 수신받은 메일함 -->
-    <select id="getAllReceivedMailsToMe" resultType="emailVO" parameterType="String">
+    <select id="getAllReceivedMailsToMe" resultType="emailVO" parameterType="Map">
         SELECT ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
@@ -88,11 +95,13 @@
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
         where ef.EMAIL_FROM_ADDR not in #{emailAddr}
           and et.EMAIL_TO_ADDR in #{emailAddr}
+          and ers.EMAIL_DELETE_AT = #{at}
+        and ers.EMAIL_REAL_DELETE_AT = 'N'
         order by ef.EMAIL_SN desc
     </select>
 
     <!-- 참조받은 메일함 -->
-    <select id="getAllReferencedMailsToMe" resultType="emailVO" parameterType="String">
+    <select id="getAllReferencedMailsToMe" resultType="emailVO" parameterType="Map">
         SELECT ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
@@ -107,11 +116,13 @@
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
         where ef.EMAIL_FROM_ADDR not in #{emailAddr}
           and ec.EMAIL_CC_ADDR in #{emailAddr}
+          and ers.EMAIL_DELETE_AT = #{at}
+          and ers.EMAIL_REAL_DELETE_AT = 'N'
         order by ef.EMAIL_SN desc
     </select>
 
     <!-- 내게 쓴 메일함 -->
-    <select id="getAllSentMailsToMe" resultType="emailVO" parameterType="String">
+    <select id="getAllSentMailsToMe" resultType="emailVO" parameterType="Map">
         SELECT ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
@@ -124,12 +135,15 @@
         FROM EMAIL_FROM ef
                  left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
-        where ef.EMAIL_FROM_ADDR = #{emailAddr} and ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
+        where ef.EMAIL_FROM_ADDR = #{emailAddr}
+          and ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
+          and ers.EMAIL_DELETE_AT = #{at}
+          and ers.EMAIL_REAL_DELETE_AT = 'N'
         order by ef.EMAIL_SN desc
     </select>
 
     <!-- 보낸메일함 -->
-    <select id="getAllSentMailsByMe" resultType="emailVO" parameterType="String">
+    <select id="getAllSentMailsByMe" resultType="emailVO" parameterType="Map">
         select ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
@@ -141,8 +155,10 @@
         from EMAIL_FROM ef
                  left join EMAIL_TO ET on ef.EMAIL_ETPR_CODE = ET.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ERS on ef.EMAIL_FROM_ADDR = ERS.EMAIL_FROM_ADDR
-        where ef.EMAIL_FROM_ADDR = 'groovytest@daum.net'
-          and et.EMAIL_TO_ADDR not in 'groovytest@daum.net'
+        where ef.EMAIL_FROM_ADDR = #{emailAddr}
+          and et.EMAIL_TO_ADDR not in #{emailAddr}
+          and ers.EMAIL_DELETE_AT = #{at}
+          and ers.EMAIL_REAL_DELETE_AT = 'N'
         order by ef.EMAIL_SN desc
     </select>
 

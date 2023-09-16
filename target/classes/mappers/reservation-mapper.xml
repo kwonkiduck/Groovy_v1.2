@@ -60,13 +60,16 @@
         WHERE CPR_CARD_NO = #{cprCardNo}
     </update>
 
-    <select id="loadWaitingList" resultType="cardReservationVO">
-        SELECT CPR_CARD_RESVE_SN,
-               CPR_CARD_RESVE_BEGIN_DATE,
-               CPR_CARD_RESVE_CLOS_DATE,
-               CPR_CARD_RESVE_EMPL_ID
-        FROM CPR_CARD_RESVE
-        WHERE COMMON_CODE_RESVE_AT = 'RESVE010';
+    <select id="loadCardWaitingList" resultType="cardReservationVO">
+        SELECT C.CPR_CARD_RESVE_SN,
+               C.CPR_CARD_RESVE_BEGIN_DATE,
+               C.CPR_CARD_RESVE_CLOS_DATE,
+               C.CPR_CARD_RESVE_EMPL_ID,
+               E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM
+        FROM CPR_CARD_RESVE C, EMPL E
+        WHERE COMMON_CODE_RESVE_AT = 'RESVE010'
+        AND C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
+        ORDER BY CPR_CARD_RESVE_SN
     </select>
 
 </mapper>
