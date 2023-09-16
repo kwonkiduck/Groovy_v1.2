@@ -3,52 +3,54 @@
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
     <div class="contentWrap">
-        <table border="1" style="width: 50%">
-            <tr>
-                <th>받는 사람</th>
-                <td>
-                    <span id="receiveTo"></span>
-                    <input type="text" name="emailToAddr" id="emailToAddr">
-                    <button type="button" id="orgBtnTo">조직도</button>
+        <form action="#" method="post" id="mailForm">
+            <table border="1" style="width: 50%">
+                <tr>
+                    <th>받는 사람</th>
+                    <td>
+                        <span id="receiveTo"></span>
+                        <input type="text" name="emailToAddr" id="emailToAddr">
+                        <button type="button" id="orgBtnTo">조직도</button>
 
-                </td>
-            </tr>
-            <tr>
-                <th>참조</th>
-                <td>
-                    <span id="receiveCc"></span>
-                    <input type="text" name="emailCcAddr" id="emailCcAddr">
-                    <button type="button" id="orgBtnCc">조직도</button>
-                </td>
-            </tr>
-            <tr>
-                <th>제목</th>
-                <td>
-                    <input type="text" name="emailFromSj" id="emailFromSj">
-                </td>
-            </tr>
-            <tr>
-                <th>파일첨부</th>
-                <td>
-                    <input type="file" name="file" id="file" multiple>
-                </td>
-            </tr>
-            <tr>
-                <th>내용</th>
-                <td>
-                    <textarea id="editor" name="emailFromCn" required></textarea>
-                </td>
-            </tr>
-        </table>
-        <div class="serviceWrap">
+                    </td>
+                </tr>
+                <tr>
+                    <th>참조</th>
+                    <td>
+                        <span id="receiveCc"></span>
+                        <input type="text" name="emailCcAddr" id="emailCcAddr">
+                        <button type="button" id="orgBtnCc">조직도</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td>
+                        <input type="text" name="emailFromSj" id="emailFromSj">
+                    </td>
+                </tr>
+                <tr>
+                    <th>파일첨부</th>
+                    <td>
+                        <input type="file" name="file" id="file" multiple>
+                    </td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td>
+                        <textarea id="editor" name="emailFromCn" required></textarea>
+                    </td>
+                </tr>
+            </table>
             <div class="serviceWrap">
-                <div class="writeWrap">
-                    <button type="button" id="sendBtn">보내기</button>
-                    <button type="button" id="saveBtn">임시저장</button>
-                    <button type="button" id="resveBtn">예약</button>
+                <div class="serviceWrap">
+                    <div class="writeWrap">
+                        <button type="button" id="sendBtn">보내기</button>
+                        <button type="button" id="saveBtn">임시저장</button>
+                        <button type="button" id="resveBtn">예약</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </sec:authorize>
 <script src="${pageContext.request.contextPath}/resources/ckeditor/ckeditor.js"></script>
@@ -67,6 +69,8 @@
     let emailToAddrInput = document.querySelector("#emailToAddr");
     let emailCcAddrInput = document.querySelector("#emailCcAddr");
 
+    const mailForm = document.querySelector("#mailForm");
+    console.log(mailForm);
     getOrgChart(orgBtnTo, receiveTo);
     getOrgChart(orgBtnCc, receiveCc);
 
