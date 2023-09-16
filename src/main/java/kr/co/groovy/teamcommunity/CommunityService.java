@@ -1,9 +1,6 @@
 package kr.co.groovy.teamcommunity;
 
-import kr.co.groovy.vo.AnswerVO;
-import kr.co.groovy.vo.EmployeeVO;
-import kr.co.groovy.vo.RecomendVO;
-import kr.co.groovy.vo.SntncVO;
+import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +20,14 @@ public class CommunityService {
         this.mapper = mapper;
         this.uploadPath = uploadPath;
     }
+
     public void inputPost(SntncVO vo, MultipartFile postFile) throws IOException {
         /* sntncEtprCode */
         String sntncEtprCode = makeSntncEtprCode();
         vo.setSntncEtprCode(sntncEtprCode);
         mapper.inputPost(vo);
         boolean hasFile = postFile.isEmpty();
-        if(postFile!= null && postFile.getSize() != 0 && !postFile.getName().equals("")){
+        if (postFile != null && postFile.getSize() != 0 && !postFile.getName().equals("")) {
             String path = uploadPath + "/teamCommunity";
             log.debug("path: " + path);
             File uploadDir = new File(path);
@@ -61,31 +59,91 @@ public class CommunityService {
 
 
     }
-    public void inputTeamNoti(Map<String, Object> map){
+
+    public void inputTeamNoti(Map<String, Object> map) {
         /* sntncEtprCode */
         String sntncEtprCode = makeSntncEtprCode();
-        map.put("sntncEtprCode",sntncEtprCode);
+        map.put("sntncEtprCode", sntncEtprCode);
         mapper.inputTeamNoti(map);
     }
-    public List<SntncVO> loadTeamNoti(String emplId){return mapper.loadTeamNoti(emplId);}
-    public void modifyTeamNoti(Map<String, Object> map){mapper.modifyTeamNoti(map);}
-    public List<SntncVO> loadPost(String emplId){
+
+    public List<SntncVO> loadTeamNoti(String emplId) {
+        return mapper.loadTeamNoti(emplId);
+    }
+
+    public void modifyTeamNoti(Map<String, Object> map) {
+        mapper.modifyTeamNoti(map);
+    }
+
+    public List<SntncVO> loadPost(String emplId) {
         return mapper.loadPost(emplId);
-    };
-    public int modifyPost(Map<String, Object> map){return mapper.modifyPost(map);};
-    public void deletePost(Map<String, Object> map){mapper.deletePost(map);}
-    /*public List<RecomendVO> loadRecomend(String emplId){return mapper.loadRecomend(emplId);}*/
-    public int loadRecomend(String sntncEtprCode){return mapper.loadRecomend(sntncEtprCode);}
-    public int findRecomend(HashMap<String, Object> map) {return mapper.findRecomend(map);}
+    }
 
-    public void inputRecomend(RecomendVO vo){ mapper.inputRecomend(vo);}
-    public void deleteRecomend(RecomendVO vo){ mapper.deleteRecomend(vo);}
+    ;
+
+    public int modifyPost(Map<String, Object> map) {
+        return mapper.modifyPost(map);
+    }
+
+    ;
+
+    public void deletePost(Map<String, Object> map) {
+        mapper.deletePost(map);
+    }
+
+    /*public List<RecommendVO> loadRecommend(String emplId){return mapper.loadRecomend(emplId);}*/
+    public int loadRecommend(String sntncEtprCode) {
+        return mapper.loadRecommend(sntncEtprCode);
+    }
+
+    public int findRecommend(HashMap<String, Object> map) {
+        return mapper.findRecommend(map);
+    }
+
+    public void inputRecommend(RecommendVO vo) {
+        log.info("RecommendVO ==> " + vo);
+        mapper.inputRecommend(vo);
+    }
+
+    public void deleteRecommend(RecommendVO vo) {
+        mapper.deleteRecommend(vo);
+    }
+
     /*  댓글  */
-    public void inputAnswer(Map<String, Object> map){mapper.inputAnswer(map);}
-    public int loadAnswerCnt(String sntncEtprCode){return mapper.loadAnswerCnt(sntncEtprCode);}
-    public List<AnswerVO> loadAnswer(String sntncEtprCode){return mapper.loadAnswer(sntncEtprCode);}
+    public void inputAnswer(Map<String, Object> map) {
+        mapper.inputAnswer(map);
+    }
 
-    public String makeSntncEtprCode(){
+    public int loadAnswerCnt(String sntncEtprCode) {
+        return mapper.loadAnswerCnt(sntncEtprCode);
+    }
+
+    public List<AnswerVO> loadAnswer(String sntncEtprCode) {
+        return mapper.loadAnswer(sntncEtprCode);
+    }
+
+    /*  투표  */
+    public List<VoteRegisterVO> loadAllRegistVote(String emplId) {
+        List<VoteRegisterVO> voteRegistList = mapper.loadAllRegistVote(emplId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("emplId", emplId);
+        for (VoteRegisterVO vo : voteRegistList) {
+            String voteRegistSeq = String.valueOf(vo.getVoteRegistSeq());
+            map.put("voteRegistSeq", voteRegistSeq);
+            List<VoteOptionVO> voteOptionList = mapper.loadVoteOption(map);
+            vo.setVoteOptionList(voteOptionList);
+        }
+        return voteRegistList;
+    }
+
+    public void inputVote(Map<String, Object> map) {
+        mapper.inputVote(map);
+    }
+    public void deleteVote(Map<String, Object> map){
+        mapper.deleteVote(map);
+    }
+
+    public String makeSntncEtprCode() {
         int postSeq = mapper.getSeq();
         /*'SNTNC-'||SNTNC_SEQ.nextval||'-'||TO_CHAR(sysdate,'yyyyMMdd')*/
         // 현재 날짜 구하기

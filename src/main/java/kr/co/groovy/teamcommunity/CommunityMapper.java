@@ -16,11 +16,11 @@ public interface CommunityMapper {
     int modifyPost(Map<String, Object> map);
     void deletePost(Map<String, Object> map);
     List<SntncVO> loadPost(String emplId);
-    int loadRecomend(String sntncEtprCode);
-    int findRecomend(HashMap<String, Object> map);
+    int loadRecommend(String sntncEtprCode);
+    int findRecommend(HashMap<String, Object> map);
 
-    void inputRecomend(RecomendVO vo);
-    void deleteRecomend(RecomendVO vo);
+    void inputRecommend(RecommendVO vo);
+    void deleteRecommend(RecommendVO vo);
     /*  댓글  */
     void inputAnswer(Map<String, Object> map);
     int loadAnswerCnt(String sntncEtprCode);
@@ -30,4 +30,10 @@ public interface CommunityMapper {
     List<SntncVO> loadTeamNoti(String emplId);
     void modifyTeamNoti(Map<String, Object> map);
     void deleteTeamNoti(Map<String, Object> map);
+
+    /*  투표  */
+    List<VoteRegisterVO> loadAllRegistVote(String emplId);
+    List<VoteOptionVO> loadVoteOption(Map<String, Object> map);
+    void inputVote(Map<String, Object> map);
+    void deleteVote(Map<String, Object> map);
 }
