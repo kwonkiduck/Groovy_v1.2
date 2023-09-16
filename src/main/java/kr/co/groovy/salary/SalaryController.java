@@ -52,4 +52,9 @@ public class SalaryController {
         List<SalaryVO> list = service.loadPaymentList(emplId,year);
         return list;
     }
+
+    @GetMapping("/paystub")
+    public String loadPaystub() {
+        return "employee/mySalary";
+    }
 }

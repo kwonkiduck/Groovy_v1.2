@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div>
-    <a href="/employee/vacation"><p>내 휴가</p></a>
-    <a href="#"><p>내 급여</p></a>
-</div>
+<header>
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/vacation">내 휴가</a></li>
+        <li><a href="${pageContext.request.contextPath}/salary/paystub">내 급여</a></li>
+        <li><a href="${pageContext.request.contextPath}/vacation/record">휴가 기록</a></li>
+    </ul>
+</header>
 
-<div>
+<main>
     <div>
         <p>8월 급여명세서</p>
         <p>실 수령액</p>
@@ -42,4 +45,4 @@
             <input type="submit" value="확인">
         </form>
     </div>
-</div>
+</main>

@@ -25,7 +25,7 @@ public class VacationController {
 
     /* 내 휴가 관련 */
     @GetMapping("")
-    public String vacation(Model model, Principal principal) {
+    public String myVacation(Model model, Principal principal) {
         String emplId = principal.getName();
         VacationVO vacationVO = service.loadVacationCnt(emplId);
         if (vacationVO != null) {

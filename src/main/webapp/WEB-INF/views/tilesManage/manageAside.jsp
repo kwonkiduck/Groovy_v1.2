@@ -47,7 +47,7 @@
                 <li class="department nav-list"><a href="#">회계팀  <i class="icon i-arr-bt"></i></a></li>
                 <ul>
                     <li class="nav-list"><a href="#"><i class="icon i-sanction"></i>결재 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-card"></i>회사 카드 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/card/manage"><i class="icon i-card"></i>회사 카드 관리</a></li>
                     <li class="nav-list"><a href="${pageContext.request.contextPath}/salary/list"><i class="icon i-todo"></i>급여 명세서 관리</a></li>
                 </ul>
             </ul>
