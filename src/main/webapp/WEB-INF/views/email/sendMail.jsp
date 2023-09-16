@@ -98,6 +98,7 @@
         emailCcAddrArr.forEach((emailAddr) => {
             emailCcAddr.push(emailAddr.value);
         });
+        console.log(mailForm);
 
         let request = {
             emplIdToList: emplIdTo,
@@ -109,8 +110,6 @@
             emailFromAddr: "${CustomUser.employeeVO.emplEmail}",
             emailFromTmprStreAt: 'N',
             emailFromSendDate: new Date(),
-
-
         }
 
         if (request.emplIdToList || request.emplIdCcList || request.emailCcAddrList || request.emailToAddrList) {
