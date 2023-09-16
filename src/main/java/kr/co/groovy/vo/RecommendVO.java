@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RecomendVO {
+public class RecommendVO {
     private String sntncEtprCode;
     private String recomendEmplId;
     private int recomendSn;
