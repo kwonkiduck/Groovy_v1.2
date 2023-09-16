@@ -15,7 +15,7 @@
 	VALUES(
 		#{dietDate}, 
 		#{dietRice},  
-		#{dietSoup}', 
+		#{dietSoup}, 
 		#{dietDish1}, 
 		#{dietDish2}, 
 		#{dietDish3}, 
