@@ -64,6 +64,21 @@
                , #{emailImprtncAt}
                , #{emailRealDeleteAt})
     </insert>
+    <insert id="uploadEmailFile" parameterType="map">
+        /* 총무팀 - 공지사항 등록 파일 업로드 처리(다중) */
+        INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN,
+                                UPLOAD_FILE_ETPR_CODE,
+                                UPLOAD_FILE_ORGINL_NM,
+                                UPLOAD_FILE_STRE_NM,
+                                UPLOAD_FILE_SIZE,
+                                UPLOAD_FILE_RGSDE)
+        VALUES (UPLOAD_FILE_SEQ.nextval,
+                #{notiEtprCode},
+                #{originalFileName},
+                #{newFileName},
+                #{fileSize},
+                sysdate)
+    </insert>
     <update id="deleteMails" parameterType="String">
         update EMAIL_RECEIVED_STTUS
         set EMAIL_REAL_DELETE_AT = 'Y'
@@ -96,7 +111,7 @@
         where ef.EMAIL_FROM_ADDR not in #{emailAddr}
           and et.EMAIL_TO_ADDR in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
-        and ers.EMAIL_REAL_DELETE_AT = 'N'
+          and ers.EMAIL_REAL_DELETE_AT = 'N'
         order by ef.EMAIL_SN desc
     </select>
 
@@ -168,10 +183,24 @@
         where EMPL_EMAIL = #{emailAddr}
     </select>
 
+    <select id="getUnreadMailCount" resultType="int" parameterType="String">
+        select count(EMAIL_ETPR_CODE)
+        from EMAIL_RECEIVED_STTUS
+        where EMAIL_RECEIVED_EMPL_ID = #{emplId}
+          and EMAIL_REDNG_AT = 'N'
+    </select>
+
+    <select id="getEmailSeq" resultType="int">
+        SELECT EMAIL_SEQ.nextval
+        FROM dual
+    </select>
+
     <update id="modifyEmailRedngAt" parameterType="Map">
         update EMAIL_RECEIVED_STTUS
         set ${emailAtKind} = #{at}
         where EMAIL_ETPR_CODE = #{emailEtprCode}
     </update>
+
+
 </mapper>
 

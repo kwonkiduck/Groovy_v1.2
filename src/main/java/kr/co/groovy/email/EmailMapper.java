@@ -32,4 +32,9 @@ public interface EmailMapper {
 
     void deleteMails(String emailEtprCode);
 
+    int getUnreadMailCount(String emplId);
+
+    int getEmailSeq();
+
+    void uploadEmailFile(Map<String, Object> map);
 }
