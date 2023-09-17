@@ -6,9 +6,9 @@
     <sec:authentication property="principal" var="CustomUser"/>
     <header>
         <ul>
-            <li><a href="#">내 휴가</a></li>
-            <li><a href="#">내 급여</a></li>
-            <li><a href="#">휴가 기록</a></li>
+            <li><a href="${pageContext.request.contextPath}/vacation">내 휴가</a></li>
+            <li><a href="${pageContext.request.contextPath}/salary/paystub/checkPassword">내 급여</a></li>
+            <li><a href="${pageContext.request.contextPath}/vacation/record">휴가 기록</a></li>
         </ul>
     </header>
     <main>

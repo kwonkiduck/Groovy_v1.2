@@ -1,16 +1,18 @@
 package kr.co.groovy.salary;
 
+import kr.co.groovy.security.CustomUser;
 import kr.co.groovy.vo.AnnualSalaryVO;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.SalaryVO;
 import kr.co.groovy.vo.TariffVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +24,12 @@ import java.util.Map;
 public class SalaryController {
     final
     SalaryService service;
+    final
+    PasswordEncoder encoder;
 
-    public SalaryController(SalaryService service) {
+    public SalaryController(SalaryService service, PasswordEncoder encoder) {
         this.service = service;
+        this.encoder = encoder;
     }
 
     // 인사팀의 사원 연봉, 수당 및 세율 관리
@@ -62,5 +67,28 @@ public class SalaryController {
         map.put("salaryList", salaryVOList);
         map.put("tariffList", tariffVOList);
         return map;
+    }
+
+    @GetMapping("/paystub")
+    public String loadPaystub() {
+        return "employee/mySalary";
+    }
+
+    @GetMapping("/paystub/checkPassword")
+    public String checkPassword() {
+        return "security/checkPassword";
+    }
+
+    @PostMapping("/paystub/checkPassword")
+    @ResponseBody
+    public String checkPassword(Authentication auth, @RequestBody String password) {
+        CustomUser user = (CustomUser) auth.getPrincipal();
+        String emplPassword = user.getEmployeeVO().getEmplPassword();
+
+        if (encoder.matches(password, emplPassword)) {
+            return "success";
+        } else {
+            return "fail";
+        }
     }
 }
