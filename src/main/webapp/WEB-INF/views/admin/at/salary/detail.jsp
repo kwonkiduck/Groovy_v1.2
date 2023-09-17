@@ -24,30 +24,78 @@
 <div id="paymentDetail">
 </div>
 <script>
+    let year;
+    let tariffList;
+
     function getPaymentList(id) {
-        let year = $("#salaryYear").val();
+        year = $("#salaryYear").val();
         $.ajax({
             url: `/salary/payment/list/\${id}/\${year}`,
             type: 'GET',
             success: function (data) {
-                console.log(data)
+                tariffList = data.tariffList
+                console.log(data);
                 let code = "<table border=1>";
-                if (data.length === 0) {
-                    code += "<td>검색 결과가 없습니다</td>";
+                if (data.salaryList.length === 0) {
+                    code += "<tr><td>상세 내역이 없습니다</td></tr>";
                 } else {
-                    for (let i = 0; i < data.length; i++) {
-                        code += `<td>\${data[i].salaryPymntDate}</td>`;
-                        code += `<td><a href="#" onclick="getPaymentDetail(\${data[i].salaryEmplId})">급여명세서 보기</td>`;
+                    for (let i = 0; i < data.salaryList.length; i++) {
+                        code += "<tr>";
+                        code += `<td>\${data.salaryList[i].salaryPymntDate}월</td>`;
+                        code += `<td><a href="#" class="getDetail" data-bslry="\${data.salaryList[i].salaryBslry}"
+                                                                   data-allwnc="\${data.salaryList[i].salaryOvtimeAllwnc}"
+                                                                   data-emplNm="\${data.salaryList[i].emplNm}"
+                                                                   data-month="\${data.salaryList[i].salaryPymntDate}">급여명세서 보기</a></td>`;
                         code += "</tr>";
                     }
                 }
-                code += "</tbody></table>";
+                code += "</table>";
                 $("#paymentList").html(code);
+
             },
             error: function (xhr) {
                 console.log(xhr.status)
             }
         })
     }
+
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $("#paymentList").on("click", ".getDetail", function (event) {
+        event.preventDefault();
+        const emplNm  = $(this).data("emplNm");
+        const month   = $(this).data("month");
+        const bslry   = parseInt($(this).data("bslry"));
+        const allwnc  = parseInt($(this).data("allwnc"));
+        const payment = parseInt(bslry) + parseInt(allwnc); // 총 지급액
+        let deduction = 0; // 총 공제액
+        let taxes = {};
+        for (let i = 0; i < tariffList.length; i++) {
+            if (i !== tariffList.length - 1) {
+                taxes[i] = payment * tariffList[i].taratStdrValue / 100;
+            } else {
+                taxes[i] = taxes[4] * tariffList[i].taratStdrValue / 100;
+            }
+            deduction += parseInt(taxes[i]);
+        }
+        let code = "";
+        code += `<p>실 지급액</p>`;
+        code += `<p>\${formatNumber(payment-deduction)}</p>`;
+        code += `<p>급여 상세</p>`;
+        code += `<p>\${month}  \${emplNm}</p><hr>`;
+        code += `<p>지급 \${formatNumber(payment)} 원</p>`;
+        code += `<p>통상임금 \${formatNumber(bslry)} 원</p>`;
+        code += `<p>시간외수당 \${formatNumber(allwnc)} 원</p><hr>`;
+        code += `<p>공제 \${formatNumber(deduction)} 원</p>`;
+
+        for (let i in taxes) {
+            if (taxes.hasOwnProperty(i)) {
+                code += `<p>\${tariffList[i].taratStdrNm} \${formatNumber(taxes[i].toFixed(0))} 원</p>`;
+            }
+        }
+        $("#paymentDetail").html(code);
+    });
 
 </script>
