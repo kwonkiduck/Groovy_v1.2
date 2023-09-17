@@ -11,7 +11,7 @@
                 <td>${recodeVO.yrycUseDtlsBeginDate} - ${recodeVO.yrycUseDtlsEndDate}</td>
                 <td>${recodeVO.commonCodeYrycUseKind}</td>
                 <td>${recodeVO.commonCodeYrycUseSe}</td>
-                <td>${recodeVO.elctrnSanctnEtprCode == null ? '미상신' : '상신'}</td>
+                <td>${recodeVO.commonCodeYrycState}</td>
 
             </tr>
         </c:forEach>

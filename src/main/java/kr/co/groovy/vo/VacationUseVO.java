@@ -22,6 +22,7 @@ public class VacationUseVO {
     private String yrycUseDtlsEmplId;
     private String yrycUseDtlsEmplNm;
     private String elctrnSanctnEtprCode;
+    private String commonCodeYrycState;
     private String profileFileName;
     private int generatedKey;
 
