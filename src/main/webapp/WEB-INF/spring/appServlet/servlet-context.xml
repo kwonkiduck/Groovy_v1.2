@@ -58,6 +58,7 @@
 		</websocket:handshake-interceptors>
 		<websocket:sockjs />
 	</websocket:handlers>
+
 	<task:scheduler id="jobScheduler" pool-size="10" />
 	<task:annotation-driven scheduler="jobScheduler" />
 
