@@ -14,7 +14,7 @@ public interface SalaryMapper {
 
     List<AnnualSalaryVO> loadBonus();
 
-    List<TariffVO> loadTariff();
+    List<TariffVO> loadTariff(@Param("year") String year);
 
     List<EmployeeVO> loadEmpList();
 
