@@ -6,7 +6,6 @@
 <main>
     <div>
         <p>비밀번호 확인</p>
-        <i></i>
     </div>
     <div>
         <input type="password" id="password" placeholder="PASSWORD"/>

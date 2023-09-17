@@ -76,7 +76,7 @@ public class SalaryController {
 
     @GetMapping("/paystub/checkPassword")
     public String checkPassword() {
-        return "security/checkPassword";
+        return "employee/checkPassword";
     }
 
     @PostMapping("/paystub/checkPassword")
@@ -84,7 +84,6 @@ public class SalaryController {
     public String checkPassword(Authentication auth, @RequestBody String password) {
         CustomUser user = (CustomUser) auth.getPrincipal();
         String emplPassword = user.getEmployeeVO().getEmplPassword();
-
         if (encoder.matches(password, emplPassword)) {
             return "success";
         } else {
