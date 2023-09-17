@@ -6,19 +6,19 @@ import kr.co.groovy.vo.EmailVO;
 import kr.co.groovy.vo.EmployeeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMultipart;
-import java.io.File;
+import javax.mail.internet.*;
 import java.io.IOException;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -79,6 +79,66 @@ public class EmailService {
 
     public int getUnreadMailCount(String emplId) {
         return emailMapper.getUnreadMailCount(emplId);
+    }
+
+    public List<EmailVO> getAllReceivedMailList(EmployeeVO employeeVO) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", employeeVO.getEmplEmail());
+        map.put("at", "N");
+        List<EmailVO> allReceivedMailsToMe = emailMapper.getAllReceivedMailsToMe(map);
+        List<EmailVO> allReferencedMailsToMe = emailMapper.getAllReferencedMailsToMe(map);
+
+        List<EmailVO> allReceivedMails = new ArrayList<>();
+        allReceivedMails.addAll(allReceivedMailsToMe);
+        allReceivedMails.addAll(allReferencedMailsToMe);
+        allReceivedMails.sort(new Comparator<EmailVO>() {
+            @Override
+            public int compare(EmailVO vo1, EmailVO vo2) {
+                Integer emailSn1 = vo1.getEmailSn();
+                Integer emailSn2 = vo2.getEmailSn();
+                return emailSn1.compareTo(emailSn2) * -1;
+            }
+        });
+
+        return allReceivedMails;
+    }
+
+    public List<EmailVO> getAllSentMailsByMe(EmployeeVO employeeVO) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", employeeVO.getEmplEmail());
+        map.put("at", "N");
+        return emailMapper.getAllSentMailsByMe(map);
+    }
+
+    public List<EmailVO> getSentMailsToMe(EmployeeVO employeeVO) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAddr", employeeVO.getEmplEmail());
+        map.put("at", "N");
+        return emailMapper.getAllSentMailsToMe(map);
+    }
+
+    public Map<String, String> getEmailAtMap(String code, String emailEtprCode, String at) {
+        Map<String, String> map = new HashMap<>();
+        switch (code) {
+            case "redng":
+                map.put("emailAtKind", "EMAIL_REDNG_AT");
+                break;
+            case "imprtnc":
+                map.put("emailAtKind", "EMAIL_IMPRTNC_AT");
+                break;
+            case "delete":
+                map.put("emailAtKind", "EMAIL_DELETE_AT");
+                break;
+        }
+
+        if (at.equals("N")) {
+            map.put("at", "Y");
+        } else {
+            map.put("at", "N");
+        }
+        map.put("emailEtprCode", emailEtprCode);
+        emailMapper.modifyEmailRedngAt(map);
+        return map;
     }
 
     public JavaMailSenderImpl googleMailSender(String email, String password) {
@@ -259,36 +319,48 @@ public class EmailService {
         map.put("emailAddr", emailAddr);
         map.put("at", at);
         List<EmailVO> receivedMails = emailMapper.getAllReceivedMailsToMe(map);
-        for (EmailVO receivedMail : receivedMails) {
-            receivedMail.setEmailBoxName("받은메일함");
+        for (EmailVO mail : receivedMails) {
+            mail.setEmailBoxName("받은메일함");
+            getEmplNmByEmplEmail(mail);
         }
         List<EmailVO> referencedMails = emailMapper.getAllReferencedMailsToMe(map);
-        for (EmailVO referencedMail : referencedMails) {
-            referencedMail.setEmailBoxName("받은메일함");
+        for (EmailVO mail : referencedMails) {
+            mail.setEmailBoxName("받은메일함");
+            getEmplNmByEmplEmail(mail);
         }
         List<EmailVO> allSentMailsToMe = emailMapper.getAllSentMailsToMe(map);
-        for (EmailVO allSentMailToMe : allSentMailsToMe) {
-            allSentMailToMe.setEmailBoxName("내게쓴메일함");
+        for (EmailVO mail : allSentMailsToMe) {
+            mail.setEmailBoxName("내게쓴메일함");
+            getEmplNmByEmplEmail(mail);
         }
         List<EmailVO> allSentMailsByMe = emailMapper.getAllSentMailsByMe(map);
-        for (EmailVO allSentMailByMe : allSentMailsByMe) {
-            allSentMailByMe.setEmailBoxName("보낸메일함");
-        }
-        List<EmailVO> allReceivedMails = new ArrayList<>();
-        allReceivedMails.addAll(receivedMails);
-        allReceivedMails.addAll(referencedMails);
-        allReceivedMails.addAll(allSentMailsToMe);
-        allReceivedMails.addAll(allSentMailsByMe);
+        for (EmailVO mail : allSentMailsByMe) {
+            mail.setEmailBoxName("보낸메일함");
+            getEmplNmByEmplEmail(mail);
 
-        allReceivedMails.sort(new Comparator<EmailVO>() {
+        }
+        List<EmailVO> allMails = new ArrayList<>();
+        allMails.addAll(receivedMails);
+        allMails.addAll(referencedMails);
+        allMails.addAll(allSentMailsToMe);
+        allMails.addAll(allSentMailsByMe);
+        allMails.sort(new Comparator<EmailVO>() {
             @Override
             public int compare(EmailVO vo1, EmailVO vo2) {
-                Integer emailSn1 = vo1.getEmailSn();
-                Integer emailSn2 = vo2.getEmailSn();
+                String emailSn1 = vo1.getEmailEtprCode();
+                String emailSn2 = vo2.getEmailEtprCode();
                 return emailSn1.compareTo(emailSn2) * -1;
             }
         });
-        return allReceivedMails;
+        return allMails;
+    }
+
+    public String getEmplNmByEmplEmail(EmailVO mail) {
+        String emplNmByEmplEmail = emailMapper.getEmplNmByEmplEmail(mail.getEmailFromAddr());
+        if (emplNmByEmplEmail != null) {
+            mail.setEmailFromAddr(emplNmByEmplEmail);
+        }
+        return mail.getEmailFromAddr();
     }
 
     private String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws MessagingException, IOException {
@@ -309,48 +381,102 @@ public class EmailService {
         return content;
     }
 
-    public String inputNotice(EmailVO vo, MultipartFile[] notiFiles) {
-        int emailSeq = emailMapper.getEmailSeq();
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd");
-        Date currentDate = new java.util.Date();
-        String formattedDate = sdf.format(currentDate);
+//    public String inputNotice(EmailVO vo, MultipartFile[] notiFiles) {
+//        int emailSeq = emailMapper.getEmailSeq();
+//        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd");
+//        Date currentDate = new java.util.Date();
+//        String formattedDate = sdf.format(currentDate);
+//
+//        String emailEtprCode = "EMAIL-" + emailSeq + "-" + formattedDate;
+//        vo.setEmailEtprCode(emailEtprCode);
+//
+//        try {
+//            String path = uploadPath + "/email";
+//            log.info("notice path: " + path);
+//            File uploadDir = new File(path);
+//            if (!uploadDir.exists()) {
+//                if (uploadDir.mkdirs()) {
+//                    log.info("폴더 생성 성공");
+//                } else {
+//                    log.info("폴더 생성 실패");
+//                }
+//            }
+//            for (MultipartFile emailFile : notiFiles) {
+//                String originalFileName = emailFile.getOriginalFilename();
+//                String extension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+//                String newFileName = UUID.randomUUID() + "." + extension;
+//
+//                File saveFile = new File(path, newFileName);
+//                emailFile.transferTo(saveFile);
+//
+//                long fileSize = emailFile.getSize();
+//                HashMap<String, Object> map = new HashMap<>();
+//                map.put("notiEtprCode", emailEtprCode);
+//                map.put("originalFileName", originalFileName);
+//                map.put("newFileName", newFileName);
+//                map.put("fileSize", fileSize);
+//                emailMapper.uploadEmailFile(map);
+//                log.info("공지 파일 등록 성공");
+//            }
+//        } catch (Exception e) {
+//            log.info("공지 파일 등록 실패");
+//        }
+//        return emailEtprCode; //알림 url
+//    }
 
-        String emailEtprCode = "EMAIL-" + emailSeq + "-" + formattedDate;
-        vo.setEmailEtprCode(emailEtprCode);
-//        mapper.inputNotice(vo);
+    public String sentMail(EmailVO emailVO, MultipartFile[] emailFiles, EmployeeVO employeeVO) {
+        String emplEmail = employeeVO.getEmplEmail();
+        JavaMailSenderImpl mailSender = null;
+        if (emplEmail.contains("naver.com")) {
+            mailSender = naverMailSender(emplEmail, "BowwowBowwow402");
+        } else if (emplEmail.contains("gmail.com")) {
+            mailSender = googleMailSender(emplEmail, "zwhfanbijftbggwx");
+        } else if (emplEmail.contains("daum.net")) {
+            mailSender = daumMailSender(emplEmail, "groovy402dditfinal");
+        }
+
+        List<String> emplIdToList = emailVO.getEmplIdToList();
+        for (String emplId : emplIdToList) {
+            EmployeeVO emailToEmpl = employeeMapper.loadEmp(emplId);
+            emplIdToList.clear();
+            emplIdToList.add(emailToEmpl.getEmplEmail());
+        }
+        List<String> toList = new ArrayList<>(emplIdToList);
+        toList.addAll(emailVO.getEmailToAddrList());
+        String[] toArr = new String[toList.size()];
+        toArr = toList.toArray(new String[0]);
+
+        List<String> emplIdCcList = emailVO.getEmplIdCcList();
+        for (String emplId : emplIdCcList) {
+            EmployeeVO emailCcEmpl = employeeMapper.loadEmp(emplId);
+            emplIdCcList.clear();
+            emplIdCcList.add(emailCcEmpl.getEmplEmail());
+        }
+        List<String> ccList = new ArrayList<>(emplIdCcList);
+        ccList.addAll(emailVO.getEmailCcAddrList());
+        String[] ccArr = new String[toList.size()];
+        ccArr = ccList.toArray(new String[0]);
 
         try {
-            String path = uploadPath + "/email";
-            log.info("notice path: " + path);
-            File uploadDir = new File(path);
-            if (!uploadDir.exists()) {
-                if (uploadDir.mkdirs()) {
-                    log.info("폴더 생성 성공");
-                } else {
-                    log.info("폴더 생성 실패");
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(toArr);
+            helper.setCc(ccArr);
+            helper.setFrom(emplEmail);
+            helper.setSubject(emailVO.getEmailFromSj());
+            helper.setText(emailVO.getEmailFromCn().substring(1), true);
+            helper.setSentDate(new Date());
+            for (MultipartFile emailFile : emailFiles) {
+                if (!emailFile.getOriginalFilename().isEmpty()) {
+                    String fileName = StringUtils.cleanPath(emailFile.getOriginalFilename());
+                    helper.addAttachment(MimeUtility.encodeText(fileName, "UTF-8", "B"), new ByteArrayResource(IOUtils.toByteArray(emailFile.getInputStream())));
                 }
             }
-            for (MultipartFile emailFile : notiFiles) {
-                String originalFileName = emailFile.getOriginalFilename();
-                String extension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-                String newFileName = UUID.randomUUID() + "." + extension;
-
-                File saveFile = new File(path, newFileName);
-                emailFile.transferTo(saveFile);
-
-                long fileSize = emailFile.getSize();
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("notiEtprCode", emailEtprCode);
-                map.put("originalFileName", originalFileName);
-                map.put("newFileName", newFileName);
-                map.put("fileSize", fileSize);
-                emailMapper.uploadEmailFile(map);
-                log.info("공지 파일 등록 성공");
-            }
-        } catch (Exception e) {
-            log.info("공지 파일 등록 실패");
+            mailSender.send(message);
+            return "success";
+        } catch (MessagingException | IOException e) {
+            return "fail";
         }
-        return emailEtprCode; //알림 url
     }
 
 }

@@ -37,4 +37,6 @@ public interface EmailMapper {
     int getEmailSeq();
 
     void uploadEmailFile(Map<String, Object> map);
+
+    String getEmplNmByEmplEmail(String emailAddr);
 }

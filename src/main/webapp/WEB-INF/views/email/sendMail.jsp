@@ -3,7 +3,7 @@
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
     <div class="contentWrap">
-        <form action="#" method="post" id="mailForm">
+        <form action="#" method="post" id="mailForm" enctype="multipart/form-data">
             <table border="1" style="width: 50%">
                 <tr>
                     <th>받는 사람</th>
@@ -104,23 +104,22 @@
         formData.append("emplIdCcList", emplIdCcList);
         formData.append("emailToAddrList", emailToAddrList);
         formData.append("emailCcAddrList", emailCcAddrList);
+        formData.append("emailFromCn", editor.getData());
 
-        $.ajax({
-            url: "/email/sent",
-            type: 'post',
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: "json",
-            success: function (result) {
-                console.log(result);
-            },
-            error: function (xhr, status, error) {
-                console.log("code: " + xhr.status);
-                console.log("message: " + xhr.responseText);
-                console.log("error: " + xhr.error);
+        let xhr = new XMLHttpRequest();
+        xhr.open("post", "/email/send", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log(xhr.responseText);
+                if (xhr.responseText === "success") {
+                    alert("메일을 성공적으로 전송했습니다.");
+                    location.href = "/email/all";
+                } else {
+                    alert("메일 전송에 실패했습니다. 다시 시도해주세요");
+                }
             }
-        });
+        }
+        xhr.send(formData);
     });
 
     document.addEventListener("click", function (event) {
@@ -132,11 +131,16 @@
         }
     });
 
-    function addEmailAddrSpan(emailAddr, receive) {
-        emailAddr.addEventListener('keyup', function (event) {
+    function addEmailAddrSpan(emailAddrInput, receive) {
+        emailAddrInput.addEventListener('keyup', function (event) {
             if (event.key === 'Enter') {
-                const value = emailAddr.value;
-                let str = "";
+                const value = emailAddrInput.value;
+                const regExpEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+                if (!regExpEmail.test(value)) {
+                    alert("이메일 형식이 아닙니다. 다시 입력해주세요.");
+                    emailAddrInput.value = '';
+                    return;
+                }
                 if (value) {
                     let newSpan = document.createElement('span');
                     newSpan.textContent = value + " ";
@@ -148,9 +152,9 @@
 
                     let newInput = document.createElement("input");
                     newInput.setAttribute("type", "hidden");
-                    if (emailAddr.getAttribute("id") === "emailToAddr") {
+                    if (emailAddrInput.getAttribute("id") === "emailToAddr") {
                         newInput.setAttribute("name", "emailToAddrArr");
-                    } else if (emailAddr.getAttribute("id") === "emailCcAddr") {
+                    } else if (emailAddrInput.getAttribute("id") === "emailCcAddr") {
                         newInput.setAttribute("name", "emailCcAddrArr");
                     }
                     newInput.setAttribute("value", value);
@@ -158,7 +162,7 @@
                     receive.appendChild(newSpan);
                     newSpan.appendChild(newButton);
                     newSpan.appendChild(newInput);
-                    emailAddr.value = ''; // 입력 필드를 비움
+                    emailAddrInput.value = ''; // 입력 필드를 비움
                 }
             }
         });
