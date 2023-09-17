@@ -163,7 +163,12 @@ public class CommunityService {
     }
     @Scheduled(cron = "0 0 * * * ?")
     public void updateVoteRegistAtFromDate() {
-        mapper.updateVoteRegistAtFromDate(Instant.now(),"1");
+        Instant now = Instant.now();
+        String voteRegistAt = "1";
+        Map<String, Object> map = new HashMap<>();
+        map.put("now", now);
+        map.put("voteRegistAt", voteRegistAt);
+        mapper.updateVoteRegistAtFromDate(map);
     }
     public String makeSntncEtprCode() {
         int postSeq = mapper.getSeq();

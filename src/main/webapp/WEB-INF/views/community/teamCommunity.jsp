@@ -35,6 +35,12 @@
     .endBtn.on {
         display: block;
     }
+    .btn-wrap {
+        display: none;
+    }
+    .btn-wrap.on {
+        display: block;
+    }
 </style>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
