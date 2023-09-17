@@ -191,9 +191,10 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        const emplId = ${CustomUser.employeeVO.emplId};
-        const emplNm = ${CustomUser.employeeVO.emplNm};
-        const emplDept = ${CustomUser.employeeVO.commonCodeDept};
+        const emplId = "${CustomUser.employeeVO.emplId}";
+        const emplNm = "${CustomUser.employeeVO.emplNm}";
+        const emplDept = "${CustomUser.employeeVO.commonCodeDept}";
+
     </script>
     <script src="/resources/js/teamCommunity.js"></script>
 </sec:authorize>

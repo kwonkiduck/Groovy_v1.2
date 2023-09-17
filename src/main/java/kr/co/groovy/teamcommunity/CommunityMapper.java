@@ -2,7 +2,9 @@ package kr.co.groovy.teamcommunity;
 
 import kr.co.groovy.vo.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,4 +42,6 @@ public interface CommunityMapper {
     int inputVoteOptions(VoteOptionVO vo);
     void updateVoteRegistAt(String voteRegistNo);
     int getVoteSeq();
+
+    void updateVoteRegistAtFromDate(Instant now, String voteRegistAt);
 }

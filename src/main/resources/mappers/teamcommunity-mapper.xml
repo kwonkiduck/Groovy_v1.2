@@ -37,7 +37,8 @@
                UF.UPLOAD_FILE_ORGINL_NM,
                UF.UPLOAD_FILE_SN,
                UF.UPLOAD_FILE_SIZE,
-               E.PROFL_ETPR_CODE
+               E.PROFL_ETPR_CODE,
+               (SELECT F1.UPLOAD_FILE_STRE_NM FROM UPLOAD_FILE F1 WHERE E.PROFL_ETPR_CODE = F1.UPLOAD_FILE_ETPR_CODE) AS proflPhotoFileStreNm
         FROM SNTNC S
                  JOIN EMPL E ON S.SNTNC_WRTING_EMPL_ID = E.EMPL_ID
                  LEFT JOIN UPLOAD_FILE UF ON s.SNTNC_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
@@ -256,6 +257,14 @@
         UPDATE VOTE_REGIST
         SET VOTE_REGIST_AT = '1'
         WHERE VOTE_REGIST_NO = #{voteRegistNo}
+    </update>
+    <update id="updateVoteRegistAtFromDate">
+        <![CDATA[
+            UPDATE VOTE_REGIST
+            SET VOTE_REGIST_AT = '1'
+            WHERE VOTE_REGIST_END_DATE < SYSDATE
+            AND VOTE_REGIST_AT = '0'
+        ]]>
     </update>
     <select id="getVoteSeq" resultType="int">
         SELECT VOTE_REGIST_SEQ.CURRVAL FROM DUAL

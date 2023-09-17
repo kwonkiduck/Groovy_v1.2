@@ -2,6 +2,7 @@ package kr.co.groovy.teamcommunity;
 
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 @Slf4j
@@ -159,7 +161,10 @@ public class CommunityService {
     public void updateVoteRegistAt(String voteRegistNo){
         mapper.updateVoteRegistAt(voteRegistNo);
     }
-
+    @Scheduled(cron = "0 0 * * * ?")
+    public void updateVoteRegistAtFromDate() {
+        mapper.updateVoteRegistAtFromDate(Instant.now(),"1");
+    }
     public String makeSntncEtprCode() {
         int postSeq = mapper.getSeq();
         /*'SNTNC-'||SNTNC_SEQ.nextval||'-'||TO_CHAR(sysdate,'yyyyMMdd')*/

@@ -71,7 +71,6 @@
             /*  좋아요 */
             if (target.classList.contains("unRecommendBtn")) {
                 const btn = item.querySelector(".unRecommendBtn");
-                console.log(recommendVo);
                 $.ajax({
                     url: "/teamCommunity/inputRecommend",
                     type: "POST",
@@ -306,7 +305,6 @@
             insertNotice.style.display = "none";
             document.querySelector("#modal-insert-notice").style.display = "block";
             notisntncSj.value = card.querySelector(".noti-title").innerText;
-            console.log(card.querySelector(".noti-content").innerText);
             notisntncCn.value = card.querySelector(".noti-content").innerHTML;
         }
         if (target.classList.contains("notideleteBtn")) {
@@ -493,7 +491,6 @@
                 let code = '<button type="button" id="addVote">+ 투표 등록하기</button>' +
                     '<div class="inner">';
                 data.forEach(item => {
-                    console.log(item, emplId);
                     code += `<div class="inner">
                                  <div class="card" id="${item.voteRegistNo}">
                                      <div class="card-header">
@@ -501,7 +498,7 @@
                                             ${item.voteRegistAt == 0 ? '진행 중' : '종료'}
                                         </span>
                                          <h3 class="voteTitle">${item.voteRegistTitle}</h3>
-                                         <button class="endBtn ${item.voteRegistEmpId == emplId && item.voteRegistAt == 0? 'on' : ''}">투표 종료</button>
+                                         <button class="endBtn ${item.voteRegistEmpId == emplId ? 'on' : ''}" ${item.voteRegistAt == 1 ? 'disabled' : ''}>투표 종료</button>
                                             <p class="voteDate">
                                              <span class="voteRegistStartDate">${item.voteRegistStartDate}</span>~
                                              <span class="voteRegistEndDate">${item.voteRegistEndDate}</span>
@@ -513,7 +510,7 @@
                     item.voteOptionList.forEach(item => {
                         code += `
                                                     <div>
-                                                        <button type="button" class="option-btn ${item.votedAt == 1 ? 'on' : ''}">${item.voteOptionContents}</button>
+                                                        <button type="button" class="option-btn ${item.votedAt == 1 ? 'on' : ''}"  >${item.voteOptionContents}</button>
                                                         <input type="checkbox" name="${item.voteOptionNo}" id="${item.voteOptionNo}" class="optionChkBox" style="display:none;">
                                                     </div>`
                     });
@@ -533,6 +530,18 @@
                              </div>`
                 })
                 teamEnter.innerHTML = code;
+
+                /* 투표 종료시 인풋 disabled   */
+                document.querySelectorAll(".card").forEach(item => {
+                    const badge = item.querySelector(".badge");
+                    const options = item.querySelectorAll(".option-btn");
+
+                    if (badge.classList.contains("completed")) {
+                        options.forEach(option => {
+                            option.disabled = true;
+                        })
+                    }
+                });
             },
             error: function (request, status, error) {
                 console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
@@ -619,10 +628,19 @@
 
         }
     })
-    document.querySelectorAll(".options")
+    /*document.querySelectorAll(".card").forEach(item => {
+        const badge = item.querySelector(".badge");
+        const options = item.querySelectorAll(".option-btn");
+
+        if(badge.classList.contains("completed")){
+            console.log(badge);
+            options.forEach(option => {
+                option.disabled = true;
+            })
+        }
+    })*/
     /* 오늘 자동으로 인풋*/
     voteRegistStartDate.valueAsDate = new Date();
     const today = new Date().toISOString().split("T")[0];
-    console.log(today);
     voteRegistEndDate.setAttribute("min",today);
     
