@@ -198,10 +198,16 @@
         SELECT EMAIL_SEQ.nextval
         FROM dual
     </select>
+
     <select id="getEmplNmByEmplEmail" resultType="String" parameterType="String">
         select EMPL_NM
         from EMPL
         where EMPL_EMAIL = #{emailAddr}
+    </select>
+
+    <select id="getMaxEmailSn" resultType="int">
+        select max(EMAIL_SN)
+        from EMAIL_FROM
     </select>
 
     <update id="modifyEmailRedngAt" parameterType="Map">
@@ -209,7 +215,5 @@
         set ${emailAtKind} = #{at}
         where EMAIL_ETPR_CODE = #{emailEtprCode}
     </update>
-
-
 </mapper>
 

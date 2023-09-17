@@ -95,7 +95,6 @@ public class EmailController {
     @ResponseBody
     public String inputSentEmail(Principal principal, EmailVO emailVO, MultipartFile[] emailFiles) {
         EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
-        log.info(String.valueOf(emailVO));
         return emailService.sentMail(emailVO, emailFiles, employeeVO);
     }
 
@@ -105,7 +104,12 @@ public class EmailController {
         return "tiles/aside";
     }
 
-    @PostMapping("/mine")
+    @GetMapping("/sendMine")
+    public String loadWriteMinePage() {
+        return "email/sendMine";
+    }
+
+    @PostMapping("/sendMine")
     @ResponseBody
     public String inputMineEmail() {
         return null;
