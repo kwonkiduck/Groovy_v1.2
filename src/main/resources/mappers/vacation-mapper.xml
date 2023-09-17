@@ -20,7 +20,6 @@
         FROM YRYC_USE_DTLS Y, EMPL E
         WHERE Y.YRYC_USE_DTLS_EMPL_ID = #{emplId}
         AND Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
-        AND Y.COMMON_CODE_YRYC_STATE = 'YRYC032'
         ORDER BY YRYC_USE_DTLS_BEGIN_DATE DESC
     </select>
 
@@ -70,9 +69,20 @@
         SET ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
         WHERE YRYC_USE_DTLS_SN = #{approveId}
     </update>
+    
+    <select id="정" parameterType="String" resultType="vacationUseVO">
+        SELECT Y.YRYC_USE_DTLS_BEGIN_DATE,
+               Y.YRYC_USE_DTLS_END_DATE,
+               Y.COMMON_CODE_YRYC_USE_KIND
+        FROM YRYC_USE_DTLS Y, EMPL E
+        WHERE Y.YRYC_USE_DTLS_EMPL_ID = #{emplId}
+          AND Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
+          AND Y.COMMON_CODE_YRYC_STATE = 'YRYC032'
+        ORDER BY YRYC_USE_DTLS_BEGIN_DATE DESC
+    </select>
 
     <select id="loadTeamMemVacation" parameterType="String" resultType="vacationUseVO">
-    SELECT Y.YRYC_USE_DTLS_SN,
+        SELECT Y.YRYC_USE_DTLS_SN,
                Y.YRYC_USE_DTLS_EMPL_ID,
                Y.YRYC_USE_DTLS_BEGIN_DATE,
                Y.YRYC_USE_DTLS_END_DATE,

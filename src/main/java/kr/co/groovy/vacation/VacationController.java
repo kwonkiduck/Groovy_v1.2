@@ -50,14 +50,9 @@ public class VacationController {
                 model.addAttribute("totalVacationCnt", totalVacationCnt);
             }
         }
-        List<VacationUseVO> myVacation = service.loadVacationRecord(emplId);
-        if(myVacation.size() > 10) {
-            List<VacationUseVO> list = myVacation.subList(0, 10);
-            model.addAttribute("myVacation", list);
-        } else {
-            model.addAttribute("myVacation", myVacation);
-        }
+        List<VacationUseVO> myVacation = service.loadConfirmedVacation(emplId);
         List<VacationUseVO> teamMemVacation = service.loadTeamMemVacation(emplId);
+        model.addAttribute("myVacation", myVacation);
         model.addAttribute("teamMemVacation", teamMemVacation);
         return "employee/myVacation";
     }
