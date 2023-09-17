@@ -19,7 +19,6 @@
     const sntncSj = document.querySelector("#sntncSj");
     const sntncCn = document.querySelector("#sntncCn");
     const noticeFile = document.querySelector("#noticeFile");
-    const modifyVoteBtn = document.querySelector(".modifyVote");
     const deleteVoteBtn = document.querySelector("#deleteVoteBtn");
     let deleteOptionBtn = document.querySelectorAll(".deleteOption");
     let optionContainers = document.querySelectorAll(".option");
@@ -464,7 +463,7 @@
         }
         $.ajax({
             url: "/teamCommunity/modifyTeamNoti",
-            type: "Put",
+            type: "PUT",
             data: JSON.stringify(notiSntncVO),
             contentType: "application/json",
             dataType: "text",
@@ -542,6 +541,7 @@
                         })
                     }
                 });
+
             },
             error: function (request, status, error) {
                 console.log("code:" + request.status + "n" + "message:" + request.responseText + "n" + "error:" + error);
@@ -643,4 +643,6 @@
     voteRegistStartDate.valueAsDate = new Date();
     const today = new Date().toISOString().split("T")[0];
     voteRegistEndDate.setAttribute("min",today);
+
+
     

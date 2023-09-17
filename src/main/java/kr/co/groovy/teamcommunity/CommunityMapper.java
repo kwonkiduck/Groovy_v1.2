@@ -43,5 +43,5 @@ public interface CommunityMapper {
     void updateVoteRegistAt(String voteRegistNo);
     int getVoteSeq();
 
-    void updateVoteRegistAtFromDate(Instant now, String voteRegistAt);
+    void updateVoteRegistAtFromDate(Map<String, Object> map);
 }

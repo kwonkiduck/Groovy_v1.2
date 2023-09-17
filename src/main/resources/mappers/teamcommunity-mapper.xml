@@ -258,11 +258,11 @@
         SET VOTE_REGIST_AT = '1'
         WHERE VOTE_REGIST_NO = #{voteRegistNo}
     </update>
-    <update id="updateVoteRegistAtFromDate">
+    <update id="updateVoteRegistAtFromDate" parameterType="map">
         <![CDATA[
             UPDATE VOTE_REGIST
-            SET VOTE_REGIST_AT = '1'
-            WHERE VOTE_REGIST_END_DATE < SYSDATE
+            SET VOTE_REGIST_AT = #{voteRegistAt}
+            WHERE VOTE_REGIST_END_DATE < #{now}
             AND VOTE_REGIST_AT = '0'
         ]]>
     </update>
