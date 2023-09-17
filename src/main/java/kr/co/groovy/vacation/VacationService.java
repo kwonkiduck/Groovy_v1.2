@@ -28,6 +28,7 @@ public class VacationService {
         for(VacationUseVO vo : list ){
             vo.setCommonCodeYrycUseKind(VacationKind.valueOf(vo.getCommonCodeYrycUseKind()).label());
             vo.setCommonCodeYrycUseSe(VacationKind.valueOf(vo.getCommonCodeYrycUseSe()).label());
+            vo.setCommonCodeYrycState(VacationKind.valueOf(vo.getCommonCodeYrycState()).label());
         }
         return list;
     }
@@ -39,11 +40,22 @@ public class VacationService {
         VacationUseVO vo = mapper.loadVacationDetail(yrycUseDtlsSn);
         vo.setCommonCodeYrycUseKind(VacationKind.valueOf(vo.getCommonCodeYrycUseKind()).label());
         vo.setCommonCodeYrycUseSe(VacationKind.valueOf(vo.getCommonCodeYrycUseSe()).label());
+        vo.setCommonCodeYrycState(VacationKind.valueOf(vo.getCommonCodeYrycState()).label());
         return vo;
     }
 
     public List<VacationUseVO> loadTeamMemVacation(String emplId) {
-        return mapper.loadTeamMemVacation(emplId);
+        List<VacationUseVO> list = mapper.loadTeamMemVacation(emplId);
+        for(VacationUseVO vo : list) {
+            String useKind = VacationKind.valueOf(vo.getCommonCodeYrycUseKind()).label();
+            vo.setCommonCodeYrycUseKind(useKind);
+        }
+        if(list.size() > 10) {
+            List<VacationUseVO> teamMemVacationList = list.subList(0, 10);
+            return teamMemVacationList;
+        } else {
+            return list;
+        }
     }
 
     public void modifyVacationCount(VacationUseVO vacationUseVO) {mapper.modifyVacationCount(vacationUseVO);}

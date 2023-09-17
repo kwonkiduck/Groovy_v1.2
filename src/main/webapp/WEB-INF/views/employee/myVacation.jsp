@@ -32,7 +32,16 @@
             </div>
             <div id="myVacation">
                 <ul>
-
+                    <c:forEach items="${myVacation}" var="myVacation">
+                        <c:choose>
+                            <c:when test="${myVacation.yrycUseDtlsBeginDate == myVacation.yrycUseDtlsEndDate}">
+                                <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate}</li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate} ~ ${myVacation.yrycUseDtlsEndDate}</li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
                 </ul>
             </div>
         </div>
@@ -40,18 +49,18 @@
             <div><p>구성원의 휴가(연락금지)</p></div>
             <div id="memVacation">
                 <ul>
-                    <c:forEach items="${teamMemVacationList}" var="vacation">
+                    <c:forEach items="${teamMemVacation}" var="memVacation">
                         <c:choose>
-                            <c:when test="${vacation.yrycUseDtlsBeginDate == vacation.yrycUseDtlsEndDate}">
+                            <c:when test="${memVacation.yrycUseDtlsBeginDate == memVacation.yrycUseDtlsEndDate}">
                                 <li>
-                                    <img src="${vacation.profileFileName}"/>
-                                        ${vacation.yrycUseDtlsEmplNm} | ${vacation.commonCodeYrycUseKind} ${vacation.yrycUseDtlsBeginDate}
+                                    <img src="${memVacation.profileFileName}"/>
+                                        ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate}
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li>
-                                    <img src="${vacation.profileFileName}"/>
-                                        ${vacation.yrycUseDtlsEmplNm} | ${vacation.commonCodeYrycUseKind} ${vacation.yrycUseDtlsBeginDate} ~ ${vacation.yrycUseDtlsEndDate}
+                                    <img src="${memVacation.profileFileName}"/>
+                                        ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate} ~ ${memVacation.yrycUseDtlsEndDate}
                                 </li>
                             </c:otherwise>
                         </c:choose>
