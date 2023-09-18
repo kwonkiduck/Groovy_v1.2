@@ -28,13 +28,13 @@
                     <div class="section-inner flex-inner">
                         <div class="commute">
                             <div class="commute-area commute-work card-df card">
-                                <button type="button" id="work" data-io="0" class="btn-commute pd-32">
+                                <button type="button" id="work" data-io="0" class="btn-commute icon-area pd-32">
                                     <h3 class="content-title font-b">출근</h3>
                                     <p id="workTime">00:00</p>
                                 </button>
                             </div>
                             <div class="commute-area commute-leave card-df card">
-                                <button type="button" id="leave" data-io="1" class="btn-commute pd-32">
+                                <button type="button" id="leave" data-io="1" class="btn-commute icon-area pd-32">
                                     <h3 class="content-title font-b">퇴근</h3>
                                     <p id="leaveTime">00:00</p>
                                 </button>
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div class="diet">
-                            <div class="diet-area card card-df pd-32">
+                            <div class="diet-area card card-df pd-32 icon-area">
                                 <div class="area-header">
                                     <h3 class="content-title font-b">오늘의 식단</h3>
                                 </div>
@@ -131,6 +131,15 @@
                                 <div class="area-body">
                                     <ul class="content-list birthday-list">
                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weather">
+                            <div class="weather-area card card-df">
+                                <img id="weatherImg"></img>
+                                <div id="weather">
+                                    <div class="sky"></div>
+                                    <div class="temperature"></div>
                                 </div>
                             </div>
                         </div>
@@ -387,16 +396,17 @@
                     const birthday = item.emplBrthdy.split("-")[2];
                     console.log(birthday)
                     code += `
-                            <li><a href="#" class="list-item">
-                                <img src="/uploads/profile/\${item.proflPhotoFileStreNm}" width="50px;" title="\${item.emplNm}"/>
-                            </a></li>
-                             <td>\${item.emplNm}</td></tr>
-                             <td>\${birthday}일</td></tr>`
+                            <li class="list-item">
+                                <div class="item-img">
+                                    <img src="/uploads/profile/\${item.proflPhotoFileStreNm}" width="50px;" title="\${item.emplNm}"/>
+                                </div>
+                                <div class="item-desc">
+                                    <p>\${item.emplNm}</p>
+                                    <p>\${birthday}일</p>
+                                </div>
+                            </li>`
                 })
-
-                code += `</table>`
-
-                $("#birthdayWrap").html(code);
+                $(".birthday-list").html(code);
             },
             error: function (xhr, status, error) {
                 console.log("code: " + xhr.status)
@@ -512,7 +522,8 @@
                         temperature = '' + fcstValue + '℃';
                     }
                 }
-                $('#weather').html(sky + " " + temperature);
+                $('.sky').html(sky);
+                $('.temperature').html(temperature);
                 $('#weatherImg').attr('src', imgSrc);
             },
             error: function (xhr) {

@@ -37,7 +37,6 @@
     grid-template-columns: repeat(2, calc((333 / 1920) * 100vw)) calc((118 / 1920) * 100vw);
     grid-template-rows: calc((478 / 1080) * 100vh) calc((227 / 1080) * 100vh);
     flex-direction: column;
-    border: 1px solid red;
 }
 .card {
     border-radius: var(--size-32);
@@ -91,6 +90,20 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     color: var(--color-font-row);
     font-size: var(--font-size-11);
 }
+.icon-area {
+    position: relative;
+}
+.icon-area::after {
+    content: '';
+    position: absolute;
+    right: 3%;
+    bottom: 3%;
+    width: calc((80 / 1920) * 100vw);
+    height: calc((80 / 1920) * 100vw);
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
 /*  intro   */
 .hello {
     line-height: 1.2;
@@ -120,17 +133,7 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     font-size: var(--font-size-24);
     border: none;
 }
-.btn-commute::after {
-    content: '';
-    position: absolute;
-    right: 3%;
-    bottom: 3%;
-    width: calc((80 / 1920) * 100vw);
-    height: calc((80 / 1920) * 100vw);
-    background-position: center;
-    background-size: 100%;
-    background-repeat: no-repeat;
-}
+
 #work::after {
     background-image: url("../images/Icon3d/watch.png");
 }
@@ -177,10 +180,79 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
 .content-list.diet-list {
     overflow-y: unset;
 }
+.diet-area::after {
+    background-image: url("../images/Icon3d/Pizza.png");
+}
 /*  이달의 생일  */
 .birthday-area {
     height: 100%;
 }
 .birthday-list {
+    flex-direction: row;
+    overflow-y: unset;
+    gap: var(--vw-24) var(--vw-12);
+    flex-wrap: nowrap;
+}
+.birthday-list .list-item {
+    flex-direction: column;
+    padding-bottom: 12px;
+}
+.item-img {
+    transition: .35s;
+    border-radius: 50%;
+}
+.item-img img {
+    display: block;
+    width: calc((42/1920)*100vw);
+    height: calc((42/1920)*100vw);
+    border: 1px solid var(--color-stroke);
+}
+
+.birthday-list .list-item {
+    position: relative;
+    flex:1;
+    align-items: center;
+    padding: 0;
+}
+.item-desc {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+    opacity: 0;
+    font-size: var(--font-size-11);
+    transition: .35s;
+    text-align: center;
+}
+.birthday-list .list-item:hover .item-img {
+    background: var(--color-main);
+}
+.birthday-list .list-item:hover .item-img + .item-desc {
+    opacity: 1;
+    color: white;
+}
+/*  날씨  */
+.weather-area {
     display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+#weather {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vh-16);
+    text-align: center;
+}
+#weather .sky {
+    font-size: var(--font-size-14);
+    font-family: var(--font-md);
+}
+#weather .temperature {
+    font-size: var(--font-size-24);
+    font-family: var(--font-md);
+}
+#weatherImg {
+    width: 100%;
+    height: auto;
 }
