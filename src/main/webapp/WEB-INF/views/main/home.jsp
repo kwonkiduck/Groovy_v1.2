@@ -19,7 +19,7 @@
     <sec:authentication property="principal" var="CustomUser"/>
     <div class="content">
         <div class="content-header">
-            <h2 class="font-24 font-md hello"><strong>안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
+            <h2 class="font-24 font-md hello"><strong class="strong">안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
                 오늘 업무도 힘차게 파이팅! &#x1F64C;</h2>
         </div>
         <div class="content-body">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="job">
-                            <div class="job-area card card-df pd-32">
+                            <div class="job-area scroll-area card card-df pd-32">
                                 <div class="area-header">
                                     <h3 class="content-title font-b">해야할 일</h3>
                                     <a href="#" class="more">
@@ -94,7 +94,7 @@
                 <section class="right">
                     <div class="section-inner grid-inner">
                         <div class="saction">
-                            <div class="saction-area card card-df pd-32">
+                            <div class="saction-area scroll-area card card-df pd-32">
                                 <div class="area-header">
                                     <h3 class="content-title font-b">진행중인 결재</h3>
                                     <a href="#" class="more">
@@ -253,7 +253,7 @@
                 $.each(data, function (index, item) {
                     code += `
                            <li><a href="#" class="list-item">
-                                    <span class="badge">공지사항</span>
+                                    <span class="badge badge-default">공지사항</span>
                                     <p class="list-context">\${item.notiCtgryIconFileStreNm} \${item.notiTitle}</p>
                                     <span class="list-date">\${item.notiDate}</span>
                                 </a></li>`
