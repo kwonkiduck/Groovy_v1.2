@@ -7,7 +7,6 @@ import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
 import kr.co.groovy.vo.JobProgressVO;
 import kr.co.groovy.vo.JobVO;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import java.sql.Date;
 import java.util.*;
 
 @Controller
-@Slf4j
 @RequestMapping("/job")
 public class JobController {
     final JobService service;
@@ -109,18 +107,16 @@ public class JobController {
             Map<String, Object> jobMap = new HashMap<>();
             jobMap.put("jobRecptnEmplId", emplId);
             Date date = (Date) map.get("date");
-            System.out.println("date = " + date);
             jobMap.put("date", date);
-            System.out.println("jobMap = " + jobMap);
             List<JobVO> jobByDate = service.getJobByDate(jobMap);
-            System.out.println("jobByDate = " + jobByDate);
+
             jobListByDate.add(jobByDate);
         }
 
         model.addAttribute("dayOfWeek", dayOfWeek);
         model.addAttribute("requestJobList", requestJobList);
         model.addAttribute("receiveJobList", receiveJobList);
-        model.addAttribute("jobListByDate", jobListByDate); // 날짜별 작업 목록을 모델에 추가합니다.
+        model.addAttribute("jobListByDate", jobListByDate);
 
         return "employee/job/job";
     }
@@ -178,7 +174,6 @@ public class JobController {
         jobProgressVO.setJobRecptnEmplId(principal.getName());
         String dutyStatus = jobProgressVO.getCommonCodeDutySttus();
         jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel(dutyStatus));
-        System.out.println("jobProgressVO = " + jobProgressVO);
 
         service.updateJobStatus(jobProgressVO);
     }

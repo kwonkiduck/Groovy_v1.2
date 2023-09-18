@@ -69,8 +69,6 @@ public class JobService {
     }
 
     public List<JobVO> getJobByDate(Map<String, Object> map) {
-        System.out.println("$$$$$$$$$$$$$$$$$$map = " + map);
-        System.out.println("*****************"+mapper.getJobByDate(map));
         return mapper.getJobByDate(map);
     }
 

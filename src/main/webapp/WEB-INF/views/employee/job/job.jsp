@@ -1,3 +1,4 @@
+<%@ page import="kr.co.groovy.enums.DutyKind" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -118,18 +119,12 @@
         color: white;
     }
 </style>
-<c:forEach var="p" items="${jobListByDate}">
-    <p>${p}</p>
-    <br>
-    <br>
-</c:forEach>
-
 <a href="#">할 일</a>
 <a href="/job/jobDiary">업무 일지</a>
 
 <div id="todoBoard">
     <div class="todoBoardListWrapper">
-        <c:forEach var="dayInfo" items="${dayOfWeek}">
+        <c:forEach var="dayInfo" items="${dayOfWeek}" varStatus="stat">
             <div class="todoBoardList">
                 <div class="list-header">
                     <div class="list-header-name">
@@ -140,16 +135,16 @@
                     </div>
                 </div><br />
                 <div class="list-content">
-                    <c:forEach var="dd" items="${dayOfWeek}">
+                    <c:forEach var="jobVO" items="${jobListByDate[stat.index]}">
                         <a href="#" class="todoCard">
                             <div class="todoCard-title">
                                 <input type="checkbox" name="todoChk" class="todoChk">
-                                <span class="todoName">착수 발표</span>
+                                <span class="todoName">${jobVO.jobSj}</span>
                             </div>
                             <div class="todoCard-info">
-                                <span class="dutyProgrs">진행전</span>
-                                <span class="dutySttus">팀</span>
-                                <span class="toDoClosDate">2023-08-27 까지</span>
+                                <span class="dutyProgrs">${jobVO.jobProgressVOList[0].commonCodeDutyProgrs}</span>
+                                <span class="dutykind">${jobVO.commonCodeDutyKind}</span>
+                                <span class="toDoClosDate">${jobVO.jobClosDate}</span>
                             </div>
                         </a>
                     </c:forEach>
