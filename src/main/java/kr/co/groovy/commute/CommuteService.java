@@ -5,13 +5,14 @@ import kr.co.groovy.enums.VacationKind;
 import kr.co.groovy.vacation.VacationMapper;
 import kr.co.groovy.vo.CommuteVO;
 import kr.co.groovy.vo.VacationUseVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @Service
 public class CommuteService {
     final CommuteMapper commuteMapper;
@@ -64,8 +65,10 @@ public class CommuteService {
 
     public int getMaxWeeklyWorkTimeByDay(CommuteVO commuteVO) {return commuteMapper.getMaxWeeklyWorkTimeByDay(commuteVO);}
 
-    public void insertCommuteByVacation(int yrycUseDtlsSn) {
-        VacationUseVO vo = vacationMapper.loadVacationBySn(yrycUseDtlsSn);
+    public void insertCommuteByVacation(Map<String, Object> paramMap) {
+        log.info("insertCommuteByVacation");
+        int id = Integer.parseInt((String) paramMap.get("vacationId"));
+        VacationUseVO vo = vacationMapper.loadVacationBySn(id);
         String vacationUse = vo.getCommonCodeYrycUseSe();
         String vacationKind = vo.getCommonCodeYrycUseKind();
         vacationMapper.modifyVacationCount(vo);

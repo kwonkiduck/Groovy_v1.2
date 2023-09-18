@@ -20,6 +20,7 @@ public class SanctionVO {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date elctrnSanctnFinalDate;
     private String commonCodeSanctProgrs;
+    private String elctrnSanctnAfterPrcs;
 
     // 결재 라인 출력용
     private String emplNm;

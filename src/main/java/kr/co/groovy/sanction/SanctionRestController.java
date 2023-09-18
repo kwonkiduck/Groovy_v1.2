@@ -59,6 +59,7 @@ public class SanctionRestController {
     /* (현재는 연차만) 결재 문서 제출 (리플랙션) */
     @PostMapping("/reflection")
     public void startApprove(@RequestBody Map<String, Object> request) {
+        log.info("startApprove" + request);
         service.startApprove(request);
     }
 

@@ -1,7 +1,6 @@
 package kr.co.groovy.commute;
 
 import kr.co.groovy.vo.CommuteVO;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -84,8 +83,4 @@ public class CommuteController {
         return commuteService.getAttend(dclzEmplId);
     }
 
-    @PostMapping("/test")
-    public void test(int no) {
-        commuteService.insertCommuteByVacation(no);
-    }
 }

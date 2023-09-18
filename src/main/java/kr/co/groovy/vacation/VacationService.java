@@ -3,13 +3,16 @@ package kr.co.groovy.vacation;
 import kr.co.groovy.enums.Department;
 import kr.co.groovy.enums.VacationKind;
 import kr.co.groovy.sanction.SanctionMapper;
+import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.VacationUseVO;
 import kr.co.groovy.vo.VacationVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import java.util.Map;
+@Slf4j
 @Service
 public class VacationService {
 
@@ -76,5 +79,13 @@ public class VacationService {
 
     public VacationUseVO loadVacationBySn(int yrycUseDtlsSn) {
         return mapper.loadVacationBySn(yrycUseDtlsSn);
+    }
+
+    public void modifyStatus(Map<String, Object> paramMap) {
+        ParamMap map = ParamMap.init();
+        map.put("approveId", paramMap.get("approveId"));
+        map.put("state", paramMap.get("state"));
+        log.info(map+"오긴 왔는데");
+        mapper.modifyStatus(map);
     }
 }
