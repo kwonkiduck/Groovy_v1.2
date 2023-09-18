@@ -70,7 +70,7 @@
         WHERE YRYC_USE_DTLS_SN = #{approveId}
     </update>
     
-    <select id="정" parameterType="String" resultType="vacationUseVO">
+    <select id="loadConfirmedVacation" parameterType="String" resultType="vacationUseVO">
         SELECT Y.YRYC_USE_DTLS_BEGIN_DATE,
                Y.YRYC_USE_DTLS_END_DATE,
                Y.COMMON_CODE_YRYC_USE_KIND
