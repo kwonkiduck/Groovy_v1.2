@@ -178,7 +178,8 @@
         WHERE J.JOB_NO = P.JOB_NO
           AND E.PROFL_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
           AND J.JOB_REQUST_EMPL_ID = E.EMPL_ID
-          AND (P.COMMON_CODE_DUTY_STTUS = 'DUTY020' OR P.COMMON_CODE_DUTY_STTUS = 'DUTY021')
+          AND P.COMMON_CODE_DUTY_STTUS = 'DUTY020'
+          AND J.JOB_REQUST_EMPL_ID != #{jobRecptnEmplId}
           AND P.JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
     </select>
 
