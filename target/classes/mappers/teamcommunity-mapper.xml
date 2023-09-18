@@ -37,7 +37,8 @@
                UF.UPLOAD_FILE_ORGINL_NM,
                UF.UPLOAD_FILE_SN,
                UF.UPLOAD_FILE_SIZE,
-               E.PROFL_ETPR_CODE
+               E.PROFL_ETPR_CODE,
+               (SELECT F1.UPLOAD_FILE_STRE_NM FROM UPLOAD_FILE F1 WHERE E.PROFL_ETPR_CODE = F1.UPLOAD_FILE_ETPR_CODE) AS proflPhotoFileStreNm
         FROM SNTNC S
                  JOIN EMPL E ON S.SNTNC_WRTING_EMPL_ID = E.EMPL_ID
                  LEFT JOIN UPLOAD_FILE UF ON s.SNTNC_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
@@ -64,17 +65,18 @@
                 SYSDATE)
     </insert>
 
-    <select id="loadRecomend" resultType="int" parameterType="String">
+    <select id="loadRecommend" resultType="int" parameterType="String">
         SELECT COUNT(SNTNC_ETPR_CODE)
         FROM RECOMEND
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode}
     </select>
-    <select id="findRecomend" resultType="int" parameterType="map">
-        SELECT COUNT(SNTNC_ETPR_CODE)
+    <select id="findRecommend" resultType="int" parameterType="map">
+        SELECT COUNT(SNTNC_ETPR_CODE) AS RECOMENDSN
         FROM RECOMEND
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
     </select>
 
+<<<<<<< HEAD
 <!--     <insert id="inputRecomend" parameterType="recomendVO"> -->
 <!--         INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN) -->
 <!--         VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL) -->
@@ -84,6 +86,18 @@
 <!--         FROM RECOMEND -->
 <!--         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId} -->
 <!--     </delete> -->
+=======
+    <insert id="inputRecommend" parameterType="recommendVO">
+        INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN)
+        VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL)
+    </insert>
+    <delete id="deleteRecommend" parameterType="recommendVO">
+        DELETE
+        FROM RECOMEND
+        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
+    </delete>
+
+>>>>>>> branch 'main' of https://github.com/dditGroovy/Groovy_v1.2.git
     <!--댓글-->
     <insert id="inputAnswer" parameterType="map">
         INSERT INTO ANSWER( ANSWER_NO,
@@ -152,6 +166,119 @@
         UPDATE SNTNC
         SET SNTNC_SJ = #{sntncSj},
             SNTNC_CN = #{sntncCn}
-        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND SNTNC_WRTING_EMPL_ID = #{sntncWrtingEmplId}
+        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode}
+          AND SNTNC_WRTING_EMPL_ID = #{sntncWrtingEmplId}
     </update>
+    <delete id="deleteTeamNoti" parameterType="map">
+        DELETE SNTNC
+        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode}
+            AND SNTNC_WRTING_EMPL_ID = #{sntncWrtingEmplId}
+            AND COMMON_CODE_SNTNC_CTGRY = 'SNTNC011'
+    </delete>
+    <select id="loadAllRegistVote" resultType="voteRegisterVO" parameterType="String">
+        SELECT
+            VR.VOTE_REGIST_NO,
+            VR.VOTE_REGIST_EMP_ID,
+            VR.VOTE_REGIST_TITLE,
+            VR.VOTE_REGIST_START_DATE,
+            VR.VOTE_REGIST_END_DATE,
+            VR.VOTE_REGIST_AT
+        FROM VOTE_REGIST VR,
+             EMPL E
+        WHERE
+            E.EMPL_ID = VR.VOTE_REGIST_EMP_ID
+          AND E.COMMON_CODE_DEPT = (
+            SELECT E1.COMMON_CODE_DEPT
+            FROM EMPL E1
+            WHERE E1.EMPL_ID = #{emplId}
+        )
+    </select>
+    <select id="loadVoteOption" resultType="voteOptionVO" parameterType="map">
+        SELECT
+            VO.VOTE_REGIST_NO,
+            VO.VOTE_OPTION_NO,
+            VO.VOTE_OPTION_CONTENTS,
+            COALESCE(VOTES.VOTECNT_BY_EMP, 0) AS VOTEDAT,
+            COALESCE(VOTE_TOTAL_COUNT, 0) AS VOTETOTALCNT
+        FROM VOTE_OPTION VO
+                 LEFT JOIN (
+            SELECT
+                VOTE_OPTION_NO,
+                COUNT(*) AS VOTECNT_BY_EMP
+            FROM VOTE
+            WHERE VOTE_PARTCPTN_EMP_ID = #{emplId}
+            GROUP BY VOTE_OPTION_NO
+        ) VOTES ON VO.VOTE_OPTION_NO = VOTES.VOTE_OPTION_NO
+                 LEFT JOIN (
+            SELECT
+                VOTE_OPTION_NO,
+                COUNT(*) AS VOTE_TOTAL_COUNT
+            FROM VOTE
+            GROUP BY VOTE_OPTION_NO
+        ) TOTAL_VOTES ON VO.VOTE_OPTION_NO = TOTAL_VOTES.VOTE_OPTION_NO
+        WHERE VO.VOTE_REGIST_NO = #{voteRegistNo}
+        ORDER BY VOTE_OPTION_NO
+    </select>
+
+    <insert id="inputVote" parameterType="map">
+        INSERT INTO VOTE(
+            VOTE_OPTION_NO,
+            VOTE_REGIST_NO,
+            VOTE_PARTCPTN_EMP_ID
+        ) VALUES (
+                     #{voteOptionNo},
+                     #{voteRegistNo},
+                     #{votePartcptnEmpId}
+                 )
+    </insert>
+    <delete id="deleteVote" parameterType="map">
+        DELETE VOTE
+        WHERE   VOTE_OPTION_NO = #{voteOptionNo}
+            AND VOTE_REGIST_NO = #{voteRegistNo}
+            AND VOTE_PARTCPTN_EMP_ID = #{votePartcptnEmpId}
+    </delete>
+    <insert id="inputVoteRegist" parameterType="voteRegisterVO">
+        INSERT INTO   VOTE_REGIST(
+                VOTE_REGIST_NO,
+                VOTE_REGIST_EMP_ID,
+                VOTE_REGIST_TITLE,
+                VOTE_REGIST_START_DATE,
+                VOTE_REGIST_END_DATE,
+                VOTE_REGIST_AT
+            ) VALUES (
+                     VOTE_REGIST_SEQ.NEXTVAL,
+                     #{voteRegistEmpId},
+                     #{voteRegistTitle},
+                     TO_DATE(#{voteRegistStartDate}),
+                     TO_DATE(#{voteRegistEndDate}),
+                      '0'
+                     )
+    </insert>
+    <insert id="inputVoteOptions" parameterType="voteOptionVO">
+        INSERT INTO VOTE_OPTION(
+            VOTE_OPTION_NO,
+            VOTE_REGIST_NO,
+            VOTE_OPTION_CONTENTS
+        ) VALUES (
+                     VOTE_OPTION_SEQ.NEXTVAL,
+                     #{voteRegistNo},
+                     #{voteOptionContents}
+                 )
+    </insert>
+    <update id="updateVoteRegistAt" parameterType="String">
+        UPDATE VOTE_REGIST
+        SET VOTE_REGIST_AT = '1'
+        WHERE VOTE_REGIST_NO = #{voteRegistNo}
+    </update>
+    <update id="updateVoteRegistAtFromDate" parameterType="map">
+        <![CDATA[
+            UPDATE VOTE_REGIST
+            SET VOTE_REGIST_AT = #{voteRegistAt}
+            WHERE VOTE_REGIST_END_DATE < #{now}
+            AND VOTE_REGIST_AT = '0'
+        ]]>
+    </update>
+    <select id="getVoteSeq" resultType="int">
+        SELECT VOTE_REGIST_SEQ.CURRVAL FROM DUAL
+    </select>
 </mapper>

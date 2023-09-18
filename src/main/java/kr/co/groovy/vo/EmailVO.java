@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,4 +34,9 @@ public class EmailVO {
     private String emailImprtncAt;
 
     private String emailBoxName;
+
+    private List<String> emplIdToList;
+    private List<String> emplIdCcList;
+    private List<String> emailToAddrList;
+    private List<String> emailCcAddrList;
 }

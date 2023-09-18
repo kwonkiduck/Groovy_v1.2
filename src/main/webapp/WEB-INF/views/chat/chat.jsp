@@ -7,10 +7,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <style>
-    div {
-        border : 1px solid black;
-    }
-
     .rooms {
         cursor: pointer;
     }
@@ -427,8 +423,6 @@
             <input id="chttRoomTy" type="hidden" value="\${obj.chttRoomTy}">
             </button>`;
             });
-
-
             $("#chatRoomList").html(code);
         }
 

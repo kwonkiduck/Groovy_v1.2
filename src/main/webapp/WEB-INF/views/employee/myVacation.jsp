@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div>
-    <a href="#"><p>내 휴가</p></a>
-    <a href="/employee/salary"><p>내 급여</p></a>
-</div>
+<header>
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/vacation">내 휴가</a></li>
+        <li><a href="${pageContext.request.contextPath}/salary/paystub/checkPassword">내 급여</a></li>
+        <li><a href="${pageContext.request.contextPath}/vacation/record">휴가 기록</a></li>
+    </ul>
+</header>
 
-<div>
+<main>
     <div>
         <table>
             <tr>
@@ -25,33 +28,45 @@
         <div>
             <div>
                 <div><p>휴가 기록</p></div>
-                <div><a href="${pageContext.request.contextPath}/vacation/record">더보기</a></div>
                 <div><a href="${pageContext.request.contextPath}/vacation/request">휴가 신청</a></div>
             </div>
-            <div>
-                <table>
-                    <tr>
-                        <td>연차 | 20XX년 XX월 XX일</td>
-                    </tr>
-                    <tr>
-                        <td>연차 | 20XX년 XX월 XX일</td>
-                    </tr>
-                    <tr>
-                        <td>연차 | 20XX년 XX월 XX일</td>
-                    </tr>
-                    <tr>
-                        <td>연차 | 20XX년 XX월 XX일</td>
-                    </tr>
-                </table>
+            <div id="myVacation">
+                <ul>
+                    <c:forEach items="${myVacation}" var="myVacation">
+                        <c:choose>
+                            <c:when test="${myVacation.yrycUseDtlsBeginDate == myVacation.yrycUseDtlsEndDate}">
+                                <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate}</li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate} ~ ${myVacation.yrycUseDtlsEndDate}</li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </ul>
             </div>
         </div>
         <div>
-            <p>구성원의 휴가(연락금지)</p>
-            <table>
-                <tr>
-                    <td>이혜진 | 연차 20XX년 XX월 XX일</td>
-                </tr>
-            </table>
+            <div><p>구성원의 휴가(연락금지)</p></div>
+            <div id="memVacation">
+                <ul>
+                    <c:forEach items="${teamMemVacation}" var="memVacation">
+                        <c:choose>
+                            <c:when test="${memVacation.yrycUseDtlsBeginDate == memVacation.yrycUseDtlsEndDate}">
+                                <li>
+                                    <img src="${memVacation.profileFileName}"/>
+                                        ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate}
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>
+                                    <img src="${memVacation.profileFileName}"/>
+                                        ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate} ~ ${memVacation.yrycUseDtlsEndDate}
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
+</main>

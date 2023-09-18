@@ -37,8 +37,8 @@
     <div class="serviceWrap">
         <div class="serviceWrap">
             <div class="writeWrap">
-                <a href="#">메일 쓰기</a>
-                <a href="#">내게 쓰기</a>
+                <a href="${pageContext.request.contextPath}/email/send">메일 쓰기</a>
+                <a href="${pageContext.request.contextPath}/email/sendMine">내게 쓰기</a>
             </div>
             <div class="filterWrap">
                 <label>필터</label>
@@ -69,10 +69,6 @@
         <c:forEach var="emailVO" items="${list}">
             <tr>
                 <td><input type="checkbox" class="selectmail"></td>
-                <td onclick="modifyTableAt(this)" data-type="redng">
-                        ${emailVO.emailRedngAt}
-                    <input type="hidden" value="${emailVO.emailDeleteAt}">
-                </td>
                 <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>
                 <td>${emailVO.emailFromAddr}</td>

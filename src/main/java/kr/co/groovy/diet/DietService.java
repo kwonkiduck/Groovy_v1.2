@@ -15,8 +15,8 @@ public class DietService {
 	}
 	
 	
-	public int insertDiert(DietVO deDietVO) {
-		return dietMapper.insertDiert(deDietVO);
+	public int insertDiet(DietVO dietVO) {
+		return dietMapper.insertDiet(dietVO);
 	}
 
 }

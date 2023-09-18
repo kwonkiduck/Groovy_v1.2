@@ -8,13 +8,13 @@ import java.util.Map;
 
 @Mapper
 public interface EmailMapper {
-    void inputReceivedEmailsFrom(EmailVO emailVO);
+    int inputReceivedEmailsFrom(EmailVO emailVO);
 
-    void inputReceivedEmailsTo(EmailVO emailVO);
+    int inputReceivedEmailsTo(EmailVO emailVO);
 
-    void inputReceivedEmailsCc(EmailVO emailVO);
+    int inputReceivedEmailsCc(EmailVO emailVO);
 
-    void inputReceivedStatus(EmailVO emailVO);
+    int inputReceivedStatus(EmailVO emailVO);
 
     List<EmailVO> getAllReceivedMailsToMe(Map<String, String> map);
 
@@ -32,4 +32,13 @@ public interface EmailMapper {
 
     void deleteMails(String emailEtprCode);
 
+    int getUnreadMailCount(String emplId);
+
+    int getEmailSeq();
+
+    void uploadEmailFile(Map<String, Object> map);
+
+    String getEmplNmByEmplEmail(String emailAddr);
+
+    int getMaxEmailSn();
 }

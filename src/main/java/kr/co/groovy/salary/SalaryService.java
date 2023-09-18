@@ -4,8 +4,8 @@ import kr.co.groovy.enums.ClassOfPosition;
 import kr.co.groovy.enums.Department;
 import kr.co.groovy.vo.AnnualSalaryVO;
 import kr.co.groovy.vo.EmployeeVO;
+import kr.co.groovy.vo.SalaryVO;
 import kr.co.groovy.vo.TariffVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,18 @@ public class SalaryService {
         }
         return list;
     }
-    List<TariffVO> loadTariff(){
-        return mapper.loadTariff();
+    List<TariffVO> loadTariff(String year){
+        return mapper.loadTariff(year);
+    }
+    List<EmployeeVO> loadEmpList(){
+        List<EmployeeVO> list = mapper.loadEmpList();
+        for (EmployeeVO vo : list) {
+            vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
+            vo.setCommonCodeClsf(ClassOfPosition.valueOf(vo.getCommonCodeClsf()).label());
+        }
+        return list;
+    }
+    List<SalaryVO> loadPaymentList(String emplId, String year){
+        return mapper.loadPaymentList(emplId,year);
     }
 }

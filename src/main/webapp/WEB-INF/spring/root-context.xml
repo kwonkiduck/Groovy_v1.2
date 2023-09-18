@@ -90,6 +90,10 @@
     <bean id="uploadTest" class="java.lang.String">
         <constructor-arg value="/Users/uploads"/>
     </bean>
+    <!--개발/테스트용 (혜진로컬)-->
+    <bean id="uploadHyejin" class="java.lang.String">
+        <constructor-arg value="/Users/leehyejin/Project/ddit/Projects/5. Groovy/upload"/>
+    </bean>
     <!-- 개발/테스트용 (수인이 거) -->
     <bean id="uploadSuin" class="java.lang.String">
         <constructor-arg value="E:/ddit/uploads"/>

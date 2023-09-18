@@ -1,10 +1,12 @@
 package kr.co.groovy.vo;
 
+import java.util.Date;
+
 import lombok.Getter;
+
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Date;
 
 @Getter
 @Setter

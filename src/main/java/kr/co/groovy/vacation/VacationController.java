@@ -1,5 +1,6 @@
 package kr.co.groovy.vacation;
 
+import kr.co.groovy.enums.VacationKind;
 import kr.co.groovy.vo.VacationUseVO;
 import kr.co.groovy.vo.VacationVO;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +23,37 @@ public class VacationController {
         this.service = vacationService;
     }
 
-
     /* 내 휴가 관련 */
-    @GetMapping("/vacation")
-    public String vacation(Model model, Principal principal) {
+    @GetMapping("")
+    public String myVacation(Model model, Principal principal) {
         String emplId = principal.getName();
         VacationVO vacationVO = service.loadVacationCnt(emplId);
         if (vacationVO != null) {
-            int usedVacationCnt = vacationVO.getYrycUseCo();
-            int nowVacationCnt = vacationVO.getYrycNowCo();
-            int totalVacationCnt = usedVacationCnt + nowVacationCnt;
-            model.addAttribute("usedVacationCnt", usedVacationCnt);
-            model.addAttribute("nowVacationCnt", nowVacationCnt);
-            model.addAttribute("totalVacationCnt", totalVacationCnt);
+            double usedVacationCnt = vacationVO.getYrycUseCo();
+            double nowVacationCnt = vacationVO.getYrycNowCo();
+            double totalVacationCnt = usedVacationCnt + nowVacationCnt;
+            if (usedVacationCnt == (int) usedVacationCnt) {
+                model.addAttribute("usedVacationCnt", (int) usedVacationCnt);
+            } else {
+                model.addAttribute("usedVacationCnt", usedVacationCnt);
+            }
+
+            if (nowVacationCnt == (int) nowVacationCnt) {
+                model.addAttribute("nowVacationCnt", (int) nowVacationCnt);
+            } else {
+                model.addAttribute("nowVacationCnt", nowVacationCnt);
+            }
+
+            if (totalVacationCnt == (int) totalVacationCnt) {
+                model.addAttribute("totalVacationCnt", (int) totalVacationCnt);
+            } else {
+                model.addAttribute("totalVacationCnt", totalVacationCnt);
+            }
         }
+        List<VacationUseVO> myVacation = service.loadConfirmedVacation(emplId);
+        List<VacationUseVO> teamMemVacation = service.loadTeamMemVacation(emplId);
+        model.addAttribute("myVacation", myVacation);
+        model.addAttribute("teamMemVacation", teamMemVacation);
         return "employee/myVacation";
     }
 
@@ -68,12 +86,10 @@ public class VacationController {
         return "redirect:/vacation/detail/" + generatedKey;
     }
 
-
     /* 휴가 신청 폼 */
     @GetMapping("/request")
     public String requestVacation() {
         return "employee/vacation/request";
     }
-
 
 }

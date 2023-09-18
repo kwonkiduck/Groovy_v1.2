@@ -34,29 +34,29 @@ success하면 자동으로 셀 리프레시하게 해놨는데 innerHTML이 안 
                 cprCardResveSn: cprCardResveSn,
                 cprCardNo: cprCardNo
             };
-
+            console.log(data.cprCardResveRturnAt);
             this.eGui = document.createElement('div');
             if(data.cprCardResveRturnAt == 0) {
+                console.log("중")
                 this.eGui.innerHTML = "<button id='returnChkBtn'>반납 확인</button>";
             } else {
+                console.log("완료")
                 this.eGui.innerHTML = "<p>반납 완료</p>";
             }
 
-            this.btn = this.eGui.querySelector("#returnChkBtn");
-
-            this.btn.onclick = () => {
-                console.log(modifyData);
-                console.log(data.cprCardResveRturnAt);
+            this.returnChkBtn = this.eGui.querySelector("#returnChkBtn");
+            this.returnChkBtn.onclick = () => {
                 $.ajax({
                     url: "/card/returnChecked",
                     type: "post",
                     data: JSON.stringify(modifyData),
                     contentType: "application/json;charset:utf-8",
                     success: function (result) {
-                        data.cprCardResveRturnAt = 1;
+                        console.log(result);
+                       /* data.cprCardResveRturnAt = 1;
                         this.eGui.innerHTML = "<p>반납 완료</p>";
                         gridOptions.api.refreshCells({ force: true });
-                        alert("카드 반납 완료 처리하였습니다.");
+                        alert("카드 반납 완료 처리하였습니다.");*/
                     },
                     error: function (xhr) {
                         alert("오류로 인한 처리 실패");
@@ -74,7 +74,9 @@ success하면 자동으로 셀 리프레시하게 해놨는데 innerHTML이 안 
     }
 
 
+    function returnChkFnc(){
 
+    }
     const getMedalString = function (param) {
         const str = `${param} `;
         return str;

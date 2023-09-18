@@ -64,6 +64,21 @@
                , #{emailImprtncAt}
                , #{emailRealDeleteAt})
     </insert>
+    <insert id="uploadEmailFile" parameterType="map">
+        /* 총무팀 - 공지사항 등록 파일 업로드 처리(다중) */
+        INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN,
+                                UPLOAD_FILE_ETPR_CODE,
+                                UPLOAD_FILE_ORGINL_NM,
+                                UPLOAD_FILE_STRE_NM,
+                                UPLOAD_FILE_SIZE,
+                                UPLOAD_FILE_RGSDE)
+        VALUES (UPLOAD_FILE_SEQ.nextval,
+                #{notiEtprCode},
+                #{originalFileName},
+                #{newFileName},
+                #{fileSize},
+                sysdate)
+    </insert>
     <update id="deleteMails" parameterType="String">
         update EMAIL_RECEIVED_STTUS
         set EMAIL_REAL_DELETE_AT = 'Y'
@@ -87,6 +102,7 @@
              , ef.EMAIL_FROM_SJ
              , ef.EMAIL_FROM_SEND_DATE
              , et.EMAIL_TO_ADDR
+             , et.EMAIL_TO_RECEIVED_DATE
              , ers.EMAIL_DELETE_AT
              , ers.EMAIL_IMPRTNC_AT
              , ers.EMAIL_REDNG_AT
@@ -96,18 +112,19 @@
         where ef.EMAIL_FROM_ADDR not in #{emailAddr}
           and et.EMAIL_TO_ADDR in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
-        and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by ef.EMAIL_SN desc
+          and ers.EMAIL_REAL_DELETE_AT = 'N'
+        order by et.EMAIL_TO_RECEIVED_DATE desc
     </select>
 
     <!-- 참조받은 메일함 -->
     <select id="getAllReferencedMailsToMe" resultType="emailVO" parameterType="Map">
-        SELECT ef.EMAIL_ETPR_CODE
+        SELECT ef.email_etpr_code
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
              , ef.EMAIL_FROM_SJ
              , ef.EMAIL_FROM_SEND_DATE
              , ec.EMAIL_CC_ADDR
+             , ec.EMAIL_CC_RECEIVED_DATE
              , ers.EMAIL_DELETE_AT
              , ers.EMAIL_IMPRTNC_AT
              , ers.EMAIL_REDNG_AT
@@ -118,7 +135,7 @@
           and ec.EMAIL_CC_ADDR in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by ef.EMAIL_SN desc
+        order by ec.EMAIL_CC_RECEIVED_DATE desc
     </select>
 
     <!-- 내게 쓴 메일함 -->
@@ -129,6 +146,7 @@
              , ef.EMAIL_FROM_SJ
              , ef.EMAIL_FROM_SEND_DATE
              , et.EMAIL_TO_ADDR
+             , et.EMAIL_TO_RECEIVED_DATE
              , ers.EMAIL_DELETE_AT
              , ers.EMAIL_IMPRTNC_AT
              , ers.EMAIL_REDNG_AT
@@ -139,19 +157,20 @@
           and ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by ef.EMAIL_SN desc
+        order by et.EMAIL_TO_RECEIVED_DATE desc
     </select>
 
     <!-- 보낸메일함 -->
     <select id="getAllSentMailsByMe" resultType="emailVO" parameterType="Map">
-        select ef.EMAIL_ETPR_CODE
-             , ef.EMAIL_SN
-             , ef.EMAIL_FROM_ADDR
-             , ef.EMAIL_FROM_SJ
-             , ef.EMAIL_FROM_SEND_DATE
-             , et.EMAIL_TO_ADDR
-             , ers.EMAIL_IMPRTNC_AT
-             , ers.EMAIL_DELETE_AT
+        select distinct ef.EMAIL_ETPR_CODE
+                      , ef.EMAIL_SN
+                      , ef.EMAIL_FROM_ADDR
+                      , ef.EMAIL_FROM_SJ
+                      , ef.EMAIL_FROM_SEND_DATE
+                      , et.EMAIL_TO_ADDR
+                      , et.EMAIL_TO_RECEIVED_DATE
+                      , ers.EMAIL_IMPRTNC_AT
+                      , ers.EMAIL_DELETE_AT
         from EMAIL_FROM ef
                  left join EMAIL_TO ET on ef.EMAIL_ETPR_CODE = ET.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ERS on ef.EMAIL_FROM_ADDR = ERS.EMAIL_FROM_ADDR
@@ -159,13 +178,36 @@
           and et.EMAIL_TO_ADDR not in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by ef.EMAIL_SN desc
+        order by et.EMAIL_TO_RECEIVED_DATE desc
     </select>
 
     <select id="getEmployeeByEmailAddr" resultType="int" parameterType="String">
         select count(EMPL_ID)
         from empl
         where EMPL_EMAIL = #{emailAddr}
+    </select>
+
+    <select id="getUnreadMailCount" resultType="int" parameterType="String">
+        select count(EMAIL_ETPR_CODE)
+        from EMAIL_RECEIVED_STTUS
+        where EMAIL_RECEIVED_EMPL_ID = #{emplId}
+          and EMAIL_REDNG_AT = 'N'
+    </select>
+
+    <select id="getEmailSeq" resultType="int">
+        SELECT EMAIL_SEQ.nextval
+        FROM dual
+    </select>
+
+    <select id="getEmplNmByEmplEmail" resultType="String" parameterType="String">
+        select EMPL_NM
+        from EMPL
+        where EMPL_EMAIL = #{emailAddr}
+    </select>
+
+    <select id="getMaxEmailSn" resultType="int">
+        select max(EMAIL_SN)
+        from EMAIL_FROM
     </select>
 
     <update id="modifyEmailRedngAt" parameterType="Map">

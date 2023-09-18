@@ -13,30 +13,29 @@
 <br/><br/>
 <h2>급여 기본 설정</h2>
 <button id="saveSalary">저장하기</button>
-<div id="myGrid" class="ag-theme-alpine"></div>
+<%--<div id="myGrid" class="ag-theme-alpine"></div>--%>
 
-<br/>
+<%--<br/>--%>
 <table border=" 1">
     <tr>
         <td>(만원)</td>
-        <td>사원</td>
-        <td>대리</td>
-        <td>과장</td>
-        <td>차장</td>
-        <td>팀장</td>
         <td>부장</td>
+        <td>팀장</td>
+        <td>차장</td>
+        <td>과장</td>
+        <td>대리</td>
+        <td>사원</td>
     </tr>
-    <c:forEach var="salary" items="${salary}" varStatus="stat">
+    <c:forEach var="salaryItem" items="${salary}" varStatus="salaryStat">
         <tr>
-            <td>${salary.commonCodeDeptCrsf}</td>
-            <c:forEach var="bonus" items="${bonus}" varStatus="stat">
-                <td>${salary.anslryAllwnc + bonus.anslryAllwnc}</td>
+            <td>${salaryItem.commonCodeDeptCrsf}</td>
+            <c:forEach var="bonusItem" items="${bonus}">
+                <c:set var="total" value="${salaryItem.anslryAllwnc + bonusItem.anslryAllwnc}" />
+                <td>${total.toString().substring(0, 4)}</td>
             </c:forEach>
         </tr>
     </c:forEach>
 </table>
-
-
 <hr/>
 <br/>
 

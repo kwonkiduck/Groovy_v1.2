@@ -35,10 +35,11 @@
                 <ul>
                     <li class="nav-list"><a href="#" ><i class="icon i-sanction"></i>결재 관리</a></li>
                     <li class="nav-list"><a href="${pageContext.request.contextPath}/notice/manageNotice"><i class="icon i-notice"></i>공지사항 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-calendar"></i>회사 일정 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/calendar/scheduleMain"><i class="icon i-calendar"></i>회사 일정 관리</a></li>
                     <li class="nav-list"><a href="${pageContext.request.contextPath}/club/admin"><i class="icon i-share"></i>동호회 관리</a></li>
                     <li class="nav-list"><a href="#"><i class="icon i-building"></i>시설 관리</a></li>
                     <li class="nav-list"><a href="#"><i class="icon i-parking"></i>주차차량 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/diet/dietMain"><i class="icon i-notice"></i>식단 관리</a></li>
                 </ul>
             </ul>
         </div>
@@ -47,8 +48,8 @@
                 <li class="department nav-list"><a href="#">회계팀  <i class="icon i-arr-bt"></i></a></li>
                 <ul>
                     <li class="nav-list"><a href="#"><i class="icon i-sanction"></i>결재 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-card"></i>회사 카드 관리</a></li>
-                    <li class="nav-list"><a href="#"><i class="icon i-todo"></i>급여 명세서 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/card/manage"><i class="icon i-card"></i>회사 카드 관리</a></li>
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/salary/list"><i class="icon i-todo"></i>급여 명세서 관리</a></li>
                 </ul>
             </ul>
         </div>

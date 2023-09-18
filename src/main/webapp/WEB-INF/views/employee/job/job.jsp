@@ -514,6 +514,8 @@
                 <button class="close">확인</button>
             </div>
         </div>
+
+        <!-- +  업무 등록 -->
         <div id="modal-newJob" class="modal-common">
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 등록</h4>
@@ -531,67 +533,68 @@
             </div>
             <div class="modal-body">
                 <div class="modal-content">
-                    <form action="" id="registJob">
-                        <div class="modal-option" data-target="tab-new-job">
+                    <div class="modal-option new-job on" data-target="tab-new-job">
+                        <form action="" id="registNewJob">
                             <ul>
                                 <li class="form-data-list">
-                                    <label for="">📚 업무 제목</label>
-                                    <input type="text" name="" id="" placeholder="업무 제목을 입력하세요.">
+                                    <label for="sj">📚 업무 제목</label>
+                                    <input type="text" name="jobSj" id="sj" placeholder="업무 제목을 입력하세요.">
                                 </li>
                                 <li class="form-data-list">
-                                    <label for="">✅ 업무 내용</label>
-                                    <input type="text" name="" id="" placeholder="업무 내용을 입력하세요.">
+                                    <label for="cn">✅ 업무 내용</label>
+                                    <input type="text" name="jobCn" id="cn" placeholder="업무 내용을 입력하세요.">
                                 </li>
                                 <li class="form-data-list">
                                     <label for="">📅 업무 기간</label>
                                     <div class="input-date">
-                                        <input type="date" name="" id="" placeholder="시작 날짜">
+                                        <input type="date" name="jobBeginDate" placeholder="시작 날짜">
                                         ~
-                                        <input type="date" name="" id="" placeholder="끝 날짜">
+                                        <input type="date" name="jobClosDate" placeholder="끝 날짜">
                                     </div>
                                 </li>
                                 <li class="form-data-list">
-                                    <label for="">💭 업무 분류</label>
+                                    <label>💭 업무 분류</label>
                                     <div class="input-data">
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyKind" value="DUTY010">
                                         <label for="">회의</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyKind" value="DUTY011">
                                         <label for="">팀</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyKind" value="DUTY012">
                                         <label for="">개인</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyKind" value="DUTY013">
                                         <label for="">교육</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyKind" value="DUTY014">
                                         <label for="">기타</label>
                                     </div>
                                 </li>
                                 <li class="form-data-list">
                                     <label for="">🔥 업무 상태</label>
                                     <div class="input-data">
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyProgrs" value="DUTY030">
                                         <label for="">업무 전</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyProgrs" value="DUTY031">
                                         <label for="">업무 중</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="commonCodeDutyProgrs" value="DUTY032">
                                         <label for="">업무 완료</label>
                                     </div>
                                 </li>
                             </ul>
-                        </div>
-                        <div class="modal-option on" data-target="tab-new-request">
+                            <button type="button" class="close">취소</button>
+                            <button type="button" class="regist">등록</button>
+                        </form>
+                    </div>
+                    <!-- 요청 받은 업무 목록 -->
+                    <div class="modal-option new-request" data-target="tab-new-request">
+                        <form action="">
                             <div class="request-list-wrap">
-                                <ul>
-                                    <li class="request-list">
-                                        <span class="name">이혜진 | </span>
-                                        <span class="content">스마트 홈 시스템 확장,인공지능 비서가 집안 생활을 편리하게 지원</span>
-                                        <span class="requestDate">2023년 03월 05일</span>
-                                    </li>
-                                    <li class="request-list">
-                                        <span class="name">강서주 | </span>
-                                        <span class="content">스마트 홈 시스템 확장,인공지능 비서가 집안 생활을 편리하게 지원</span>
-                                        <span class="requestDate">2023년 03월 05일</span>
-                                    </li>
-                                </ul>
+                                <c:forEach var="receiveJobVO" items="${receiveJobList}" >
+                                    <button class="receiveJob" data-seq="${receiveJobVO.jobNo}">
+                                        <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile" style="width: 50px;">
+                                        <span>${receiveJobVO.jobRequstEmplNm}</span>
+                                        <span> | ${receiveJobVO.jobSj}</span>
+                                        <span>&nbsp;&nbsp;<fmt:formatDate value="${receiveJobVO.jobRequstDate}" pattern="yy년 MM월 dd일" /></span>
+                                    </button>
+                                </c:forEach>
                             </div>
                             <ul>
                                 <li class="form-data-list">
@@ -637,16 +640,14 @@
                                     </div>
                                 </li>
                             </ul>
-                        </div>
-                    </form>
+                            <button type="button" class="close">취소</button>
+                            <button type="button" class="regist">등록</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="close">취소</button>
-                <button class="regist">등록</button>
-            </div>
-
         </div>
+
         <div id="modal-job-detail" class="modal-common" >
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 상세</h4>

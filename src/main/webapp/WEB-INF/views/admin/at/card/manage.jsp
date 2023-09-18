@@ -11,8 +11,10 @@
     }
 </style>
 <header>
-    <h1><a href="${pageContext.request.contextPath}/card/manage">회사 카드 관리</a></h1>
-    <h1><a href="${pageContext.request.contextPath}/card/reservationRecords">대여 내역 관리</a></h1>
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/card/manage">회사 카드 관리</a></li>
+        <li><a href="${pageContext.request.contextPath}/card/reservationRecords">대여 내역 관리</a></li>
+    </ul>
 </header>
 <main>
     <h1>카드 등록</h1>

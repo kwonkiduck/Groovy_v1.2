@@ -83,4 +83,9 @@ public class CommuteController {
     public CommuteVO getAttend(@PathVariable String dclzEmplId) {
         return commuteService.getAttend(dclzEmplId);
     }
+
+    @PostMapping("/test")
+    public void test(int no) {
+        commuteService.insertCommuteByVacation(no);
+    }
 }

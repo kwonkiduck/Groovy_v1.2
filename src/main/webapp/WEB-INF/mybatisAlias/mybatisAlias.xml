@@ -45,8 +45,14 @@
         <typeAlias type="kr.co.groovy.vo.AnnualSalaryVO" alias="annualSalaryVO"/>
         <typeAlias type="kr.co.groovy.vo.TariffVO" alias="tariffVO"/>
 
+<<<<<<< HEAD
         <!--윤하늘 문제아-->
 <!--         <typeAlias type="kr.co.groovy.vo.RecommendVO" alias="recommendVO"/> -->
 <!--         <typeAlias type="kr.co.groovy.vo.VoteRegisterVO" alias="voteRegisterVO"/> -->
+=======
+        <typeAlias type="kr.co.groovy.vo.RecommendVO" alias="recommendVO"/>
+        <typeAlias type="kr.co.groovy.vo.VoteRegisterVO" alias="voteRegisterVO"/>
+        <typeAlias type="kr.co.groovy.vo.SalaryVO" alias="salaryVO"/>
+>>>>>>> branch 'main' of https://github.com/dditGroovy/Groovy_v1.2.git
     </typeAliases>
 </configuration>

@@ -21,4 +21,12 @@ public interface VacationMapper {
     VacationUseVO loadVacationDetail(int yrycUseDtlsSn);
 
     void modifySanctionCode(ParamMap map);
+
+    List<VacationUseVO> loadTeamMemVacation(String emplId);
+
+    void modifyVacationCount(VacationUseVO vacationUseVO);
+
+    VacationUseVO loadVacationBySn(int yrycUseDtlsSn);
+
+    List<VacationUseVO> loadConfirmedVacation(String emplId);
 }
