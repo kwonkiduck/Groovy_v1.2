@@ -1,29 +1,33 @@
 package kr.co.groovy.job;
 
 import kr.co.groovy.common.CommonService;
+import kr.co.groovy.commute.CommuteService;
 import kr.co.groovy.enums.*;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
 import kr.co.groovy.vo.JobProgressVO;
 import kr.co.groovy.vo.JobVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.Date;
+import java.util.*;
 
 @Controller
+@Slf4j
 @RequestMapping("/job")
 public class JobController {
     final JobService service;
     final CommonService commonService;
+    final CommuteService commuteService;
 
-    public JobController(JobService service, CommonService commonService) {
+    public JobController(JobService service, CommonService commonService, CommuteService commuteService) {
         this.service = service;
         this.commonService = commonService;
+        this.commuteService = commuteService;
     }
 
     //업무일지
@@ -97,8 +101,27 @@ public class JobController {
         String emplId = principal.getName();
         List<JobVO> requestJobList = service.getAllJobById(emplId);
         List<JobVO> receiveJobList = service.getAllReceiveJobById(emplId);
+
+        List<Map<String, Object>> dayOfWeek = service.dayOfWeek();
+        List<List<JobVO>> jobListByDate = new ArrayList<>();
+
+        for (Map<String, Object> map : dayOfWeek) {
+            Map<String, Object> jobMap = new HashMap<>();
+            jobMap.put("jobRecptnEmplId", emplId);
+            Date date = (Date) map.get("date");
+            System.out.println("date = " + date);
+            jobMap.put("date", date);
+            System.out.println("jobMap = " + jobMap);
+            List<JobVO> jobByDate = service.getJobByDate(jobMap);
+            System.out.println("jobByDate = " + jobByDate);
+            jobListByDate.add(jobByDate);
+        }
+
+        model.addAttribute("dayOfWeek", dayOfWeek);
         model.addAttribute("requestJobList", requestJobList);
         model.addAttribute("receiveJobList", receiveJobList);
+        model.addAttribute("jobListByDate", jobListByDate); // 날짜별 작업 목록을 모델에 추가합니다.
+
         return "employee/job/job";
     }
 
@@ -108,7 +131,7 @@ public class JobController {
         int maxJobNo = service.getMaxJobNo() + 1;
         String emplId = principal.getName();
         jobVO.setJobNo(maxJobNo);
-         jobVO.setJobRequstEmplId(emplId);
+        jobVO.setJobRequstEmplId(emplId);
         service.insertJob(jobVO);
 
         jobProgressVO.setJobNo(maxJobNo);
@@ -159,10 +182,4 @@ public class JobController {
 
         service.updateJobStatus(jobProgressVO);
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "employee/job/yryctest";
-    }
-
 }

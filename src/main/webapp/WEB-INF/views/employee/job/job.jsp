@@ -118,182 +118,44 @@
         color: white;
     }
 </style>
+<c:forEach var="p" items="${jobListByDate}">
+    <p>${p}</p>
+    <br>
+    <br>
+</c:forEach>
 
 <a href="#">할 일</a>
 <a href="/job/jobDiary">업무 일지</a>
 
 <div id="todoBoard">
     <div class="todoBoardListWrapper">
-        <div class="todoBoardList">
-            <div class="list-header">
-                <div class="list-header-name">
-                    <p class="day">월</p>
+        <c:forEach var="dayInfo" items="${dayOfWeek}">
+            <div class="todoBoardList">
+                <div class="list-header">
+                    <div class="list-header-name">
+                        <p class="day" data-date="${dayInfo.date}">${dayInfo.day}</p>
+                    </div>
+                    <div class="list-header-add">
+                        <button class="addJob">+</button>
+                    </div>
+                </div><br />
+                <div class="list-content">
+                    <c:forEach var="dd" items="${dayOfWeek}">
+                        <a href="#" class="todoCard">
+                            <div class="todoCard-title">
+                                <input type="checkbox" name="todoChk" class="todoChk">
+                                <span class="todoName">착수 발표</span>
+                            </div>
+                            <div class="todoCard-info">
+                                <span class="dutyProgrs">진행전</span>
+                                <span class="dutySttus">팀</span>
+                                <span class="toDoClosDate">2023-08-27 까지</span>
+                            </div>
+                        </a>
+                    </c:forEach>
                 </div>
-                <div class="list-header-add">
-                    <button class="addTodoBtn">할일 추가</button>
-                </div>
-            </div><br />
-            <div class="list-content">
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">착수 발표</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행전</span>
-                        <span class="dutySttus">팀</span>
-                        <span class="toDoClosDate">2023-08-27 까지</span>
-                    </div>
-                </a>
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">물리 ERD</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행완료</span>
-                        <span class="dutySttus">개인</span>
-                        <span class="toDoClosDate">오늘</span> <!--끝나는 날짜랑 오늘 날짜랑 겹치면 오늘 출력-->
-                    </div>
-                </a>
             </div>
-        </div>
-        <div class="todoBoardList">
-            <div class="list-header">
-                <div class="list-header-name">
-                    <p class="day">화</p>
-                </div>
-                <div class="list-header-add">
-                    <button class="addTodoBtn">할일 추가</button>
-                </div>
-            </div><br />
-            <div class="list-content">
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">착수 발표</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행전</span>
-                        <span class="dutySttus">팀</span>
-                        <span class="toDoClosDate">2023-08-27 까지</span>
-                    </div>
-                </a>
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">물리 ERD</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행완료</span>
-                        <span class="dutySttus">개인</span>
-                        <span class="toDoClosDate">오늘</span> <!--끝나는 날짜랑 오늘 날짜랑 겹치면 오늘 출력-->
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="todoBoardList">
-            <div class="list-header">
-                <div class="list-header-name">
-                    <p class="day">수</p>
-                </div>
-                <div class="list-header-add">
-                    <button class="addTodoBtn">할일 추가</button>
-                </div>
-            </div><br />
-            <div class="list-content">
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">착수 발표</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행전</span>
-                        <span class="dutySttus">팀</span>
-                        <span class="toDoClosDate">2023-08-27 까지</span>
-                    </div>
-                </a>
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">물리 ERD</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행완료</span>
-                        <span class="dutySttus">개인</span>
-                        <span class="toDoClosDate">오늘</span> <!--끝나는 날짜랑 오늘 날짜랑 겹치면 오늘 출력-->
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="todoBoardList">
-            <div class="list-header">
-                <div class="list-header-name">
-                    <p class="day">목</p>
-                </div>
-                <div class="list-header-add">
-                    <button class="addTodoBtn">할일 추가</button>
-                </div>
-            </div><br />
-            <div class="list-content">
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">착수 발표</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행전</span>
-                        <span class="dutySttus">팀</span>
-                        <span class="toDoClosDate">2023-08-27 까지</span>
-                    </div>
-                </a>
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">물리 ERD</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행완료</span>
-                        <span class="dutySttus">개인</span>
-                        <span class="toDoClosDate">오늘</span> <!--끝나는 날짜랑 오늘 날짜랑 겹치면 오늘 출력-->
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="todoBoardList">
-            <div class="list-header">
-                <div class="list-header-name">
-                    <p class="day">금</p>
-                </div>
-                <div class="list-header-add">
-                    <button class="addTodoBtn">할일 추가</button>
-                </div>
-            </div><br />
-            <div class="list-content">
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">착수 발표</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행전</span>
-                        <span class="dutySttus">팀</span>
-                        <span class="toDoClosDate">2023-08-27 까지</span>
-                    </div>
-                </a>
-                <a href="#" class="todoCard">
-                    <div class="todoCard-title">
-                        <input type="checkbox" name="todoChk" class="todoChk">
-                        <span class="todoName">물리 ERD</span>
-                    </div>
-                    <div class="todoCard-info">
-                        <span class="dutyProgrs">진행완료</span>
-                        <span class="dutySttus">개인</span>
-                        <span class="toDoClosDate">오늘</span> <!--끝나는 날짜랑 오늘 날짜랑 겹치면 오늘 출력-->
-                    </div>
-                </a>
-            </div>
-        </div>
+        </c:forEach>
     </div>
 </div>
 <div id="receiveJobContainer">
@@ -319,7 +181,7 @@
     </c:forEach>
 </div>
 <button class="requestJob">업무 요청하기</button><br />
-<button class="addJob">+</button>
+
 <button class="myjob">등록된 업무</button>
 <div id="modal">
     <div class="modal-container">
@@ -588,7 +450,7 @@
                         <form action="">
                             <div class="request-list-wrap">
                                 <c:forEach var="receiveJobVO" items="${receiveJobList}" >
-                                    <button class="receiveJob" data-seq="${receiveJobVO.jobNo}">
+                                    <button type="button" class="receiveJob" data-seq="${receiveJobVO.jobNo}">
                                         <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile" style="width: 50px;">
                                         <span>${receiveJobVO.jobRequstEmplNm}</span>
                                         <span> | ${receiveJobVO.jobSj}</span>
@@ -599,49 +461,46 @@
                             <ul>
                                 <li class="form-data-list">
                                     <label for="">📚 업무 제목</label>
-                                    <input type="text" name="" id="" placeholder="업무 제목을 입력하세요.">
+                                    <div class="data-box">
+                                        <p id="receive-sj"></p>
+                                    </div>
                                 </li>
                                 <li class="form-data-list">
                                     <label for="">✅ 업무 내용</label>
-                                    <input type="text" name="" id="" placeholder="업무 내용을 입력하세요.">
+                                    <div class="data-box">
+                                        <p id="receive-cn"></p>
+                                    </div>
                                 </li>
                                 <li class="form-data-list">
                                     <label for="">📅 업무 기간</label>
                                     <div class="input-date">
-                                        <input type="date" name="" id="" placeholder="시작 날짜">
+                                        <div class="data-box">
+                                            <p id="receive-begin"></p>
+                                        </div>
                                         ~
-                                        <input type="date" name="" id="" placeholder="끝 날짜">
+                                        <div class="data-box">
+                                            <p id="receive-close"></p>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="form-data-list">
                                     <label for="">💭 업무 분류</label>
                                     <div class="input-data">
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" class="receive-kind-box" value="회의">
                                         <label for="">회의</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" class="receive-kind-box" value="팀">
                                         <label for="">팀</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" class="receive-kind-box" value="개인">
                                         <label for="">개인</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" class="receive-kind-box" value="교육">
                                         <label for="">교육</label>
-                                        <input type="radio" name="" id="">
+                                        <input type="radio" class="receive-kind-box" value="기타">
                                         <label for="">기타</label>
                                     </div>
                                 </li>
-                                <li class="form-data-list">
-                                    <label for="">🔥 업무 상태</label>
-                                    <div class="input-data">
-                                        <input type="radio" name="" id="">
-                                        <label for="">업무 전</label>
-                                        <input type="radio" name="" id="">
-                                        <label for="">업무 중</label>
-                                        <input type="radio" name="" id="">
-                                        <label for="">업무 완료</label>
-                                    </div>
-                                </li>
                             </ul>
-                            <button type="button" class="close">취소</button>
-                            <button type="button" class="regist">등록</button>
+                            <button id="rejectJob">거절</button>
+                            <button id="agreeJob">승인</button>
                         </form>
                     </div>
                 </div>
