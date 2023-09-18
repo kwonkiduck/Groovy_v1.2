@@ -67,10 +67,11 @@
         </thead>
         <tbody>
         <c:forEach var="emailVO" items="${list}">
-            <tr>
+            <tr data-id="${emailVO.emailEtprCode}">
                 <td><input type="checkbox" class="selectmail"></td>
-                <td onclick="modifyTableAt(this)"
-                    data-id="${emailVO.emailEtprCode}" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
+                <td>
+                    <input type="hidden" value="${emailVO.emailDeleteAt}" name="deleteAt">
+                </td>
                 <td>파일존재여부</td>
 
                 <td>${emailVO.emailFromAddr}</td>

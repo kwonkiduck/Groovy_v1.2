@@ -8,50 +8,42 @@ function checkAll() {
     });
 }
 
-function modifyAt(code, td) {
-    let at = td.innerText;
-    let emailEtprCode = td.getAttribute("data-id");
-    $.ajax({
-        url: `/email/${code}/${emailEtprCode}`,
-        type: 'put',
-        data: at,
-        success: function (result) {
-            at = result;
-            td.innerText = at;
-        },
-        error: function (xhr, status, error) {
-            console.log("code: " + xhr.status);
-            console.log("message: " + xhr.responseText);
-            console.log("error: " + xhr.error);
-        }
-    });
-}
-
-function modifyDeleteAt(code, td) {
-    let emailEtprCode = td.getAttribute("data-id");
-    let at = document.querySelector("input[type=hidden]").value;
-    $.ajax({
-        url: `/email/${code}/${emailEtprCode}`,
-        type: 'put',
-        data: at,
-        success: function (result) {
-            td.remove();
-        },
-        error: function (xhr, status, error) {
-            console.log("code: " + xhr.status);
-            console.log("message: " + xhr.responseText);
-            console.log("error: " + xhr.error);
-        }
-    });
-}
-
 function modifyTableAt(td) {
     let code = td.getAttribute("data-type");
     if (code === 'redng' || code === 'imprtnc') {
-        modifyAt(code, td);
+        let at = td.innerText;
+        let emailEtprCode = td.closest("tr").getAttribute("data-id");
+        $.ajax({
+            url: `/email/${code}/${emailEtprCode}`,
+            type: 'put',
+            data: at,
+            success: function (result) {
+                at = result;
+                td.innerHTML = at;
+            },
+            error: function (xhr, status, error) {
+                console.log("code: " + xhr.status);
+                console.log("message: " + xhr.responseText);
+                console.log("error: " + xhr.error);
+            }
+        });
     } else {
         code = 'delete';
-        modifyDeleteAt(code, td)
+        let emailEtprCode = td.closest("tr").getAttribute("data-id");
+        let at = document.querySelector("input[name=deleteAt]").value;
+        $.ajax({
+            url: `/email/${code}/${emailEtprCode}`,
+            type: 'put',
+            data: at,
+            success: function (result) {
+                td.remove();
+            },
+            error: function (xhr, status, error) {
+                console.log("code: " + xhr.status);
+                console.log("message: " + xhr.responseText);
+                console.log("error: " + xhr.error);
+            }
+        });
     }
 }
 

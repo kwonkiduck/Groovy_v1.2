@@ -54,7 +54,7 @@
                                         , email_redng_at
                                         , email_delete_at
                                         , email_imprtnc_at
-                                        , EMAIL_REAL_DELETE_AT)
+                                        , email_real_delete_at)
         VALUES ( 'EMAIL-' || EMAIL_SEQ.currval || '-' || to_char(#{emailFromSendDate}, 'yyyymmdd')
                , #{emailFromAddr}
                , #{emailReceivedEmplId}
@@ -96,7 +96,7 @@
 
     <!-- 수신받은 메일함 -->
     <select id="getAllReceivedMailsToMe" resultType="emailVO" parameterType="Map">
-        SELECT ef.EMAIL_ETPR_CODE
+        SELECT distinct ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
              , ef.EMAIL_FROM_SJ
@@ -113,12 +113,12 @@
           and et.EMAIL_TO_ADDR in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by et.EMAIL_TO_RECEIVED_DATE desc
+        order by ef.EMAIL_ETPR_CODE desc
     </select>
 
     <!-- 참조받은 메일함 -->
     <select id="getAllReferencedMailsToMe" resultType="emailVO" parameterType="Map">
-        SELECT ef.email_etpr_code
+        SELECT distinct ef.email_etpr_code
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
              , ef.EMAIL_FROM_SJ
@@ -135,12 +135,12 @@
           and ec.EMAIL_CC_ADDR in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by ec.EMAIL_CC_RECEIVED_DATE desc
+        order by ef.EMAIL_ETPR_CODE desc
     </select>
 
     <!-- 내게 쓴 메일함 -->
     <select id="getAllSentMailsToMe" resultType="emailVO" parameterType="Map">
-        SELECT ef.EMAIL_ETPR_CODE
+        SELECT distinct ef.EMAIL_ETPR_CODE
              , ef.EMAIL_SN
              , ef.EMAIL_FROM_ADDR
              , ef.EMAIL_FROM_SJ
@@ -157,7 +157,7 @@
           and ef.EMAIL_FROM_ADDR = et.EMAIL_TO_ADDR
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by et.EMAIL_TO_RECEIVED_DATE desc
+        order by ef.EMAIL_ETPR_CODE desc
     </select>
 
     <!-- 보낸메일함 -->
@@ -178,7 +178,7 @@
           and et.EMAIL_TO_ADDR not in #{emailAddr}
           and ers.EMAIL_DELETE_AT = #{at}
           and ers.EMAIL_REAL_DELETE_AT = 'N'
-        order by et.EMAIL_TO_RECEIVED_DATE desc
+        order by ef.EMAIL_ETPR_CODE desc
     </select>
 
     <select id="getEmployeeByEmailAddr" resultType="int" parameterType="String">
@@ -213,7 +213,7 @@
     <update id="modifyEmailRedngAt" parameterType="Map">
         update EMAIL_RECEIVED_STTUS
         set ${emailAtKind} = #{at}
-        where EMAIL_ETPR_CODE = #{emailEtprCode}
+        where EMAIL_ETPR_CODE in #{emailEtprCode}
     </update>
 </mapper>
 
