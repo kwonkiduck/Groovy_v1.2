@@ -1046,3 +1046,15 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/enums/LaborStatus.
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/vo/SalaryVO.class
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/at/salary/detail.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/hrt/employee/salary.jsp
+target/classes/kr/co/groovy/weather/WeatherController.class
+target/classes/kr/co/groovy/weather/WeatherMapper.class
+target/classes/kr/co/groovy/weather/WeatherService.class
+target/classes/mappers/weather-mapper.xml
+target/ddit-1.0.0-BUILD-SNAPSHOT/resources/js/common.js
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/weather/WeatherController.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/weather/WeatherMapper.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/weather/WeatherService.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/mappers/weather-mapper.xml
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/read.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/sendMine.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/checkPassword.jsp
