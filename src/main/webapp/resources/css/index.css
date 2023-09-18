@@ -109,6 +109,7 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     background-position: center;
     background-size: 100%;
     background-repeat: no-repeat;
+    transition: 0.35s .3s;
 }
 /*  intro   */
 .hello {
@@ -142,7 +143,16 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     font-size: var(--font-size-24);
     border: none;
 }
-
+.btn-commute:hover {
+    background: var(--color-main);
+    box-shadow: var(--clay-btn);
+    color: white;
+}
+.btn-commute:hover.icon-area::after {
+    transform: scale(1.2);
+    right: 2%;
+    bottom: 2%;
+}
 #work::after {
     background-image: url("../images/Icon3d/watch.png");
 }
@@ -208,7 +218,6 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
 .birthday-list .list-item {
     flex-direction: column;
     padding-bottom: 12px;
-    border: 1px solid var(--color-stroke);
 }
 .item-img {
     transition: .35s;
@@ -218,7 +227,7 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     display: block;
     width: calc((42/1920)*100vw);
     height: calc((42/1920)*100vw);
-
+    border: 1px solid var(--color-stroke);
 }
 
 .birthday-list .list-item {
@@ -241,8 +250,8 @@ img {
     transition: .35s;
     text-align: center;
 }
-.birthday-list .list-item:hover .item-img {
-    background: var(--color-main);
+.birthday-list .list-item:hover .item-img img {
+    background-color: var(--color-main);
 }
 .birthday-list .list-item:hover .item-img + .item-desc {
     opacity: 1;
