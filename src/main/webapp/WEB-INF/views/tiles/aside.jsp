@@ -36,12 +36,13 @@
         <li class="nav-list"><a href="${pageContext.request.contextPath}/vacation"><i class="icon i-vacation"></i>휴가 · 급여</a></li>
         <li class="nav-list"><a href="${pageContext.request.contextPath}/job/main"><i class="icon i-todo"></i>내 할 일</a></li>
         <li class="nav-list"><a href="${pageContext.request.contextPath}/sanction/box"><i class="icon i-sanction"></i>결재함</a></li>
+        <li class="nav-list"><a href="${pageContext.request.contextPath}/memo/memoMain"><i class="icon i-sanction"></i>메모</a></li>
       </ul>
     </div>
     <div class="team">
       <span class="nav-cate">팀</span>
       <ul>
-        <li class="nav-list"><a href="${pageContext.request.contextPath}/calendar/scheduleMain"><i class="icon i-org"></i>캘린더</a></li>
+        <li class="nav-list"><a href="${pageContext.request.contextPath}/calendar/emplScheduleMain"><i class="icon i-org"></i>캘린더</a></li>
         <li class="nav-list"><a href="${pageContext.request.contextPath}/teamCommunity"><i class="icon i-community"></i>팀 커뮤니티</a></li>
       </ul>
     </div>
