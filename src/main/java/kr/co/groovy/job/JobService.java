@@ -1,11 +1,14 @@
 package kr.co.groovy.job;
 
+import kr.co.groovy.enums.DutyKind;
+import kr.co.groovy.enums.DutyProgress;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
 import kr.co.groovy.vo.JobProgressVO;
 import kr.co.groovy.vo.JobVO;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -91,5 +94,28 @@ public class JobService {
             startDate = new Date(calendar.getTimeInMillis());
         }
         return weekly;
+    }
+
+    public List<List<JobVO>> jobListByDate(String emplId) {
+        List<List<JobVO>> jobListByDate = new ArrayList<>();
+        List<Map<String, Object>> dayOfWeek = dayOfWeek();
+        for (Map<String, Object> map : dayOfWeek) {
+            Map<String, Object> jobMap = new HashMap<>();
+            jobMap.put("jobRecptnEmplId", emplId);
+            Date date = (Date) map.get("date");
+            jobMap.put("date", date);
+            List<JobVO> jobByDate = getJobByDate(jobMap);
+            for (JobVO jobVO : jobByDate) {
+                String dutyKind = DutyKind.getLabelByValue(jobVO.getCommonCodeDutyKind());
+                jobVO.setCommonCodeDutyKind(dutyKind);
+                List<JobProgressVO> jobProgressVOList = jobVO.getJobProgressVOList();
+                for (JobProgressVO jobProgressVO : jobProgressVOList) {
+                    String dutyProgress = DutyProgress.getLabelByValue(jobProgressVO.getCommonCodeDutyProgrs());
+                    jobProgressVO.setCommonCodeDutyProgrs(dutyProgress);
+                }
+            }
+            jobListByDate.add(jobByDate);
+        }
+        return jobListByDate;
     }
 }

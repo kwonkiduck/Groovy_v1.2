@@ -101,17 +101,7 @@ public class JobController {
         List<JobVO> receiveJobList = service.getAllReceiveJobById(emplId);
 
         List<Map<String, Object>> dayOfWeek = service.dayOfWeek();
-        List<List<JobVO>> jobListByDate = new ArrayList<>();
-
-        for (Map<String, Object> map : dayOfWeek) {
-            Map<String, Object> jobMap = new HashMap<>();
-            jobMap.put("jobRecptnEmplId", emplId);
-            Date date = (Date) map.get("date");
-            jobMap.put("date", date);
-            List<JobVO> jobByDate = service.getJobByDate(jobMap);
-
-            jobListByDate.add(jobByDate);
-        }
+        List<List<JobVO>> jobListByDate = service.jobListByDate(emplId);
 
         model.addAttribute("dayOfWeek", dayOfWeek);
         model.addAttribute("requestJobList", requestJobList);

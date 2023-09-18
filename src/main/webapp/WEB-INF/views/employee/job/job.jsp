@@ -26,6 +26,9 @@
         flex: 3;
     }
     .todoBoardListWrapper {display: flex; gap: 24px;}
+    .todoCard {
+        margin: 4px 0;
+    }
     .list-header {display: flex; justify-content: space-between; align-items: center;}
 
     #modal {
@@ -136,7 +139,7 @@
                 </div><br />
                 <div class="list-content">
                     <c:forEach var="jobVO" items="${jobListByDate[stat.index]}">
-                        <a href="#" class="todoCard">
+                        <button type="button" class="todoCard" style="text-align: left">
                             <div class="todoCard-title">
                                 <input type="checkbox" name="todoChk" class="todoChk">
                                 <span class="todoName">${jobVO.jobSj}</span>
@@ -144,9 +147,10 @@
                             <div class="todoCard-info">
                                 <span class="dutyProgrs">${jobVO.jobProgressVOList[0].commonCodeDutyProgrs}</span>
                                 <span class="dutykind">${jobVO.commonCodeDutyKind}</span>
-                                <span class="toDoClosDate">${jobVO.jobClosDate}</span>
+                                <span class="toDoClosDate">${jobVO.jobClosDate}까지</span>
                             </div>
-                        </a>
+                        </button>
+                        <br>
                     </c:forEach>
                 </div>
             </div>
