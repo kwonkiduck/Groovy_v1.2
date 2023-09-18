@@ -19,7 +19,7 @@
     <sec:authentication property="principal" var="CustomUser"/>
     <div class="content">
         <div class="content-header">
-            <h2 class="font-36 font-md hello">안녕하세요, ${CustomUser.employeeVO.emplNm}님 <br>
+            <h2 class="font-24 font-md hello"><strong>안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
                 오늘 업무도 힘차게 파이팅! &#x1F64C;</h2>
         </div>
         <div class="content-body">
@@ -103,6 +103,33 @@
                                 </div>
                                 <div class="area-body">
                                     <ul class="content-list saction-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calendar">
+                            <div class="calendar-area card card-df pd-32">
+
+                            </div>
+                        </div>
+                        <div class="diet">
+                            <div class="diet-area card card-df pd-32">
+                                <div class="area-header">
+                                    <h3 class="content-title font-b">오늘의 식단</h3>
+                                </div>
+                                <div class="area-body">
+                                    <ul class="content-list diet-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="birthday">
+                            <div class="birthday-area card card-df pd-32">
+                                <div class="area-header">
+                                    <h3 class="content-title font-b">이달의 생일</h3>
+                                </div>
+                                <div class="area-body">
+                                    <ul class="content-list birthday-list">
                                     </ul>
                                 </div>
                             </div>
@@ -359,7 +386,10 @@
                 $.each(data, function (index, item) {
                     const birthday = item.emplBrthdy.split("-")[2];
                     console.log(birthday)
-                    code += `<tr><td><img src="/uploads/profile/\${item.proflPhotoFileStreNm}" width="50px;"/></td>
+                    code += `
+                            <li><a href="#" class="list-item">
+                                <img src="/uploads/profile/\${item.proflPhotoFileStreNm}" width="50px;" title="\${item.emplNm}"/>
+                            </a></li>
                              <td>\${item.emplNm}</td></tr>
                              <td>\${birthday}일</td></tr>`
                 })
@@ -383,21 +413,24 @@
                 });
 
                 request.done(function (data) {
-                    let calendarEl = document.getElementById('calendar');
+                    let calendarEl = document.querySelector(".calendar-area");
                     calendar = new FullCalendar.Calendar(calendarEl, {
-                        height: '500px',
+                        height: '100%',
                         slotMinTime: '08:00',
                         slotMaxTime: '20:00',
                         headerToolbar: {
-                            left: false,
-                            center: false,
+                            left: 'prev,next today',
+                            center: 'title',
                             right: false
                         },
                         initialView: 'dayGridMonth',
                         navLinks: true,
                         selectable: true,
                         events: data,
-                        locale: 'ko'
+                        locale: 'ko',
+                        dayCellContent: function(e) {
+                            e.dayNumberText = e.dayNumberText.replace('일', '');
+                        }
                     });
                     calendar.render();
                 });
@@ -409,14 +442,15 @@
             url: `/common/\${today}`,
             type: 'GET',
             success: function (data) {
-                let dietRes = `<p>\${data.dietRice}</p>
-                            <p>\${data.dietSoup}</p>
-                            <p>\${data.dietDish1}</p>
-                            <p>\${data.dietDish2}</p>
-                            <p>\${data.dietDish3}</p>
-                            <p>\${data.dietDessert}</p>
+                let dietRes = `
+                            <li class="diet-item">\${data.dietRice}</li>
+                            <li class="diet-item">\${data.dietSoup}</li>
+                            <li class="diet-item">\${data.dietDish1}</li>
+                            <li class="diet-item">\${data.dietDish2}</li>
+                            <li class="diet-item">\${data.dietDish3}</li>
+                            <li class="diet-item">\${data.dietDessert}</li>
                             `
-                $("#dietWrap").html(dietRes);
+                $(".diet-list").html(dietRes);
 
             },
             error: function (xhr, status, error) {

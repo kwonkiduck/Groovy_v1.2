@@ -17,7 +17,7 @@
 /*  메인   */
 /*  공통  */
 .content-title {
-    font-size: var(--font-size-24);
+    font-size: var(--font-size-18);
 }
 .content {
     display: flex;
@@ -34,7 +34,7 @@
 }
 .grid-inner {
     display: grid;
-    grid-template-columns: calc((333 / 1920) * 100vw) calc((462 / 1920) * 100vw);
+    grid-template-columns: repeat(2, calc((333 / 1920) * 100vw)) calc((118 / 1920) * 100vw);
     grid-template-rows: calc((478 / 1080) * 100vh) calc((227 / 1080) * 100vh);
     flex-direction: column;
     border: 1px solid red;
@@ -85,11 +85,11 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
 .list-context {
     flex: 1;
     color: var(--color-font-high);
-    font-size: var(--font-size-18);
+    font-size: var(--font-size-14);
 }
 .list-date {
     color: var(--color-font-row);
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-11);
 }
 /*  intro   */
 .hello {
@@ -102,7 +102,6 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
 }
 .commute-area {
     flex: 1;
-    /*width: calc((304/1920)*100vw);*/
     height: calc((170/1080)*100vh);
     overflow: hidden;
 }
@@ -161,4 +160,27 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
 .saction-area {
     height: 100%;
 }
-
+/*  캘린더 */
+.calendar {
+    grid-column: span 2;
+}
+.fc table{
+    font-size: var(--font-size-14);
+}
+/*  식단  */
+.diet-area {
+    height: 100%;
+}
+.diet-item {
+    font-size: var(--font-size-14);
+}
+.content-list.diet-list {
+    overflow-y: unset;
+}
+/*  이달의 생일  */
+.birthday-area {
+    height: 100%;
+}
+.birthday-list {
+    display: flex;
+}
