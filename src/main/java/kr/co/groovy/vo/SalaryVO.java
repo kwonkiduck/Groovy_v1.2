@@ -1,33 +1,14 @@
-<<<<<<< HEAD
+
 package kr.co.groovy.vo;
 
 import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Setter
-@Getter
-@ToString
-public class SalaryVO {
-	
-	private Date salaryPymntDate;
-	private String salaryEmplId;
-	private int salaryBslry;
-	private int salaryOvtimeAllwnc;
-	
-}
-=======
-package kr.co.groovy.vo;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.sql.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -43,4 +24,3 @@ public class SalaryVO {
     private List<TariffVO> tariffVOList; // 세율 기준 리스트
 
 }
->>>>>>> branch 'main' of https://github.com/dditGroovy/Groovy_v1.2.git
