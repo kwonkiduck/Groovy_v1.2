@@ -46,7 +46,7 @@
         <typeAlias type="kr.co.groovy.vo.TariffVO" alias="tariffVO"/>
 
         <!--윤하늘 문제아-->
-        <typeAlias type="kr.co.groovy.vo.RecommendVO" alias="recommendVO"/>
-        <typeAlias type="kr.co.groovy.vo.VoteRegisterVO" alias="voteRegisterVO"/>
+<!--         <typeAlias type="kr.co.groovy.vo.RecommendVO" alias="recommendVO"/> -->
+<!--         <typeAlias type="kr.co.groovy.vo.VoteRegisterVO" alias="voteRegisterVO"/> -->
     </typeAliases>
 </configuration>

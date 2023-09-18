@@ -1,9 +1,11 @@
 package kr.co.groovy.reservation;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.groovy.vo.FacilityVO;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,15 @@ public class FacilityManageService {
 		// log.info("(서비스)값이 나오니? " + reservedRoom);
 		return reservedRoom;
 	}
-
+	
+	// 각 시설별 비품 목록 가져오기
+	public List<FacilityVO> findEquipmentList() {
+		List<FacilityVO> equipmentList = mapper.findEquipmentList();
+		log.info("시설별 비품 목록이 나오니?? "+equipmentList);
+		return equipmentList;
+	}
+	// 각 시설별 비품을 한번에 출력하는 로직
+	
 	// 저장된 시설 이름 vo에 전달
 	public FacilityVO addFcilityName(FacilityVO facilityVO) {
 		String commonCodeFcltyKind = facilityVO.getCommonCodeFcltyKind();
@@ -32,6 +42,7 @@ public class FacilityManageService {
 		facilityVO.setFcltyName(fcltyName);
 		return facilityVO;
 	}
+	
 	// 저장된 시설 코드 VO에 전달
 	public FacilityVO addFcilityCode(FacilityVO facilityVO) {
 		String fcltyName = facilityVO.getFcltyName();
@@ -122,10 +133,10 @@ public class FacilityManageService {
 		return mapper.getRoomCount(roomCode);
 	}
 	
-	//당알 예약 가져오기
+	//당일 예약 가져오기
 	public List<FacilityVO> findTodayResve() {
 		List<FacilityVO> todayResve = mapper.findTodayResve();
-		log.info("당일 예약 나오니?? " + todayResve);
+		log.info("당일 예약 나오니?? "+todayResve);
 		return todayResve;
 	}
 }

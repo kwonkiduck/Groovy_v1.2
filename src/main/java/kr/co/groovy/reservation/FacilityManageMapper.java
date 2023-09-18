@@ -18,10 +18,10 @@ public interface FacilityManageMapper {
     //회의실 갯수
     public int getRoomCount(String oomCode);
     
-    //해당 시설에 비품 유무 조회
-    public List<FacilityVO> getReservedMatter();
-    
     //당일 예약 조회
     public List<FacilityVO> findTodayResve();
+    
+    //각 시설별 비품 조회
+	public List<FacilityVO> findEquipmentList();
 
 }	

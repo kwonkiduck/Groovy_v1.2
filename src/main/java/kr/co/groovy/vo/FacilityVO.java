@@ -22,6 +22,8 @@ public class FacilityVO {
     private String screen;
     private String whiteBoard;
     private String extinguisher;
+    private String commonCodeFxtrsKind;
+    private String equipName;
     private String fcltyName;
     private String fcltyCode; 
     private String fcltyEmplName;

@@ -75,15 +75,15 @@
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
     </select>
 
-    <insert id="inputRecomend" parameterType="recomendVO">
-        INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN)
-        VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL)
-    </insert>
-    <delete id="deleteRecomend" parameterType="recomendVO">
-        DELETE
-        FROM RECOMEND
-        WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
-    </delete>
+<!--     <insert id="inputRecomend" parameterType="recomendVO"> -->
+<!--         INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN) -->
+<!--         VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL) -->
+<!--     </insert> -->
+<!--     <delete id="deleteRecomend" parameterType="recomendVO"> -->
+<!--         DELETE -->
+<!--         FROM RECOMEND -->
+<!--         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId} -->
+<!--     </delete> -->
     <!--댓글-->
     <insert id="inputAnswer" parameterType="map">
         INSERT INTO ANSWER( ANSWER_NO,

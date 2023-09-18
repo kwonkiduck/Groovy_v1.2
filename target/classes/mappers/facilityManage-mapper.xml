@@ -10,7 +10,8 @@
     <result property="fcltyResveRequstMatter" column="FCLTY_RESVE_REQUST_MATTER"/>
     <result property="fcltyResveEmplId" column="FCLTY_RESVE_EMPL_ID"/>
     <result property="commonCodeResveAt" column="COMMON_CODE_RESVE_AT"/>
-    <result property="fcltyEmplName" column="EMPL_NM"/>
+    <result property="fcltyEmplName" column="EMPL_NM"/>    
+    <result property="equipName" column="EQUIPMENTLIST"/>    
 </resultMap>
 
 <!-- 시설 예약 현황 조회 -->
@@ -41,10 +42,19 @@
 </select>
 
 
-<!-- 비품 예약 현황 조회 -->
-<select id="getReservedMatter" resultType="facilityVO">
-	SELECT FCLTY_RESVE_REQUST_MATTER
-	FROM FCLTY_RESVE;
+<!-- 시설 별 비품 현황 조회 -->
+<select id="findEquipmentList" resultMap="facilityVOMap">
+	SELECT
+	       FC.COMMON_CODE_FCLTY_KIND,
+	       LISTAGG(C.COMMON_NAME, ', ') 
+	       WITHIN GROUP (ORDER BY C.COMMON_NAME) 
+	       AS equipmentList
+	FROM FCLTY FC
+	INNER JOIN FXTRS FX 
+	ON FX.COMMON_CODE_FCLTY_KIND = FC.COMMON_CODE_FCLTY_KIND
+	INNER JOIN COMMON C 
+	ON C.COMMON_CODE = FX.COMMON_CODE_FXTRS_KIND
+	GROUP BY FC.COMMON_CODE_FCLTY_KIND
 </select>
 
 <!-- 오늘 예약 현황 조회 -->
