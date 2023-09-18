@@ -71,7 +71,6 @@ public class CommuteService {
         VacationUseVO vo = vacationMapper.loadVacationBySn(id);
         String vacationUse = vo.getCommonCodeYrycUseSe();
         String vacationKind = vo.getCommonCodeYrycUseKind();
-        vacationMapper.modifyVacationCount(vo);
 
         Date beginDate = vo.getYrycUseDtlsBeginDate();
         Date endDate = vo.getYrycUseDtlsEndDate();
@@ -104,6 +103,7 @@ public class CommuteService {
             String workWik = commuteMapper.getWorkWik(String.valueOf(currentDate));
             commuteVO.setDclzWorkWik(workWik);
 
+            vacationMapper.modifyVacationCount(vo);
             commuteMapper.insertCommute(commuteVO);
 
             calendar.add(Calendar.DATE, 1);
