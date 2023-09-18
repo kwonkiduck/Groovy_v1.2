@@ -148,8 +148,6 @@
              , et.EMAIL_TO_ADDR
              , et.EMAIL_TO_RECEIVED_DATE
              , ers.EMAIL_DELETE_AT
-             , ers.EMAIL_IMPRTNC_AT
-             , ers.EMAIL_REDNG_AT
         FROM EMAIL_FROM ef
                  left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
@@ -169,7 +167,6 @@
                       , ef.EMAIL_FROM_SEND_DATE
                       , et.EMAIL_TO_ADDR
                       , et.EMAIL_TO_RECEIVED_DATE
-                      , ers.EMAIL_IMPRTNC_AT
                       , ers.EMAIL_DELETE_AT
         from EMAIL_FROM ef
                  left join EMAIL_TO ET on ef.EMAIL_ETPR_CODE = ET.EMAIL_ETPR_CODE
