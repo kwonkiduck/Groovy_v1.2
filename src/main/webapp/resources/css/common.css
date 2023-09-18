@@ -1,6 +1,9 @@
 /* reset */
 @import "commonStyle.css";
 
+body {
+    font-family: var(--font-reg);
+}
 /* aside */
 #sideBar{
     display: flex;
@@ -186,4 +189,15 @@ input[type="text"]::placeholder,  input[type="password"]::placeholder {
 .checkboxWrap {
     display: flex;
     width: 100%;
+}
+
+
+/*  더보기 */
+.more {
+    font-size: var(--font-size-14);
+    color: var(--color-font-md);
+    font-family: var(--font-md);
+}
+.more:hover {
+    font-weight: bold;
 }
