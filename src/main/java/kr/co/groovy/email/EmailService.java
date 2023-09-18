@@ -137,7 +137,8 @@ public class EmailService {
             map.put("at", "N");
         }
         map.put("emailEtprCode", emailEtprCode);
-        emailMapper.modifyEmailRedngAt(map);
+        int count = emailMapper.modifyEmailRedngAt(map);
+        log.info("업데이트 수: " + count);
         return map;
     }
 
@@ -214,7 +215,7 @@ public class EmailService {
             map.put("emailSn", emailVO.getEmailSn());
             map.put("nowEmailAddr", employeeVO.getEmplEmail());
 
-            if (emailMapper.existsMessageNumber(map) == 0) {
+            if (emailMapper.existsMessageNumber(map) == 0) { // 메시지 순번 검색 개수가 0이면
                 // 발신부
                 String from = String.valueOf(mail.getFrom()[0]);
                 if (from.startsWith("=?")) {
@@ -237,11 +238,6 @@ public class EmailService {
                     }
                 }
 
-                String subject = mail.getSubject();
-                if (subject == null || subject.isEmpty()) {
-                    subject = "(제목 없음)";
-                }
-
                 String content = "";
                 if (mail.getSubject() != null) {
                     if (mail.isMimeType("multipart/*")) {
@@ -253,7 +249,7 @@ public class EmailService {
                 }
 
                 emailVO.setEmailFromAddr(from);
-                emailVO.setEmailFromSj(subject);
+                emailVO.setEmailFromSj(mail.getSubject());
                 emailVO.setEmailFromCn(content);
                 emailVO.setEmailFromCnType(mail.getContentType());
                 emailVO.setEmailFromSendDate(mail.getSentDate());
@@ -347,9 +343,9 @@ public class EmailService {
         allMails.sort(new Comparator<EmailVO>() {
             @Override
             public int compare(EmailVO vo1, EmailVO vo2) {
-                String emailSn1 = vo1.getEmailEtprCode();
-                String emailSn2 = vo2.getEmailEtprCode();
-                return emailSn1.compareTo(emailSn2) * -1;
+                String seq1 = vo1.getEmailEtprCode().split("-")[1];
+                String seq2 = vo2.getEmailEtprCode().split("-")[1];
+                return seq1.compareTo(seq2) * -1;
             }
         });
         return allMails;
@@ -472,7 +468,7 @@ public class EmailService {
             helper.setCc(ccArr);
             helper.setFrom(emplEmail);
             String emailFromSj = emailVO.getEmailFromSj();
-            if (emailFromSj == null || emailFromSj.equals("")) {
+            if (emailFromSj == null || emailFromSj.isEmpty()) {
                 emailFromSj = "(제목 없음)";
             }
             helper.setSubject(emailFromSj);
