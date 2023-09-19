@@ -2,8 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
-<script defer
-	src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+<script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js" defer></script>
 <style>
 ul {
 	list-style: none;
@@ -46,89 +45,22 @@ ul {
         init(params) {
             this.eGui = document.createElement('div');
             this.eGui.innerHTML = `
-                    <button class="cancelRoom" id="\${params.value}">예약 취소</button>
-                `;
+                <button class="cancelRoom" id="${params.value}">예약 취소</button>
+            `;
             this.id = params.value;
             this.btnReturn = this.eGui.querySelector(".cancelRoom");
-			
-            this.btnReturn.onclick = () => alert(this.id + "ddd 예약 취소 완료");
-        }
 
-        getGui() {
-            return this.eGui;
-        }
-
-        destroy() {
-        }
-    }
-    const getString = function (param) {
-        const str = "${param}";
-        return str;
-    };
-    const StringRenderer = function (params) {
-        return getString(params.value);
-    };
-    function onQuickFilterChanged() {
-        gridOptions.api.setQuickFilter(document.getElementById('quickFilter').value);
-    }
-    const columnDefs = [
-        {field: "fcltyResveSn", headerName: "예약번호", cellRenderer: returnValue},
-        {field: "commonCodeFcltyKindParent", headerName: "시설 종류 구분",getQuickFilterText: (params) => {return params.value}},
-        {field: "commonCodeFcltyKind", headerName: "시설 이름"},
-        {field: "fcltyResveBeginTime", headerName: "시작 시간"},
-        {field: "fcltyResveEndTime", headerName: "끝 시간"},
-        {field: "fcltyResveEmplNm", headerName: "예약 사원"},
-        {field: "fcltyResveEmplId", headerName: "사번"},
-        {field: "fcltyResveRequstMatter", headerName: "요청사항"},
-        {field: "chk", headerName: " ", cellRenderer: ClassBtn},
-    ];
-    const rowData = [];
-        <c:forEach items="${toDayList}" var="room" varStatus="state">
-         <c:set var="beginTime" value="${room.fcltyResveBeginTime}"/>
-         <fmt:formatDate var="fBeginTime" value="${beginTime}" pattern="HH:mm"/>
-         <c:set var="endTime" value="${room.fcltyResveEndTime}"/>
-         <fmt:formatDate var="fEndTime" value="${endTime}" pattern="HH:mm"/>
-        rowData.push({
-            fcltyResveSn: "${room.fcltyResveSn}",
-            commonCodeFcltyKindParent: "${room.fcltyCode}",
-            commonCodeFcltyKind: "${room.fcltyName}",
-            fcltyResveBeginTime: "${fBeginTime}",
-            fcltyResveEndTime: "${fEndTime}",
-            fcltyResveEmplNm: "${room.fcltyEmplName}",
-            fcltyResveEmplId: "${room.fcltyResveEmplId}",
-            fcltyResveRequstMatter : "${room.fcltyResveRequstMatter}",
-            chk:"${room.fcltyResveSn}"
-        })
-        </c:forEach>
-        
-    const gridOptions = {
-        columnDefs: columnDefs,
-        rowData: rowData,
-    };
-
-    /*module.exports = returnCarButtonRenderer;*/
-    document.addEventListener('DOMContentLoaded', () => {
-        const gridDiv = document.querySelector('#myGrid');
-        new agGrid.Grid(gridDiv, gridOptions);
-
-    });
-    function delClickEvent() {
-        let delEvents = document.querySelectorAll("#myGrid");
-        delEvents.forEach(function (delEvent) {
-            delEvent.addEventListener("click", function () {
+            // 클릭 이벤트 핸들러를 정의하고 삭제 버튼에 추가
+            this.btnReturn.addEventListener("click", () => {
                 console.log("취소가 되니?");
-                if (confirm("정말 취소하시겠습니까?")) { // 사용자에게 확인 메시지 표시
-                    const fcltyResveSn = this.getAttribute("data-fcltyResveSn");
-    					console.log(fcltyResveSn);
+                if (confirm("정말 취소하시겠습니까?")) {
+                    const fcltyResveSn = this.id; // params.value 대신 this.id를 사용
+                    console.log(fcltyResveSn);
 
                     // 값이 비어있으면 요청을 보내지 않도록 확인
                     if (fcltyResveSn) {
                         const xhr = new XMLHttpRequest();
-                     // 삭제 요청을 보낼때 중요한 정보가 아니므로 get을 사용하고, 파라미터 값을 가져올때 순번으로 가져오는데
-                     // 쿼리에서 orderBy를 한번에 순번에 적용하지 말고,
-                     // from밑에 orderBy를 하고 순번을 가져올때 카운트랑 별개로 가져와야 하므로,
-                     // varStatus="stat"를 추가해서 카운트는 순번과 별개로 화면에 보여지고,버튼을 누르면 순번만 인식해서 지워짐!
-                        xhr.open("get", "/reservation/deleteReserved?fcltyResveSn=" +fcltyResveSn, true);  
+                        xhr.open("get", "/reservation/deleteReserved?fcltyResveSn=" + fcltyResveSn, true);
                         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                         xhr.onload = function () {
@@ -144,10 +76,72 @@ ul {
                             console.error("네트워크 오류로 인해 삭제 요청이 실패했습니다.");
                         };
 
-                        xhr.send("fcltyResveSn=" + fcltyResveSn);
+                        xhr.send();
                     }
                 }
             });
-        });
+        }
+
+        getGui() {
+            return this.eGui;
+        }
+
+        destroy() {}
     }
+    const getString = function (param) {
+        const str = "${param}";
+        return str;
+    };
+    const StringRenderer = function (params) {
+        return getString(params.value);
+    };
+    function onQuickFilterChanged() {
+        gridOptions.api.setQuickFilter(document.getElementById('quickFilter').value);
+    }
+    const columnDefs = [
+    	{field: "count", headerName: "순서"},
+        {field: "fcltyResveSn", headerName: "예약번호", cellRenderer: returnValue},
+        {field: "commonCodeFcltyKindParent", headerName: "시설 종류 구분",getQuickFilterText: (params) => {return params.value}},
+        {field: "commonCodeFcltyKind", headerName: "시설 이름"},
+        {field: "fcltyResveBeginTime", headerName: "시작 시간"},
+        {field: "fcltyResveEndTime", headerName: "끝 시간"},
+        {field: "fcltyResveEmplNm", headerName: "예약 사원(사번)",
+        	valueGetter: function(params) 
+        	{ return params.data.fcltyResveEmplNm +
+        		" (" + params.data.fcltyResveEmplId + ")"; }},
+        {field: "fcltyResveRequstMatter", headerName: "요청사항"},
+        {field: "chk", headerName: " ", cellRenderer: ClassBtn},
+    ];
+    const rowData = [];
+        <c:forEach items="${reservedRooms}" var="room" varStatus="state">
+         <c:set var="beginTime" value="${room.fcltyResveBeginTime}"/>
+         <fmt:formatDate var="fBeginTime" value="${beginTime}" pattern="HH:mm"/>
+         <c:set var="endTime" value="${room.fcltyResveEndTime}"/>
+         <fmt:formatDate var="fEndTime" value="${endTime}" pattern="HH:mm"/>
+        rowData.push({
+        	count: "${stat.count}",
+            fcltyResveSn: "${room.fcltyResveSn}",
+            commonCodeFcltyKindParent: "${room.fcltyCode}",
+            commonCodeFcltyKind: "${room.fcltyName}",
+            fcltyResveBeginTime: "${fBeginTime}",
+            fcltyResveEndTime: "${fEndTime}",
+            fcltyResveEmplNm: "${room.fcltyEmplName}",(fcltyResveEmplId: "${room.fcltyResveEmplId}"),
+            fcltyResveRequstMatter : "${room.fcltyResveRequstMatter}",
+            chk:"${room.fcltyResveSn}"
+        })
+        </c:forEach>
+        
+    const gridOptions = {
+        columnDefs: columnDefs,
+        rowData: rowData,
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const gridDiv = document.querySelector('#myGrid');
+        new agGrid.Grid(gridDiv, gridOptions);
+
+        // delClickEvent 함수 호출
+        delClickEvent();
+    });
+}
 </script>

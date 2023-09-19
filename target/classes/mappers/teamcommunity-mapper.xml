@@ -76,7 +76,6 @@
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
     </select>
 
-<<<<<<< HEAD
 <!--     <insert id="inputRecomend" parameterType="recomendVO"> -->
 <!--         INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN) -->
 <!--         VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL) -->
@@ -86,7 +85,6 @@
 <!--         FROM RECOMEND -->
 <!--         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId} -->
 <!--     </delete> -->
-=======
     <insert id="inputRecommend" parameterType="recommendVO">
         INSERT INTO RECOMEND (SNTNC_ETPR_CODE, RECOMEND_EMPL_ID, RECOMEND_SN)
         VALUES (#{sntncEtprCode}, #{recomendEmplId}, RECOMEND_SEQ.NEXTVAL)
@@ -97,7 +95,6 @@
         WHERE SNTNC_ETPR_CODE = #{sntncEtprCode} AND RECOMEND_EMPL_ID = #{recomendEmplId}
     </delete>
 
->>>>>>> branch 'main' of https://github.com/dditGroovy/Groovy_v1.2.git
     <!--댓글-->
     <insert id="inputAnswer" parameterType="map">
         INSERT INTO ANSWER( ANSWER_NO,
