@@ -44,6 +44,10 @@ public class SanctionController {
     public String getInProgress() {
         return "sanction/document";
     }
+    @GetMapping("/line")
+    public String getLine() {
+        return "sanction/line/line";
+    }
 
     @GetMapping("/read/{sanctionNo}")
     public String loadSanction(@PathVariable String sanctionNo, Model model) {
