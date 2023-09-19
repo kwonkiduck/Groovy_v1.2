@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -109,14 +111,27 @@ public class EmailController {
         return "email/sendMine";
     }
 
-    @PostMapping("/sendMine")
-    @ResponseBody
-    public String inputMineEmail() {
-        return null;
-    }
-
     @GetMapping("/{emailEtprCode}")
-    public EmailVO getEmail(@PathVariable String emailEtprCode) {
-        return null;
+    public String getEmail(@PathVariable String emailEtprCode, Model model, Principal principal) {
+        EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
+
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAtKind", "EMAIL_REDNG_AT");
+        map.put("at", "Y");
+        map.put("emailEtprCode", emailEtprCode);
+        emailService.modifyEmailRedngAt(map);
+
+        EmailVO emailVO = emailService.getEmail(emailEtprCode, employeeVO.getEmplEmail());
+        List<EmailVO> toList = emailService.getToPerEmail(emailEtprCode, emailVO.getEmailToAddr());
+        List<EmailVO> ccList = emailService.getCcPerEmail(emailEtprCode, emailVO.getEmailCcAddr());
+        int unreadMailCount = emailService.getUnreadMailCount(principal.getName());
+        int allMailCount = emailService.getAllMailCount(employeeVO.getEmplEmail());
+
+        model.addAttribute("unreadMailCount", unreadMailCount);
+        model.addAttribute("allMailCount", allMailCount);
+        model.addAttribute("emailVO", emailVO);
+        model.addAttribute("toList", toList);
+        model.addAttribute("ccList", ccList);
+        return "email/read";
     }
 }

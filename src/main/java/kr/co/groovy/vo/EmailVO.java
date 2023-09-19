@@ -15,6 +15,7 @@ public class EmailVO {
     private int emailSn;
 
     private String emailFromAddr;
+    private String emailFromNm;
     private String emailFromSj;
     private String emailFromCn;
     private String emailFromCnType;
@@ -22,9 +23,11 @@ public class EmailVO {
     private String emailFromTmprStreAt;
 
     private String emailToAddr;
+    private String emailToNm;
     private Date emailToReceivedDate;
 
     private String emailCcAddr;
+    private String emailCcNm;
     private Date emailCcReceivedDate;
 
     private String emailReceivedEmplId;

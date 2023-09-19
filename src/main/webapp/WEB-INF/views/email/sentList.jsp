@@ -66,17 +66,17 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="emailVO" items="${list}">
-            <tr data-id="${emailVO.emailEtprCode}">
+        <c:forEach var="emailCc" items="${list}">
+            <tr data-id="${emailCc.emailEtprCode}">
                 <td><input type="checkbox" class="selectmail"></td>
                 <td onclick="modifyTableAt(this)" data-type="imprtnc">
-                    <input type="hidden" value="${emailVO.emailDeleteAt}" name="deleteAt">
+                    <input type="hidden" value="${emailCc.emailDeleteAt}" name="deleteAt">
                 </td>
                 <td>파일존재여부</td>
 
-                <td>${emailVO.emailFromAddr}</td>
-                <td><a href="#">${emailVO.emailFromSj}</a></td>
-                <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
+                <td>${emailCc.emailFromAddr}</td>
+                <td><a href="#">${emailCc.emailFromSj}</a></td>
+                <c:set var="sendDateStr" value="${emailCc.emailFromSendDate}"/>
                 <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
                 <td>${sendDate}</td>
             </tr>

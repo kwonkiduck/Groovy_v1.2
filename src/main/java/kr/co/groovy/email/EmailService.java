@@ -81,6 +81,36 @@ public class EmailService {
         return emailMapper.getUnreadMailCount(emplId);
     }
 
+    public int getAllMailCount(String emailAddr) {
+        return emailMapper.getAllMailCount(emailAddr);
+    }
+
+    public EmailVO getEmail(String emailEtprCode, String emailAddr) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailEtprCode", emailEtprCode);
+        map.put("emailFromAddr", emailAddr);
+        EmailVO nowEmail = emailMapper.getNowEmail(map);
+        String emailFromAddr = nowEmail.getEmailFromAddr();
+        if (emailFromAddr.contains("<")) {
+            nowEmail.setEmailFromAddr(emailFromAddr.substring(emailFromAddr.indexOf('<') + 1, emailFromAddr.indexOf('>')));
+        }
+        return nowEmail;
+    }
+
+    public List<EmailVO> getToPerEmail(String emailEtprCode, String emailAddr) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailEtprCode", emailEtprCode);
+        map.put("emailAddr", emailAddr);
+        return emailMapper.getToPerEmail(map);
+    }
+
+    public List<EmailVO> getCcPerEmail(String emailEtprCode, String emailAddr) {
+        Map<String, String> map = new HashMap<>();
+        map.put("emailEtprCode", emailEtprCode);
+        map.put("emailAddr", emailAddr);
+        return emailMapper.getCcPerEmail(map);
+    }
+
     public List<EmailVO> getAllReceivedMailList(EmployeeVO employeeVO) {
         Map<String, String> map = new HashMap<>();
         map.put("emailAddr", employeeVO.getEmplEmail());
@@ -99,7 +129,6 @@ public class EmailService {
                 return emailSn1.compareTo(emailSn2) * -1;
             }
         });
-
         return allReceivedMails;
     }
 
@@ -333,7 +362,6 @@ public class EmailService {
         for (EmailVO mail : allSentMailsByMe) {
             mail.setEmailBoxName("보낸메일함");
             getEmplNmByEmplEmail(mail);
-
         }
         List<EmailVO> allMails = new ArrayList<>();
         allMails.addAll(receivedMails);
@@ -343,8 +371,8 @@ public class EmailService {
         allMails.sort(new Comparator<EmailVO>() {
             @Override
             public int compare(EmailVO vo1, EmailVO vo2) {
-                String seq1 = vo1.getEmailEtprCode().split("-")[1];
-                String seq2 = vo2.getEmailEtprCode().split("-")[1];
+                Date seq1 = vo1.getEmailFromSendDate();
+                Date seq2 = vo2.getEmailFromSendDate();
                 return seq1.compareTo(seq2) * -1;
             }
         });
