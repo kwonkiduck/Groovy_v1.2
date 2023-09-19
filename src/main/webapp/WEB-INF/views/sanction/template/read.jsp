@@ -58,7 +58,7 @@
             </div>
             <br/>
             <div class="formTitle">
-                    ${sanction.elctrnSanctnSj}
+                    ${sanction.elctrnSanctnSj}${sanction.elctrnSanctnAfterPrcs}
             </div>
         </div>
         <div class="formContent">
@@ -113,6 +113,11 @@
         let rejectReason;
         let rejectId;
         let etprCode = '${sanction.elctrnSanctnEtprCode}';
+        let afterPrcs = '${sanction.elctrnSanctnAfterPrcs}'
+        $(function (){
+
+            console.log(afterPrcs);
+        })
 
         function closeWindow() {
             window.close();
@@ -141,9 +146,26 @@
                 type: 'PUT',
                 success: function (data) {
                     alert('최종 승인 처리 성공')
+                    afterFinalApprove();
                 },
                 error: function (xhr) {
                     alert('최종 승인 처리 실패')
+                }
+            });
+        }
+
+        /* 후처리 실행 */
+        function afterFinalApprove() {
+            $.ajax({
+                url: `/sanction/api/reflection`,
+                type: "POST",
+                data: afterPrcs,
+                contentType: "application/json",
+                success: function (data) {
+                    alert("후처리 실행(리플랙션) 성공");
+                },
+                error: function (xhr) {
+                    alert("후처리 실행(리플랙션) 실패");
                 }
             });
         }

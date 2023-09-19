@@ -7,6 +7,7 @@ import kr.co.groovy.vo.JobVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface JobMapper {
@@ -37,4 +38,6 @@ public interface JobMapper {
     JobVO getReceiveJobByNo(int jobNo);
 
     void updateJobStatus(JobProgressVO jobProgressVO);
+
+    List<JobVO> getJobByDate(Map<String, Object> map);
 }

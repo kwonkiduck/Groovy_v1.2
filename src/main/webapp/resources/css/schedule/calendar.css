@@ -236,7 +236,7 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
 /*.fc .fc-button-primary:not(:disabled):active:focus,
   .fc .fc-button-primary:not(:disabled).fc-button-active:focus {
     box-shadow: 0 0 0 0.2rem rgba(76, 91, 106, 0.5);
-  */}
+  */
 .fc {
 
   /* icons within buttons */
@@ -300,6 +300,9 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     -webkit-overflow-scrolling: touch;
     position: relative; /* for abs-positioned elements within */
   }
+.fc-scroller.fc-scroller-liquid-absolute{
+    overflow: hidden;
+}
 .fc .fc-scroller-liquid {
     height: 100%;
   }

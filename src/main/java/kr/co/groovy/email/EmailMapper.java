@@ -28,7 +28,7 @@ public interface EmailMapper {
 
     int existsMessageNumber(Map<String, Object> map);
 
-    void modifyEmailRedngAt(Map<String, String> map);
+    int modifyEmailRedngAt(Map<String, String> map);
 
     void deleteMails(String emailEtprCode);
 

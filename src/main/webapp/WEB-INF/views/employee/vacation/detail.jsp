@@ -10,15 +10,17 @@
             <td>${detailVO.yrycUseDtlsRm}</td>
             <td>${detailVO.commonCodeYrycUseKind}</td>
             <td>${detailVO.commonCodeYrycUseSe}</td>
+            <td>${detailVO.commonCodeYrycState}</td>
         </tr>
     </table>
     <c:choose>
-        <c:when test="${empty detailVO.elctrnSanctnEtprCode}">
+        <c:when test="${detailVO.commonCodeYrycState == '미상신'}">
             <button type="button" id="modifyVacation">수정하기</button>
             <button type="button" id="startSanction">결재하기</button>
         </c:when>
+        <%--    결재 했을 때     --%>
         <c:otherwise>
-            <!-- 결재 했을 때 옵션 추가 (목록으로 이런 거) -->
+            <a href="${pageContext.request.contextPath}/vacation/record">목록으로</button>
         </c:otherwise>
     </c:choose>
 </div>
@@ -32,7 +34,7 @@
     }
     $("#startSanction").on("click", function () {
         $("#modifyVacation").prop("disabled", true)
-        window.open(`/sanction/write/DEPT010?format=\${param}`, "결재", "width = 1200, height = 1200")
+        window.open(`/sanction/format/DEPT010/\${param}`, "결재", "width = 1200, height = 1200")
     })
 
     function refreshParent() {

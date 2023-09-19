@@ -136,14 +136,16 @@
                                   ELCTRN_SANCTN_DC,
                                   ELCTRN_SANCTN_DRFT_EMPL_ID,
                                   ELCTRN_SANCTN_RECOM_DATE,
-                                  COMMON_CODE_SANCT_PROGRS)
+                                  COMMON_CODE_SANCT_PROGRS,
+                                  ELCTRN_SANCTN_AFTER_PRCS)
         VALUES (#{elctrnSanctnEtprCode},
                 #{elctrnSanctnFormatCode},
                 #{elctrnSanctnSj},
                 #{elctrnSanctnDc},
                 #{elctrnSanctnDrftEmplId},
                 SYSDATE,
-                #{commonCodeSanctProgrs})
+                #{commonCodeSanctProgrs},
+                #{elctrnSanctnAfterPrcs})
     </insert>
     <insert id="inputLine" parameterType="sanctionLineVO">
         /* 결재 기안 - 결재 라인 등록 */
@@ -223,6 +225,7 @@
                S.ELCTRN_SANCTN_RECOM_DATE,
                S.COMMON_CODE_SANCT_PROGRS,
                S.ELCTRN_SANCTN_FINAL_DATE,
+               S.ELCTRN_SANCTN_AFTER_PRCS,
                E.EMPL_NM,
                E.COMMON_CODE_CLSF,
                E.COMMON_CODE_DEPT,

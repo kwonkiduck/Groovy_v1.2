@@ -1,6 +1,7 @@
 package kr.co.groovy.job;
 
 import kr.co.groovy.common.CommonService;
+import kr.co.groovy.commute.CommuteService;
 import kr.co.groovy.enums.*;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
@@ -14,16 +15,19 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/job")
 public class JobController {
     final JobService service;
     final CommonService commonService;
+    final CommuteService commuteService;
 
-    public JobController(JobService service, CommonService commonService) {
+    public JobController(JobService service, CommonService commonService, CommuteService commuteService) {
         this.service = service;
         this.commonService = commonService;
+        this.commuteService = commuteService;
     }
 
     //업무일지
@@ -97,8 +101,15 @@ public class JobController {
         String emplId = principal.getName();
         List<JobVO> requestJobList = service.getAllJobById(emplId);
         List<JobVO> receiveJobList = service.getAllReceiveJobById(emplId);
+
+        List<Map<String, Object>> dayOfWeek = service.dayOfWeek();
+        List<List<JobVO>> jobListByDate = service.jobListByDate(emplId);
+
+        model.addAttribute("dayOfWeek", dayOfWeek);
         model.addAttribute("requestJobList", requestJobList);
         model.addAttribute("receiveJobList", receiveJobList);
+        model.addAttribute("jobListByDate", jobListByDate);
+
         return "employee/job/job";
     }
 
@@ -108,7 +119,7 @@ public class JobController {
         int maxJobNo = service.getMaxJobNo() + 1;
         String emplId = principal.getName();
         jobVO.setJobNo(maxJobNo);
-         jobVO.setJobRequstEmplId(emplId);
+        jobVO.setJobRequstEmplId(emplId);
         service.insertJob(jobVO);
 
         jobProgressVO.setJobNo(maxJobNo);
@@ -155,14 +166,7 @@ public class JobController {
         jobProgressVO.setJobRecptnEmplId(principal.getName());
         String dutyStatus = jobProgressVO.getCommonCodeDutySttus();
         jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel(dutyStatus));
-        System.out.println("jobProgressVO = " + jobProgressVO);
 
         service.updateJobStatus(jobProgressVO);
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "employee/job/yryctest";
-    }
-
 }

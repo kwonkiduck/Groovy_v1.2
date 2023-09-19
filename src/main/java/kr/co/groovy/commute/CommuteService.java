@@ -5,13 +5,14 @@ import kr.co.groovy.enums.VacationKind;
 import kr.co.groovy.vacation.VacationMapper;
 import kr.co.groovy.vo.CommuteVO;
 import kr.co.groovy.vo.VacationUseVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @Service
 public class CommuteService {
     final CommuteMapper commuteMapper;
@@ -64,11 +65,12 @@ public class CommuteService {
 
     public int getMaxWeeklyWorkTimeByDay(CommuteVO commuteVO) {return commuteMapper.getMaxWeeklyWorkTimeByDay(commuteVO);}
 
-    public void insertCommuteByVacation(int yrycUseDtlsSn) {
-        VacationUseVO vo = vacationMapper.loadVacationBySn(yrycUseDtlsSn);
+    public void insertCommuteByVacation(Map<String, Object> paramMap) {
+        log.info("insertCommuteByVacation");
+        int id = Integer.parseInt((String) paramMap.get("vacationId"));
+        VacationUseVO vo = vacationMapper.loadVacationBySn(id);
         String vacationUse = vo.getCommonCodeYrycUseSe();
         String vacationKind = vo.getCommonCodeYrycUseKind();
-        vacationMapper.modifyVacationCount(vo);
 
         Date beginDate = vo.getYrycUseDtlsBeginDate();
         Date endDate = vo.getYrycUseDtlsEndDate();
@@ -87,11 +89,11 @@ public class CommuteService {
 
             if (vacationUse.equals(String.valueOf(VacationKind.YRYC020))
                     || vacationUse.equals(String.valueOf(VacationKind.YRYC021))) {
-                commuteVO.setDclzDailWorkTime(4);
-                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + 4);
+                commuteVO.setDclzDailWorkTime(4 * 60);
+                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + (4 * 60));
             } else {
-                commuteVO.setDclzDailWorkTime(8);
-                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + 8);
+                commuteVO.setDclzDailWorkTime(8 * 60);
+                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + (8 * 60));
             }
             if (vacationKind.equals(String.valueOf(VacationKind.YRYC010))) {
                 commuteVO.setCommonCodeLaborSttus(String.valueOf(LaborStatus.LABOR_STTUS011));
@@ -101,6 +103,7 @@ public class CommuteService {
             String workWik = commuteMapper.getWorkWik(String.valueOf(currentDate));
             commuteVO.setDclzWorkWik(workWik);
 
+            vacationMapper.modifyVacationCount(vo);
             commuteMapper.insertCommute(commuteVO);
 
             calendar.add(Calendar.DATE, 1);

@@ -1,5 +1,6 @@
 package kr.co.groovy.sanction;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.groovy.enums.ClassOfPosition;
@@ -9,6 +10,7 @@ import kr.co.groovy.enums.SanctionProgress;
 import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
@@ -52,10 +54,15 @@ public class SanctionService {
 
     public void startApprove(@RequestBody Map<String, Object> request) {
         try {
-            String approvalType = (String) request.get("approvalType");
+            String className = (String) request.get("className");
+            log.info("className" + className);
             String methodName = (String) request.get("methodName");
+            log.info("methodName" + methodName);
+
             Map<String, Object> parameters = (Map<String, Object>) request.get("parameters");
-            Class<?> serviceType = Class.forName(approvalType);
+            log.info("parameters" + parameters);
+
+            Class<?> serviceType = Class.forName(className);
             Object serviceInstance = context.getBean(serviceType);
             Method method = serviceType.getDeclaredMethod(methodName, Map.class);
             method.invoke(serviceInstance, parameters);
@@ -97,13 +104,13 @@ public class SanctionService {
     }
 
     public void inputSanction(ParamMap requestData) {
-        log.info(String.valueOf(requestData));
         SanctionVO vo = new SanctionVO();
         String etprCode = requestData.getString("etprCode");
         String formatCode = requestData.getString("formatCode");
         String writer = requestData.getString("writer");
         String title = requestData.getString("title");
         String content = requestData.getString("content");
+        String afterProcess = requestData.getString("afterProcess");
 
         vo.setElctrnSanctnEtprCode(etprCode);
         vo.setElctrnSanctnFormatCode(formatCode);
@@ -111,10 +118,10 @@ public class SanctionService {
         vo.setElctrnSanctnDc(content);
         vo.setElctrnSanctnDrftEmplId(writer);
         vo.setCommonCodeSanctProgrs("SANCTN010");
+        vo.setElctrnSanctnAfterPrcs(afterProcess);
         mapper.inputSanction(vo);
 
         List<String> approverList = requestData.get("approver", List.class);
-        log.info(approverList + "");
 
         if (approverList != null) {
             for (int i = 0; i < approverList.size(); i++) {
@@ -222,7 +229,6 @@ public class SanctionService {
                 throw new RuntimeException(e);
             }
         }
-        log.info(resultList.toString());
         return resultList;
     }
 

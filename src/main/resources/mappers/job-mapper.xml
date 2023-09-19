@@ -202,4 +202,19 @@
         WHERE JOB_NO = #{jobNo}
           AND JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
     </update>
+
+    <select id="getJobByDate" parameterType="map" resultMap="jobMap">
+        SELECT J.JOB_NO,
+               J.JOB_SJ,
+               J.JOB_CLOS_DATE,
+               J.COMMON_CODE_DUTY_KIND,
+               P.COMMON_CODE_DUTY_PROGRS
+        FROM JOB J,
+             JOB_PROGRS P
+        WHERE to_date(to_char(#{date}, 'yyyy-mm-dd'),'yyyy-mm-dd') BETWEEN JOB_BEGIN_DATE AND JOB_CLOS_DATE
+          AND J.JOB_NO = P.JOB_NO
+          AND COMMON_CODE_DUTY_STTUS = 'DUTY021'
+          AND P.JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
+        ORDER BY J.JOB_CLOS_DATE
+    </select>
 </mapper>
