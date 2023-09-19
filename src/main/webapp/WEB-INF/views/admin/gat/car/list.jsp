@@ -49,7 +49,6 @@
             this.eGui = document.createElement('div');
             if (rowData.pop().vhcleResveReturnAt == 'Y') {
                 this.eGui.innerHTML = `
-                    <button class="returnCarBtn" id="\${params.value}" style="display: none;">반납 확인</button>
                     <p class="returnStatus">반납완료</p>
                 `;
 

@@ -87,9 +87,7 @@
                                 <p class="returnStatus" style="display: none;">반납완료</p>
                             </c:if>
                             <c:if test="${vehicleVO.vhcleResveReturnAt == 'Y'}">
-                                <button class="returnCarBtn" id="\${params.value}" style="display: none;">반납 확인</button>
                                 <p class="returnStatus">반납완료</p>
-
                             </c:if>
                         </td>
                     </tr>
@@ -137,7 +135,7 @@
     </div>
 </div>
 <script>
-    let btnReturn = document.querySelector(".returnCarBtn");
+    let btnReturn = document.querySelectorAll(".returnCarBtn");
     let returnStatus = document.querySelector(".returnStatus");
 
     function modifyReturnAt() {
