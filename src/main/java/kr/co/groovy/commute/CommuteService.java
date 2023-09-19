@@ -89,11 +89,11 @@ public class CommuteService {
 
             if (vacationUse.equals(String.valueOf(VacationKind.YRYC020))
                     || vacationUse.equals(String.valueOf(VacationKind.YRYC021))) {
-                commuteVO.setDclzDailWorkTime(4);
-                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + 4);
+                commuteVO.setDclzDailWorkTime(4 * 60);
+                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + (4 * 60));
             } else {
-                commuteVO.setDclzDailWorkTime(8);
-                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + 8);
+                commuteVO.setDclzDailWorkTime(8 * 60);
+                commuteVO.setDclzWikWorkTime(getMaxWeeklyWorkTimeByDay(commuteVO) + (8 * 60));
             }
             if (vacationKind.equals(String.valueOf(VacationKind.YRYC010))) {
                 commuteVO.setCommonCodeLaborSttus(String.valueOf(LaborStatus.LABOR_STTUS011));

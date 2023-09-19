@@ -8,7 +8,6 @@ import kr.co.groovy.vo.JobProgressVO;
 import kr.co.groovy.vo.JobVO;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
