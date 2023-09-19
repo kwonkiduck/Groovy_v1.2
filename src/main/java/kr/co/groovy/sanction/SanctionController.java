@@ -34,6 +34,7 @@ public class SanctionController {
         return "sanction/template/write";
 
     }
+
     @GetMapping("/box")
     public String getSanctionBox() {
         return "sanction/box";
@@ -62,15 +63,17 @@ public class SanctionController {
 
     /**
      * 양식 불러오기
+     *
      * @param kind 양식 종류(부서)
      * @param code 양식 코드
      */
     @GetMapping("/format/{kind}/{code}")
-    public String writeSanction(@PathVariable String kind, @PathVariable String code,Model model) {
+    public String writeSanction(@PathVariable String kind, @PathVariable String code, Model model) {
         String etprCode = service.getSeq(Department.valueOf(kind).label());
         SanctionFormatVO vo = service.loadFormat(code);
         model.addAttribute("format", vo);
         model.addAttribute("etprCode", etprCode);
+        model.addAttribute("dept", kind);
         return "sanction/template/write";
     }
 }

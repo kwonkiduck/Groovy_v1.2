@@ -5,7 +5,7 @@
     <h2>휴가 기록</h2>
     <table border="1">
         <tr>
-            <td id="vacationId">${detailVO.yrycUseDtlsSn}</td>
+            <td id="sanctionNum">${detailVO.yrycUseDtlsSn}</td>
             <td>${detailVO.yrycUseDtlsBeginDate} - ${detailVO.yrycUseDtlsEndDate}</td>
             <td>${detailVO.yrycUseDtlsRm}</td>
             <td>${detailVO.commonCodeYrycUseKind}</td>
@@ -20,7 +20,7 @@
         </c:when>
         <%--    결재 했을 때     --%>
         <c:otherwise>
-            <a href="${pageContext.request.contextPath}/vacation/record">목록으로</button>
+            <a href="${pageContext.request.contextPath}/vacation/record">목록으로</a>
         </c:otherwise>
     </c:choose>
 </div>

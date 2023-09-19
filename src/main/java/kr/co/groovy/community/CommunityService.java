@@ -1,7 +1,8 @@
-package kr.co.groovy.teamcommunity;
+package kr.co.groovy.community;
 
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.*;
 
 @Slf4j
 @Service
+@EnableScheduling
 public class CommunityService {
     final CommunityMapper mapper;
     final String uploadPath;

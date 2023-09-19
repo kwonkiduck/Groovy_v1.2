@@ -1,11 +1,8 @@
-package kr.co.groovy.teamcommunity;
+package kr.co.groovy.community;
 
 import kr.co.groovy.vo.*;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
 
-import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

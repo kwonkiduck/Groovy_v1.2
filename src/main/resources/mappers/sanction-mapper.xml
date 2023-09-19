@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.sanction.SanctionMapper">
     <select id="loadFormat" resultType="sanctionFormatVO">
-        SELECT /* 결재 템플릿 불러오기 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 템플릿 불러오기 */
+        SELECT
             F.COMMON_CODE_SANCTN_FORMAT,
             F.FORMAT_SANCTN_KND,
             F.FORMAT_SJ,
@@ -14,7 +15,8 @@
             COMMON_CODE_SANCTN_FORMAT = #{format}
     </select>
     <select id="getSeq" parameterType="String" resultType="String">
-        SELECT /* 부서별 결재 문서 번호 생성 */
+        /* kr.co.groovy.sanction.SanctionMapper 부서별 결재 문서 번호 생성 */
+        SELECT
                 #{formatSanctnKnd} || '-' || TO_CHAR(SYSDATE, 'YYYY') || '-' ||
                 LPAD(
                         (SELECT TO_NUMBER(COUNT(*)) + 1
@@ -26,7 +28,7 @@
             DUAL
     </select>
     <select id="getStatus" parameterType="String" resultType="int">
-        /* 결재함 기안, 완료, 반려 결재 개수 불러오기 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재함 기안, 완료, 반려 결재 개수 불러오기 */
         SELECT
             COUNT(*)
         FROM
@@ -54,7 +56,7 @@
             COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
     </select>
     <update id="approve" parameterType="String">
-        /* 결재 승인 - 다음 결재 순번자의 상태 변경 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 승인 - 다음 결재 순번자의 상태 변경 */
         {CALL DECLARE
         BEGIN
             UPDATE
@@ -88,7 +90,7 @@
         END}
     </update>
     <update id="finalApprove" parameterType="String">
-        /* 결재 최종 승인 - 결재 문서의 상태 변경 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 최종 승인 - 결재 문서의 상태 변경 */
         {CALL DECLARE
         BEGIN
             UPDATE SANCTN_LINE
@@ -105,7 +107,7 @@
 
     </update>
     <update id="reject" parameterType="String">
-        /* 결재 반려 - 결재 문서의 상태 변경 및 반려 사유 등록 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 반려 - 결재 문서의 상태 변경 및 반려 사유 등록 */
         {CALL DECLARE
         BEGIN
             UPDATE SANCTN_LINE
@@ -122,14 +124,14 @@
 
     </update>
     <update id="collect" parameterType="String">
-        /* 결재 회수 - 결재 문서의 상태 변경 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 회수 - 결재 문서의 상태 변경 */
         UPDATE ELCTRN_SANCTN
         SET COMMON_CODE_SANCT_PROGRS = 'SANCTN012'
         WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </update>
 
     <insert id="inputSanction" parameterType="sanctionVO">
-        /* 결재 기안 - 결재 등록 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 기안 - 결재 등록 */
         INSERT INTO ELCTRN_SANCTN(ELCTRN_SANCTN_ETPR_CODE,
                                   ELCTRN_SANCTN_FORMAT_CODE,
                                   ELCTRN_SANCTN_SJ,
@@ -148,7 +150,7 @@
                 #{elctrnSanctnAfterPrcs})
     </insert>
     <insert id="inputLine" parameterType="sanctionLineVO">
-        /* 결재 기안 - 결재 라인 등록 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 기안 - 결재 라인 등록 */
         INSERT INTO SANCTN_LINE(ELCTRN_SANCTN_ETPR_CODE,
                                 ELCTRN_SANCTNEMPL_ID,
                                 SANCTN_LINE_ORDR,
@@ -161,14 +163,14 @@
                 #{elctrnSanctnFinalAt})
     </insert>
     <insert id="inputRefrn" parameterType="referenceVO">
-        /* 결재 기안 - 결재 참조 등록 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 기안 - 결재 참조 등록 */
         INSERT INTO SANCTN_REFRN( SANCTN_REFRN_EMPL_ID
                                 , ELCTRN_SANCTN_ETPR_CODE)
         VALUES (#{sanctnRefrnEmplId},
                 #{elctrnSanctnEtprCode})
     </insert>
     <insert id="uploadFile" parameterType="uploadFileVO">
-        /* 결재 기안 - 첨부 파일 업로드 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 기안 - 첨부 파일 업로드 */
         INSERT INTO UPLOAD_FILE(UPLOAD_FILE_SN,
                                 UPLOAD_FILE_ETPR_CODE,
                                 UPLOAD_FILE_ORGINL_NM,
@@ -183,7 +185,7 @@
                 sysdate)
     </insert>
     <select id="loadLine" parameterType="String" resultType="sanctionLineVO">
-        /* 결재 문서 불러오기 - 결재선 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 문서 불러오기 - 결재선 */
         SELECT L.ELCTRN_SANCTN_ETPR_CODE,
                L.ELCTRN_SANCTNEMPL_ID,
                L.SANCTN_LINE_ORDR,
@@ -204,7 +206,7 @@
         ORDER BY L.SANCTN_LINE_ORDR ASC
     </select>
     <select id="loadRefrn" parameterType="String" resultType="referenceVO">
-        /* 결재 문서 불러오기 - 참조 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 문서 불러오기 - 참조 */
         SELECT R.SANCTN_REFRN_EMPL_ID,
                R.ELCTRN_SANCTN_ETPR_CODE,
                E.EMPL_NM,
@@ -216,7 +218,7 @@
           AND R.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </select>
     <select id="loadSanction" parameterType="String" resultType="sanctionVO">
-        /* 결재 문서 불러오기 - 결재 문서 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 문서 불러오기 - 결재 문서 */
         SELECT S.ELCTRN_SANCTN_ETPR_CODE,
                S.ELCTRN_SANCTN_FORMAT_CODE,
                S.ELCTRN_SANCTN_SJ,
@@ -238,7 +240,7 @@
           AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </select>
     <select id="loadAwaiting" parameterType="String" resultType="sanctionLineVO">
-        /* 결재함 - 결재(받은) 문서 불러오기 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재함 - 결재(받은) 문서 불러오기 */
         SELECT E.ELCTRN_SANCTN_ETPR_CODE,
                E.ELCTRN_SANCTN_SJ,
                P.EMPL_NM,
@@ -255,7 +257,7 @@
         ORDER BY L.COMMON_CODE_SANCT_PROGRS, L.ELCTRN_SANCTN_ETPR_CODE ASC
     </select>
     <select id="loadSanctionFile" parameterType="String" resultType="uploadFileVO">
-        /* 결재 문서 불러오기 - 첨부 파일 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재 문서 불러오기 - 첨부 파일 */
         SELECT U.UPLOAD_FILE_SN,
                U.UPLOAD_FILE_ETPR_CODE,
                U.UPLOAD_FILE_ORGINL_NM,
@@ -268,7 +270,7 @@
           AND E.ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </select>
     <select id="loadAllLine" parameterType="String" resultType="employeeVO">
-        /* 결재선 지정 - 접속 사원을 제외한 조직도 불러오기 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재선 지정 - 접속 사원을 제외한 조직도 불러오기 */
         SELECT E.EMPL_ID,
                E.EMPL_NM,
                E.EMPL_TELNO,
@@ -282,7 +284,7 @@
         ORDER BY TO_NUMBER(SUBSTR(E.COMMON_CODE_CLSF, 5)), E.EMPL_ENCPN ASC
     </select>
     <select id="loadReference" parameterType="String" resultType="sanctionVO">
-        /* 결재함 - 참조(받은) 문서 불러오기 */
+        /* kr.co.groovy.sanction.SanctionMapper 결재함 - 참조(받은) 문서 불러오기 */
         SELECT E.ELCTRN_SANCTN_ETPR_CODE,
                E.ELCTRN_SANCTN_SJ,
                P.EMPL_NM,
@@ -297,7 +299,7 @@
         ORDER BY E.COMMON_CODE_SANCT_PROGRS, E.ELCTRN_SANCTN_ETPR_CODE ASC
     </select>
     <insert id="inputBookmark" parameterType="sanctionBookmarkVO">
-        /* 나의 결재선 등록 */
+        /* kr.co.groovy.sanction.SanctionMapper 나의 결재선 등록 */
         INSERT INTO SANCTN_LINE_BOOKMARK(SANCTION_LINE_BOOKMARK_SN,
                                          ELCTRN_SANCTN_DRFT_EMPL_ID,
                                          ELCTRN_SANCTN_BOOKMARK_NAME,
@@ -308,7 +310,7 @@
                 #{elctrnSanctnLineBookmark})
     </insert>
     <select id="loadBookmark" parameterType="String" resultType="sanctionBookmarkVO">
-        /* 나의 결재선 조회 */
+        /* kr.co.groovy.sanction.SanctionMapper 나의 결재선 조회 */
         SELECT B.SANCTION_LINE_BOOKMARK_SN,
                B.ELCTRN_SANCTN_DRFT_EMPL_ID,
                B.ELCTRN_SANCTN_BOOKMARK_NAME,
@@ -317,13 +319,13 @@
         WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{emplId}
     </select>
     <delete id="deleteBookmark" parameterType="String">
-        /* 나의 결재선 삭제  */
+        /* kr.co.groovy.sanction.SanctionMapper 나의 결재선 삭제  */
         DELETE
         FROM SANCTN_LINE_BOOKMARK
         WHERE SANCTION_LINE_BOOKMARK_SN = #{sanctionLineBookmarkSn}
     </delete>
     <select id="loadVacationSanction" resultType="sanctionVO">
-        /* 인사팀 결재 관리 - 휴가 신청 내역 불러오기 */
+        /* kr.co.groovy.sanction.SanctionMapper 인사팀 결재 관리 - 휴가 신청 내역 불러오기 */
         SELECT S.ELCTRN_SANCTN_ETPR_CODE,   -- 결재 번호
                S.ELCTRN_SANCTN_FORMAT_CODE, -- 결재 양식
                S.ELCTRN_SANCTN_SJ,          -- 결재 제목

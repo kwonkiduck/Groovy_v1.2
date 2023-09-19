@@ -69,8 +69,9 @@
             <label for="empPos5">팀장</label>
             <input type="radio" name="commonCodeClsf" id="empPos6" value="CLSF011">
             <label for="empPos6">부장</label>
-            <%--            <input type="radio" name="commonCodeClsf" id="empPos7" value="CLSF010">--%>
-            <%--            <label for="empPos7">대표이사</label>--%>
+            <%--TODO 지우기 --%>
+            <input type="radio" name="commonCodeClsf" id="empPos7" value="CLSF010">
+            <label for="empPos7">대표이사</label>
 
             <%-- commonCodeDept --%>
             <label>부서</label>
@@ -80,7 +81,8 @@
                 <option value="DEPT012">영업팀</option>
                 <option value="DEPT013">홍보팀</option>
                 <option value="DEPT014">총무팀</option>
-                <%--                <option value="DEPT015">경영자</option>--%>
+                <%--TODO 지우기 --%>
+                <option value="DEPT015">경영자</option>
             </select><br/>
 
             <label>입사일</label>
