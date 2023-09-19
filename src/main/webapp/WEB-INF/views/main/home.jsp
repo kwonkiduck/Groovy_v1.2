@@ -20,8 +20,7 @@
     <sec:authentication property="principal" var="CustomUser"/>
     <div class="content">
         <div class="content-header">
-            <h2 class="font-24 font-md hello"><strong
-                    class="strong">안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
+            <h2 class="font-24 font-md hello"><strong class="strong">안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
                 오늘 업무도 힘차게 파이팅! &#x1F64C;</h2>
         </div>
         <div class="content-body">
@@ -150,74 +149,74 @@
             </div>
         </div>
 
-            <%-- <h3>해야 할 일</h3>
-             <table border="1" style="width: 50%;">
-                 <thead>
-                 <tr>
-                     <th>업무결과</th>
-                     <th>업무제목</th>
-                     <th>마감날짜</th>
-                 </tr>
-                 </thead>
-                 <tbody>
-                 <tr>
-                     <td>진행전</td>
-                     <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-                     <td>2023-07-30</td>
-                 </tr>
-                 <tr>
-                     <td>진행중</td>
-                     <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-                     <td>2023-07-30</td>
-                 </tr>
-                 <tr>
-                     <td>완료</td>
-                     <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-                     <td>2023-07-30</td>
-                 </tr>
-                 </tbody>
-             </table>
-             <br/>
-             <hr/>
+       <%-- <h3>해야 할 일</h3>
+        <table border="1" style="width: 50%;">
+            <thead>
+            <tr>
+                <th>업무결과</th>
+                <th>업무제목</th>
+                <th>마감날짜</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>진행전</td>
+                <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
+                <td>2023-07-30</td>
+            </tr>
+            <tr>
+                <td>진행중</td>
+                <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
+                <td>2023-07-30</td>
+            </tr>
+            <tr>
+                <td>완료</td>
+                <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
+                <td>2023-07-30</td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+        <hr/>
 
-             <h3>공지사항</h3>
-             <div id="mainNotice"></div>
-             <br/>
-             <hr/>
+        <h3>공지사항</h3>
+        <div id="mainNotice"></div>
+        <br/>
+        <hr/>
 
-             <h3>진행 중인 결재</h3>
-             <div id="sanctionBox">
-             </div>
+        <h3>진행 중인 결재</h3>
+        <div id="sanctionBox">
+        </div>
 
-             <br/>
-             <hr/>
-             <h3>오늘의 식단</h3>
-             <div id="dietWrap">
-             </div>
+        <br/>
+        <hr/>
+        <h3>오늘의 식단</h3>
+        <div id="dietWrap">
+        </div>
 
-             <br/>
-             <hr/>
-             <h3>이번달 생일</h3>
-             <div id="birthdayWrap">
-             </div>
+        <br/>
+        <hr/>
+        <h3>이번달 생일</h3>
+        <div id="birthdayWrap">
+        </div>
 
-             <br/>
-             <hr/>
-             <h3>일정</h3>
-             <div id="calendar">
-             </div>
+        <br/>
+        <hr/>
+        <h3>일정</h3>
+        <div id="calendar">
+        </div>
 
-             <br/>
-             <hr/>
-             <h3>날씨</h3>
-             <div id="weather"></div>
-             <img id="weatherImg" src="">
-             <form action="/main/uploadFile" method="post" enctype="multipart/form-data">
-                 <input type="file" name="defaultFile">
-                 <button type="submit">저장</button>
-             </form>
-             <p>파일 업로드 확인용</p>
-             <img src="/uploads/test/test.png"/>--%>
+        <br/>
+        <hr/>
+        <h3>날씨</h3>
+        <div id="weather"></div>
+        <img id="weatherImg" src="">
+        <form action="/main/uploadFile" method="post" enctype="multipart/form-data">
+            <input type="file" name="defaultFile">
+            <button type="submit">저장</button>
+        </form>
+        <p>파일 업로드 확인용</p>
+        <img src="/uploads/test/test.png"/>--%>
     </div>
 
 </sec:authorize>
@@ -255,8 +254,8 @@
                 $.each(data, function (index, item) {
                     code += `
                            <li><a href="#" class="list-item">
-                                    <span class="badge badge-default">\${item.notiCtgryIconFileStreNm} </span>
-                                    <p class="list-context">\${item.notiTitle}</p>
+                                    <span class="badge badge-default">공지사항</span>
+                                    <p class="list-context">\${item.notiCtgryIconFileStreNm} \${item.notiTitle}</p>
                                     <span class="list-date">\${item.notiDate}</span>
                                 </a></li>`
                 })
@@ -436,11 +435,10 @@
                             right: false
                         },
                         initialView: 'dayGridMonth',
-                        navLinks: true,
                         selectable: true,
                         events: data,
                         locale: 'ko',
-                        dayCellContent: function (e) {
+                        dayCellContent: function(e) {
                             e.dayNumberText = e.dayNumberText.replace('일', '');
                         }
                     });
