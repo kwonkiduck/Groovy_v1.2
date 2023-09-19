@@ -85,6 +85,7 @@ public class ScheduleService {
 
             result = scheduleMapper.modifySchedule(scheduleVO);
         }
+        
         return result;
     }
     

@@ -51,12 +51,12 @@ public class ScheduleController {
 	
 			List<Map<String, Object>> result = new ArrayList<>();
 	
-			for(ScheduleVO schedule : list) {
+			for(ScheduleVO scheduleVO : list) {
 				HashMap<String, Object> scheduleMap = new HashMap<>();	
-				scheduleMap.put("id", schedule.getSchdulSn());
-				scheduleMap.put("title", schedule.getSchdulNm());
-				scheduleMap.put("start", schedule.getSchdulBeginDate());
-				scheduleMap.put("end", schedule.getSchdulClosDate());
+				scheduleMap.put("id", scheduleVO.getSchdulSn());
+				scheduleMap.put("title", scheduleVO.getSchdulNm());
+				scheduleMap.put("start", scheduleVO.getSchdulBeginDate());
+				scheduleMap.put("end", scheduleVO.getSchdulClosDate());
 				result.add(scheduleMap);
 			}
 			
@@ -68,7 +68,7 @@ public class ScheduleController {
 		public ResponseEntity<ScheduleVO> findOneSchedule(@PathVariable int schdulSn) {
 			ScheduleVO scheduleVO = scheduleService.getOneSchedule(schdulSn);
 	
-			if (scheduleVO != null) {
+			if(scheduleVO != null) {
 				return new ResponseEntity<>(scheduleVO, HttpStatus.OK);
 			}else{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
