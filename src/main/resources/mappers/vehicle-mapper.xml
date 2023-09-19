@@ -2,54 +2,63 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.facility.FacilityMapper">
     <insert id="inputVehicleReservation" parameterType="vehicleVO">
-        insert into VHCLE_RESVE( vhcle_resve_no
-                               , vhcle_resve_begin_time
-                               , vhcle_resve_end_time
-                               , vhcle_no
-                               , vhcle_resve_empl_id
-                               , common_code_resve_at)
-        values ( VHCLE_RESVE_SEQ.nextval
+        INSERT INTO VHCLE_RESVE( VHCLE_RESVE_NO
+                               , VHCLE_RESVE_BEGIN_TIME
+                               , VHCLE_RESVE_END_TIME
+                               , VHCLE_NO
+                               , VHCLE_RESVE_EMPL_ID
+                               , COMMON_CODE_RESVE_AT
+                               , VHCLE_RESVE_RETURN_AT)
+        VALUES ( VHCLE_RESVE_SEQ.NEXTVAL
                , #{vhcleResveBeginTime}
                , #{vhcleResveEndTime}
                , #{vhcleNo}
                , #{vhcleResveEmplId}
-               , #{commonCodeResveAt})
+               , #{commonCodeResveAt}
+               , #{vhcleResveRetrunAt})
     </insert>
+
     <delete id="deleteReservedByVhcleResveNo" parameterType="int">
-        delete
-        from vhcle_resve
-        where vhcle_resve_no = #{vhcleResveNo}
+        DELETE
+        FROM VHCLE_RESVE
+        WHERE VHCLE_RESVE_NO = #{vhcleResveNo}
     </delete>
 
     <select id="getVehicles" resultType="vehicleVO">
-        select VHCLE_NO, VHCLE_VHCTY, VHCLE_PSNCPA, COMMON_CODE_HIPASS_ASN_AT
-        from VHCLE
+        SELECT VHCLE_NO
+             , VHCLE_VHCTY
+             , VHCLE_PSNCPA
+             , COMMON_CODE_HIPASS_ASN_AT
+        FROM VHCLE
     </select>
+
     <select id="getReservedVehicleByVhcleNo" resultType="vehicleVO" parameterType="String">
-        select v.VHCLE_NO,
-               v.VHCLE_VHCTY,
-               v.VHCLE_PSNCPA,
-               v.COMMON_CODE_HIPASS_ASN_AT,
-               vr.VHCLE_RESVE_NO,
-               vr.VHCLE_RESVE_BEGIN_TIME,
-               vr.VHCLE_RESVE_END_TIME,
-               vr.VHCLE_RESVE_EMPL_ID,
-               vr.COMMON_CODE_RESVE_AT
-        from VHCLE v
-                 full outer join VHCLE_RESVE vr on v.VHCLE_NO = vr.VHCLE_NO
-        where TRUNC(vr.VHCLE_RESVE_BEGIN_TIME) = TRUNC(sysdate)
-          and v.VHCLE_NO = #{vhcleNo}
-        order by VHCLE_RESVE_NO desc
+        SELECT V.VHCLE_NO,
+               V.VHCLE_VHCTY,
+               V.VHCLE_PSNCPA,
+               V.COMMON_CODE_HIPASS_ASN_AT,
+               VR.VHCLE_RESVE_NO,
+               VR.VHCLE_RESVE_BEGIN_TIME,
+               VR.VHCLE_RESVE_END_TIME,
+               VR.VHCLE_RESVE_EMPL_ID,
+               VR.COMMON_CODE_RESVE_AT
+        FROM VHCLE V
+                 FULL OUTER JOIN VHCLE_RESVE VR ON V.VHCLE_NO = VR.VHCLE_NO
+        WHERE TRUNC(VR.VHCLE_RESVE_BEGIN_TIME) = TRUNC(SYSDATE)
+          AND V.VHCLE_NO = #{vhcleNo}
+        ORDER BY VHCLE_RESVE_NO DESC
     </select>
+
     <select id="getReservedVehicleByEmplId" resultType="vehicleVO" parameterType="String">
-        select vhcle_resve_no
-             , vhcle_resve_begin_time
-             , vhcle_resve_end_time
-             , vhcle_no
-             , vhcle_resve_empl_id
-             , common_code_resve_at
-        from VHCLE_RESVE
-        where VHCLE_RESVE_EMPL_ID = #{vhcleResveEmplId}
-          and TRUNC(VHCLE_RESVE_BEGIN_TIME) = TRUNC(sysdate)
+        SELECT VHCLE_RESVE_NO
+             , VHCLE_RESVE_BEGIN_TIME
+             , VHCLE_RESVE_END_TIME
+             , VHCLE_NO
+             , VHCLE_RESVE_EMPL_ID
+             , COMMON_CODE_RESVE_AT
+        FROM VHCLE_RESVE
+        WHERE VHCLE_RESVE_EMPL_ID = #{vhcleResveEmplId}
+          AND TRUNC(VHCLE_RESVE_BEGIN_TIME) = TRUNC(SYSDATE)
     </select>
+
 </mapper>

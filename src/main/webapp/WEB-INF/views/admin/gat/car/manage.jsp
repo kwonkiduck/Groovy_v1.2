@@ -72,7 +72,7 @@
                 <tbody>
                 <c:forEach var="vehicleVO" items="${todayReservedVehicles}">
                     <tr>
-                        <td>${vehicleVO.vhcleResveNo}</td>
+                        <td>${vehicleVO.vhcleResveNoRedefine}</td>
                         <td>${vehicleVO.vhcleNo}</td>
                         <c:set var="beginTimeStr" value="${vehicleVO.vhcleResveBeginTime}"/>
                         <fmt:formatDate value="${beginTimeStr}" pattern="HH:mm" var="beginTime"/>
