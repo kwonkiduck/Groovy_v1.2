@@ -5,157 +5,162 @@
   Time: 오후 2:24
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <style>
-    ul {
-        list-style: none;
-        padding-left: 0;
-    }
+ul {
+	list-style: none;
+	padding-left: 0;
+}
 
-    .wrap ul {
-        display: flex;
-        gap: 10px
-    }
+.content ul {
+	dispaly: inline-block;
+}
 
-    .header, .titleWrap {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.wrap ul {
+	display: flex;
+	gap: 10px
+}
 
-    table tr {
-        display: flex;
-    }
+.header, .titleWrap {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
 
-    table tr td, table tr th {
-        flex: 1;
-    }
+table tr {
+	display: flex;
+}
 
-    .roomInfoList, .fxrpsList {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-    }
+table tr td, table tr th {
+	flex: 1;
+}
 
-    .content > ul {
-        display: flex;
-        flex-direction: column;
-    }
+.roomInfoList, .fxrpsList {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+}
 
-    .roomInfo {
-        display: grid;
-        grid-template-rows: repeat(2, 1fr);
-        grid-template-columns: repeat(2, 1fr)
-    }
+.content>ul {
+	display: flex;
+	flex-direction: column;
+}
+
+.roomInfo {
+	display: grid;
+	grid-template-rows: repeat(2, 1fr);
+	grid-template-columns: repeat(2, 1fr)
+}
+
+#fcltyResveSn, .fcltyResveSn {
+	display: none;
+}
 </style>
 <div class="wrap">
-    <ul>
-        <li><a href="#" class="tab">시설 관리</a></li>
-        <li><a href="#" class="tab">예약 현황</a></li>
-    </ul>
+	<ul>
+		<li><a href="/run/manage" class="tab">시설 관리</a></li>
+		<li><a href="/run/manage" class="tab">예약 현황</a></li>
+	</ul>
 </div>
+<br />
+<br />
 <div class="cardWrap">
-    <div class="card">
-        <div class="header">
-            <h3>오늘 예약 현황</h3>
-            <p>
-                <a href="#" class="totalResve"><span id="countValue"></span>건</a>
-            </p>
-            <a href="#">더보기</a>
-        </div>
-        <div class="content">
-            <table border=1 style="width: 100%" id="allReservedRooms">
-                <thead>
-                <tr>
-                    <th>리스트 순서</th>
-                    <th>순번</th>
-                    <th>시설 종류 구분</th>
-                    <th>시설 이름</th>
-                    <th>시작 날짜</th>
-                    <th>끝 날짜</th>
-                    <th>예약 사원(사번)</th>
-                    <th>예약 취소</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${reservedRooms}" var="room" varStatus="stat">
-                    <tr>
-                        <td>${stat.count}</td>
-                        <td id="fcltyResveSn">${room.fcltyResveSn}</td>
-                        <td>${room.commonCodeFcltyKind}</td>
-                        <td>${room.fcltyName}</td>
-                        <td>${room.fcltyResveBeginTime}</td>
-                        <td>${room.fcltyResveEndTime}</td>
-                        <td>${room.fcltyResveEmplId}</td>
-                        <td>
-                            <button class="delEvent" type="button" data-fcltyResveSn="${room.fcltyResveSn}">예약취소
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <br/><br/>
-    <hr>
-    <br/><br/>
-    <div class="card">
-        <div class="header">
-            <div class="titleWrap" style="display: block">
-                <h3>시설 관리</h3>
-                <br/>
-                <table>
-                    <tbody>
-                    <tr>
-                        <td>회의실 | <span class="totalConfm">10</span>개</td>
-                    </tr>
-                    <tr>
-                        <td>휴게실 | <span class="totalConfr">10</span>개</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="content">
-            <div class="roomInfo">
-                <ul id="conference">
-                    <li class="roomInfoList">
-                        <h4 class="roomId">A101</h4> <span class="roomType">회의실</span>
-                        <h5>비품</h5>
-                        <ul class="fxrpsList">
-                            <li>프로젝터</li>
-                            <li>스크린</li>
-                            <li>의자</li>
-                            <li>책상</li>
-                            <li>소화기</li>
-                        </ul>
-                    </li>
-                    <li class="roomInfoList">
-                        <h4 class="roomId">A101</h4> <span class="roomType">회의실</span>
-                        <h5>비품</h5>
-                        <ul class="fxrpsList">
-                            <li>프로젝터</li>
-                            <li>스크린</li>
-                            <li>의자</li>
-                            <li>책상</li>
-                            <li>소화기</li>
-                        </ul>
-                    </li>
-
-                </ul>
-                <ul id="rest">
-                    <li class="roomInfoList">
-                        <h4 class="roomId">R101</h4> <span class="roomType">휴게실</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+	<div class="card">
+		<div class="header">
+			<h3>오늘 예약 현황</h3>
+			<p>
+				<a href="list" class="totalResve"><span id="countValue"></span>건</a>
+			</p>
+			<a href="list">더보기</a>
+		</div>
+		<br />
+		<div class="content">
+			<table border=1 style="width: 100%" id="allReservedRooms">
+				<thead>
+					<tr>
+						<th>순서</th>
+						<th id="fcltyResveSn">순번</th>
+						<th>시설 종류 구분</th>
+						<th>예약시설 이름</th>
+						<th>시작 날짜</th>
+						<th>끝 날짜</th>
+						<th>예약 사원(사번)</th>
+						<th>예약 취소</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${reservedRooms}" var="room" varStatus="stat">
+						<tr>
+							<td>${stat.count}</td>
+							<td class="fcltyResveSn">${room.fcltyResveSn}</td>
+							<td>${room.fcltyCode}</td>
+							<td>${room.fcltyName}</td>
+							<c:set var="fcltyResveBegin" value="${room.fcltyResveBeginTime}" />
+							<fmt:formatDate value="${fcltyResveBegin}" pattern="yyyy-MM-dd"
+								var="fbeginTime" />
+							<td>${fbeginTime}</td>
+							<c:set var="fcltyResveEnd" value="${room.fcltyResveEndTime}" />
+							<fmt:formatDate value="${fcltyResveEnd}" pattern="yyyy-MM-dd"
+								var="fendTime" />
+							<td>${fendTime}</td>
+							<td>${room.fcltyResveEmplId}</td>
+							<td><button class="delEvent" type="button"
+									data-fcltyResveSn="${room.fcltyResveSn}">예약취소</button></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br />
+	<br />
+	<hr>
+	<br />
+	<br />
+	<div class="card">
+		<div class="header">
+			<div class="titleWrap" style="display: block">
+				<h3>시설 관리</h3>
+				<br />
+				<table border=1 style="width: 100%">
+					<tbody>
+						<tr>
+							<td>회의실 | ${meetingCount}개</td>
+						</tr>
+						<tr>
+							<td>휴게실 | ${retiringCount}개</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br />
+		<br />
+		<div class="content">
+			<div class="roomInfo">
+				<ul id="conference">
+					<c:forEach items="${equipmentList}" var="equip" varStatus="stat">
+						<li class="roomInfoList">
+							<h4>${equip.commonCodeFcltyKind}</h4>
+							<h4 class="roomId">${equip.fcltyCode}</h4>
+							<span class="roomType">${equip.fcltyName}</span>
+							<h5>비품</h5>
+							<ul class="fxrpsList">
+								<li>${equip.equipName}</li>
+							</ul>
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
+
     //각 버튼에 클릭 이벤트 핸들러 추가
     function delClickEvent() {
         let delEvents = document.querySelectorAll(".delEvent");
@@ -199,10 +204,10 @@
     // 페이지가 로드될 때 실행
     document.addEventListener("DOMContentLoaded", function () {
         // 모든 <td> 요소 중 id가 "fcltyResveSn"인 요소를 선택합니다.
-        const tdElements = document.querySelectorAll("td#fcltyResveSn");
+        const tdElements = document.querySelectorAll("td.fcltyResveSn");
 
         // 선택된 <td> 요소의 갯수를 가져옵니다.
-        const count = tdElements.length;
+        let count = tdElements.length;
 
         // 결과를 화면에 표시합니다.
         document.getElementById("countValue").textContent = count;
@@ -210,4 +215,6 @@
         // delClickEvent 함수 호출
         delClickEvent();
     });
+    
+    
 </script>
