@@ -58,7 +58,7 @@
             </div>
             <br/>
             <div class="formTitle">
-                    ${sanction.elctrnSanctnSj}${sanction.elctrnSanctnAfterPrcs}
+                    ${sanction.elctrnSanctnSj}
             </div>
         </div>
         <div class="formContent">
@@ -114,8 +114,8 @@
         let rejectId;
         let etprCode = '${sanction.elctrnSanctnEtprCode}';
         let afterPrcs = '${sanction.elctrnSanctnAfterPrcs}'
-        $(function (){
-
+        $(function () {
+            $("#elctrnSanctnFinalDate").html('${sanction.elctrnSanctnFinalDate}');
             console.log(afterPrcs);
         })
 
@@ -146,7 +146,9 @@
                 type: 'PUT',
                 success: function (data) {
                     alert('최종 승인 처리 성공')
-                    afterFinalApprove();
+                    if (afterPrcs != null) {
+                        afterFinalApprove();
+                    }
                 },
                 error: function (xhr) {
                     alert('최종 승인 처리 실패')

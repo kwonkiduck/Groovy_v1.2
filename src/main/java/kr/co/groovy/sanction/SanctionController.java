@@ -44,6 +44,10 @@ public class SanctionController {
     public String getInProgress() {
         return "sanction/document";
     }
+    @GetMapping("/line")
+    public String getLine() {
+        return "sanction/line/line";
+    }
 
     @GetMapping("/read/{sanctionNo}")
     public String loadSanction(@PathVariable String sanctionNo, Model model) {
@@ -51,7 +55,7 @@ public class SanctionController {
         List<ReferenceVO> refrnList = service.loadRefrn(sanctionNo);
         SanctionVO sanction = service.loadSanction(sanctionNo);
         UploadFileVO file = service.loadSanctionFile(sanctionNo);
-
+        log.info(sanction + "");
         model.addAttribute("lineList", lineList);
         model.addAttribute("refrnList", refrnList);
         model.addAttribute("sanction", sanction);

@@ -1,5 +1,6 @@
 package kr.co.groovy.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +12,9 @@ import java.sql.Date;
 @ToString
 public class CardReservationVO {
     private int cprCardResveSn;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date cprCardResveBeginDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date cprCardResveClosDate;
     private String cprCardResveEmplId;
     private String commonCodeResveAt; // RESVE010: 비예약, RESVE011: 예약
@@ -23,4 +26,7 @@ public class CardReservationVO {
     private String commonCodeYrycState;
     private int generatedKey;
 
+    private String emplNm;
+    private String commonCodeDept;
+    private String commonCodeClsf;
 }

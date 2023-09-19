@@ -98,10 +98,10 @@ public class EmailController {
         return emailService.sentMail(emailVO, emailFiles, employeeVO);
     }
 
+    @GetMapping("/unreadCount")
+    @ResponseBody
     public String getUnreadMailCount(Principal principal, Model model) {
-        int unreadMailCount = emailService.getUnreadMailCount(principal.getName());
-        model.addAttribute("unreadMailCount", unreadMailCount);
-        return "tiles/aside";
+        return String.valueOf(emailService.getUnreadMailCount(principal.getName()));
     }
 
     @GetMapping("/sendMine")

@@ -11,7 +11,6 @@ function closeModal() {
     document.querySelector("#modal").style.display = "none";
 }
 
-
 let jobProgressVO;
 
 //들어온 업무 요청
@@ -86,7 +85,6 @@ document.querySelector(".new-request").addEventListener("click", (event) => {
             type: 'get',
             url: '/job/getReceiveJobByNo?jobNo=' + jobNo,
             success: function (rslt) {
-                console.log(rslt);
                 document.querySelector("#receive-sj").innerText = rslt.jobSj;
                 document.querySelector("#receive-cn").innerText = rslt.jobCn;
                 document.querySelector("#receive-begin").innerText = rslt.jobBeginDate;
@@ -147,7 +145,6 @@ function rejectOrAgree(jobProgressVO) {
     })
 }
 
-
 document.querySelector(".requestJob").addEventListener("click", () => {
     openModal("#modal-request-job");
 });
@@ -195,24 +192,40 @@ document.getElementById("requestJobContainer").addEventListener("click", (event)
         });
     }
 });
-
-document.querySelector(".addJob").addEventListener("click", () => {
-    openModal("#modal-newJob");
-    //신규 등록
-    document.querySelector("#tab-new-request").addEventListener("click", () => {
-        document.querySelector(".new-job").classList.remove("on");
-        openModal(".new-request");
+let addJobs = document.querySelectorAll(".addJob");
+addJobs.forEach(addJob => {
+    addJob.addEventListener("click", () => {
+        openModal("#modal-newJob");
+        //신규 등록
+        document.querySelector("#tab-new-request").addEventListener("click", () => {
+            document.querySelector(".new-job").classList.remove("on");
+            openModal(".new-request");
+        });
+        //요청 받은 업무 목록
+        document.querySelector("#tab-new-job").addEventListener("click", () => {
+            document.querySelector(".new-request").classList.remove("on");
+            openModal(".new-job");
+        });
     });
-    //요청 받은 업무 목록
-    document.querySelector("#tab-new-job").addEventListener("click", () => {
-        document.querySelector(".new-request").classList.remove("on");
-        openModal(".new-job");
-    })
 });
+
 //신규 등록
 document.querySelector(".new-job .regist").addEventListener("click", () => {
     let formData = new FormData(document.querySelector("#registNewJob"));
-    console.log(formData);
+    let requiredList = ["jobSj", "jobCn", "jobBeginDate", "jobClosDate"];
+    let validation = true;
+
+    requiredList.forEach((required) => {
+        let req = document.getElementById(required);
+        if (req.value.trim() === "") {
+            validation = false;
+        }
+    });
+
+    if (!validation) {
+        alert("모든 값을 입력해주세요.");
+    }
+
     $.ajax({
         url: '/job/insertJob',
         type: 'post',
@@ -229,9 +242,57 @@ document.querySelector(".new-job .regist").addEventListener("click", () => {
     });
 })
 
+let progressList = document.querySelectorAll(".progress");
+let myJobs = document.querySelectorAll(".myJob");
+myJobs.forEach(myJob => {
+    myJob.addEventListener("click", (event)=> {
+        let kindList = document.querySelectorAll(".kind-data");
+        let target = event.target;
 
-document.querySelector(".myjob").addEventListener("click", () => {
-    openModal("#modal-job-detail");
+        kindList.forEach(kind => {
+            kind.checked = false;
+        });
+        progressList.forEach(progress => {
+            progress.checked = false;
+        });
+
+        if (target.classList.contains("todoCard")) {
+            jobNo = target.getAttribute("data-seq");
+        } else if (target.closest(".todoCard")) {
+            jobNo = target.closest(".todoCard").getAttribute("data-seq");
+        }
+
+        if (jobNo !== null) {
+            $.ajax({
+                type: 'get',
+                url: `/job/getJobByNoAndId?jobNo=${jobNo}`,
+                success: function (rslt) {
+                    document.querySelector("#sj-data").innerHTML = rslt.jobSj;
+                    document.querySelector("#cn-data").innerHTML = rslt.jobCn;
+                    document.querySelector("#begin-data").innerHTML = rslt.jobBeginDate;
+                    document.querySelector("#close-data").innerHTML = rslt.jobClosDate;
+                    document.querySelector("#request-data").innerHTML = rslt.jobRequstEmplNm;
+                    kindList.forEach(kind => {
+                        kind.disabled = true;
+                        if (kind.value === rslt.commonCodeDutyKind) {
+                            kind.checked = true;
+                        }
+                    });
+                    progressList.forEach(progress => {
+                        progress.disabled = true;
+                        if (progress.value === rslt.jobProgressVOList[0].commonCodeDutyProgrs) {
+                            progress.checked = true;
+                        }
+                    });
+                    document.querySelector("#confirm").setAttribute("data-seq", jobNo);
+                    openModal("#modal-job-detail");
+                },
+                error: function (xhr) {
+                    console.log(xhr.status);
+                }
+            });
+        }
+    });
 });
 
 const close = document.querySelectorAll(".close");
@@ -246,6 +307,20 @@ close.forEach(item => {
 function validateDate() {
     const begin = document.querySelector("#jobBeginDate");
     const close = document.querySelector("#jobClosDate");
+    const beginDate = new Date(begin.value);
+    const closeDate = new Date(close.value);
+
+    validateCurrentDate(begin);
+    validateCurrentDate(close);
+
+    if (beginDate > closeDate) {
+        alert('끝 날짜는 시작 날짜보다 이전이 될 수 없습니다.');
+        close.value = begin.value;
+    }
+}
+function newValidateDate() {
+    const begin = document.querySelector("#date-begin");
+    const close = document.querySelector("#date-close");
     const beginDate = new Date(begin.value);
     const closeDate = new Date(close.value);
 
@@ -288,10 +363,13 @@ requestBtn.addEventListener("click", (event) => {
     requiredList.forEach((required) => {
         let req = document.getElementById(required);
         if (req.value.trim() === "") {
-            alert("모든 값을 입력해주세요.");
             validation = false;
         }
     });
+
+    if (!validation) {
+        alert("모든 값을 입력해주세요.");
+    }
 
     //받는 사원의 리스트
     let receiveEmpls = receive.querySelectorAll("span");
@@ -318,4 +396,40 @@ requestBtn.addEventListener("click", (event) => {
     });
 });
 
+//수정
+let modifyBtn = document.querySelector("#modify");
+let confirmBtn = document.querySelector("#confirm");
+modifyBtn.addEventListener("click", () => {
+    progressList.forEach(progress => {
+        progress.disabled = false;
+    });
+    confirmBtn.style.display = "block";
+});
+
+confirmBtn.addEventListener("click", () => {
+    let jobNo = confirmBtn.getAttribute("data-seq");
+    let selectedValue;
+    progressList.forEach(progress => {
+        if (progress.checked) {
+            selectedValue = progress.getAttribute("data-code");
+        }
+    });
+    let jobProgressVO = {
+        "jobNo": jobNo,
+        "commonCodeDutyProgrs": selectedValue
+    }
+    console.log(jobProgressVO)
+    $.ajax({
+        type: 'put',
+        url: '/job/updateJobProgress',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(jobProgressVO),
+        success: function () {
+            location.href = "/job/main";
+        },
+        error: function (xhr) {
+            console.log(xhr.status);
+        }
+    });
+})
 

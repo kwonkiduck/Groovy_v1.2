@@ -1,6 +1,5 @@
 package kr.co.groovy.sanction;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.groovy.enums.ClassOfPosition;
@@ -10,7 +9,6 @@ import kr.co.groovy.enums.SanctionProgress;
 import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
@@ -118,7 +116,9 @@ public class SanctionService {
         vo.setElctrnSanctnDc(content);
         vo.setElctrnSanctnDrftEmplId(writer);
         vo.setCommonCodeSanctProgrs("SANCTN010");
-        vo.setElctrnSanctnAfterPrcs(afterProcess);
+        if (afterProcess != null) {
+            vo.setElctrnSanctnAfterPrcs(afterProcess);
+        }
         mapper.inputSanction(vo);
 
         List<String> approverList = requestData.get("approver", List.class);

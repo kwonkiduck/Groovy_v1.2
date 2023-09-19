@@ -70,8 +70,22 @@ public class JobService {
         mapper.updateJobStatus(jobProgressVO);
     }
 
+    public void updateJobProgress(JobProgressVO jobProgressVO) {
+        mapper.updateJobProgress(jobProgressVO);
+    }
+
     public List<JobVO> getJobByDate(Map<String, Object> map) {
         return mapper.getJobByDate(map);
+    }
+
+    public JobVO getJobByNoAndId(JobProgressVO jobProgressVO) {
+        JobVO jobVO = mapper.getJobByNoAndId(jobProgressVO);
+        jobVO.setCommonCodeDutyKind(DutyKind.getLabelByValue(jobVO.getCommonCodeDutyKind()));
+        List<JobProgressVO> jobProgressVOList = jobVO.getJobProgressVOList();
+        for (JobProgressVO progressVO : jobProgressVOList) {
+            progressVO.setCommonCodeDutyProgrs(DutyProgress.getLabelByValue(progressVO.getCommonCodeDutyProgrs()));
+        }
+        return jobVO;
     }
 
     public List<Map<String,Object>> dayOfWeek() {

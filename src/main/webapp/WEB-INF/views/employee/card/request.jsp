@@ -42,4 +42,25 @@
             </form>
         </div>
     </main>
+    <div>
+        <h2>법인카드 신청 기록</h2>
+        <table border="1">
+            <tr>
+                <td>신청 번호</td>
+                <td>사용 기간</td>
+                <td>사용처</td>
+                <td>사용 목적</td>
+                <td>상신 여부</td>
+            </tr>
+            <c:forEach var="recodeVO" items="${cardRecord}" varStatus="stat">
+                <tr>
+                    <td><a href="/card/detail/${recodeVO.cprCardResveSn}">${recodeVO.cprCardResveSn}</a></td>
+                    <td>${recodeVO.cprCardResveBeginDate} - ${recodeVO.cprCardResveClosDate}</td>
+                    <td>${recodeVO.cprCardUseLoca}</td>
+                    <td>${recodeVO.cprCardUsePurps}</td>
+                    <td>${recodeVO.commonCodeYrycState == 'YRYC031'? '상신' : '미상신'}</td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
 </sec:authorize>

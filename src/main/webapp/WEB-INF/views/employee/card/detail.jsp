@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div>
     <h2>법인카드 신청 기록</h2>
@@ -9,11 +10,12 @@
             <td>기간: ${detailVO.cprCardResveBeginDate} - ${detailVO.cprCardResveClosDate}</td>
             <td>사용처 : ${detailVO.cprCardUseLoca}</td>
             <td>사용목적 : ${detailVO.cprCardUsePurps}</td>
-            <td>사용예상금액: ${detailVO.cprCardUseExpectAmount}</td>
+            <td>사용예상금액 : <fmt:formatNumber type="number" value="${detailVO.cprCardUseExpectAmount}" pattern="#,##0"/>원
+            </td>
         </tr>
     </table>
     <c:choose>
-        <c:when test="${detailVO.commonCodeYrycState == 'N'}">
+        <c:when test="${detailVO.commonCodeYrycState == 'YRYC030'}">
             <button type="button" id="modifyRequest">수정하기</button>
             <button type="button" id="startSanction">결재하기</button>
         </c:when>

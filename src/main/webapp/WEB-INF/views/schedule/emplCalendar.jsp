@@ -22,7 +22,7 @@ $(document).ready(function(){
 	
 	$(function(){
 		var request = $.ajax({
-			url : "/calendar/schedule",
+			url : "/schedule/schedule",
 			method : "GET",
 			dataType : "json"
 		});

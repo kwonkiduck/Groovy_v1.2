@@ -51,14 +51,11 @@
         let month = String(before.getMonth() + 1).padStart(2, '0');
         let day = String(before.getDate()).padStart(2, '0');
 
-
         let approver;
         let receiver;
         let referrer;
 
-
         const dept = "${dept}" // 문서 구분용
-
 
         const etprCode = "${etprCode}";
         const formatCode = "${format.commonCodeSanctnFormat}";
@@ -73,9 +70,11 @@
             $("#sanctionNo").html(etprCode);
             $("#writeDate").html(today);
             $("#writer").html("${CustomUser.employeeVO.emplNm}")
+            $("#requestDate").html(`\${year}년 \${month}월 \${day}일`);
+
             console.log(dept)
 
-            if (dept == 'DEPT010') {
+            if (dept == 'DEPT011') {
                 loadCardData()
             } else {
                 loadVacationData()
@@ -103,7 +102,7 @@
 
         function loadCardData() {
             $.ajax({
-                url: `/vacation/loadData/\${num}`,
+                url: `/card/data/\${num}`,
                 type: "GET",
                 success: function (data) {
                     console.log(data)
@@ -112,6 +111,9 @@
                             let value = data[key];
                             let element = document.getElementById(key);
                             if (element) {
+                                if (key === "cprCardUseExpectAmount") {
+                                    value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "원";
+                                }
                                 element.textContent = value;
                             }
                         }
@@ -127,7 +129,6 @@
             referrer = $("#refrnLine input[type=hidden]").map(function () {
                 return $(this).val();
             }).get();
-            console.log(file);
             if (approver.length > 0) {
                 $("#sanctionSubmit").prop("disabled", false);
             } else {
@@ -137,15 +138,6 @@
         $("#sanctionSubmit").on("click", function () {
             updateStatus()
             content = $(".formContent").html();
-            const param = {
-                vacationId: num
-            }
-            const afterProcess = {
-                className: "kr.co.groovy.commute.CommuteService",
-                methodName: "insertCommuteByVacation",
-                parameters: param
-            }
-            const afterProcessData = JSON.stringify(afterProcess)
             const jsonData = {
                 approver: approver,
                 receiver: receiver,
@@ -157,9 +149,30 @@
                 title: title,
                 content: content,
                 vacationId: num,
-                afterProcess: afterProcessData
             };
-            console.log(jsonData)
+
+            if (dept === 'DEPT010') {
+                const param = {
+                    vacationId: num
+                };
+                const afterProcess = {
+                    className: "kr.co.groovy.commute.CommuteService",
+                    methodName: "insertCommuteByVacation",
+                    parameters: param
+                };
+                jsonData.afterProcess = JSON.stringify(afterProcess);
+            } else {
+                const param = {
+                    approveId: num,
+                    state: 'YRYC032'
+                };
+                const afterProcess = {
+                    className: "kr.co.groovy.card.CardService",
+                    methodName: "modifyStatus",
+                    parameters: param
+                };
+                jsonData.afterProcess = JSON.stringify(afterProcess);
+            }
             $.ajax({
                 url: "/sanction/api/sanction",
                 type: "POST",
@@ -203,14 +216,20 @@
             });
         }
 
-        // 연차 문서의 결재 상태 변경
+        // 문서의 결재 상태 변경
         function updateStatus() {
+            let className;
+            if (dept === 'DEPT011') {
+                className = 'kr.co.groovy.card.CardService'
+            } else {
+                className = 'kr.co.groovy.vacation.VacationService'
+            }
             let data = {
-                className: 'kr.co.groovy.vacation.VacationService',
+                className: className,
                 methodName: 'modifyStatus',
                 parameters: {
                     approveId: num,
-                    state: 'Y'
+                    state: 'YRYC031'
                 }
             };
             $.ajax({
@@ -219,10 +238,10 @@
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (data) {
-                    alert("연차 테이블 업데이트 성공");
+                    alert("결재 상태 업데이트 성공");
                 },
                 error: function (xhr) {
-                    alert("연차 테이블 업데이트 실패");
+                    alert("결재 상태 업데이트 실패");
                 }
             });
         }
