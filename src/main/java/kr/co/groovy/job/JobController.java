@@ -160,7 +160,7 @@ public class JobController {
         return jobVO;
     }
 
-    @PutMapping(value = "/updateJobStatus")
+    @PutMapping("/updateJobStatus")
     @ResponseBody
     public void updateJobStatus(@RequestBody JobProgressVO jobProgressVO, Principal principal) {
         jobProgressVO.setJobRecptnEmplId(principal.getName());
@@ -168,5 +168,23 @@ public class JobController {
         jobProgressVO.setCommonCodeDutySttus(DutyStatus.getValueOfByLabel(dutyStatus));
 
         service.updateJobStatus(jobProgressVO);
+    }
+
+    @GetMapping("/getJobByNoAndId")
+    @ResponseBody
+    public JobVO getJobByNoAndId(int jobNo, Principal principal, JobProgressVO jobProgressVO) {
+        String emplId = principal.getName();
+        jobProgressVO.setJobNo(jobNo);
+        jobProgressVO.setJobRecptnEmplId(emplId);
+        return service.getJobByNoAndId(jobProgressVO);
+    }
+
+    @PutMapping("/updateJobProgress")
+    @ResponseBody
+    public void updateJobProgress(Principal principal, @RequestBody JobProgressVO jobProgressVO) {
+        String emplId = principal.getName();
+        jobProgressVO.setJobRecptnEmplId(emplId);
+        System.out.println("****jobProgressVO = " + jobProgressVO);
+        service.updateJobProgress(jobProgressVO);
     }
 }
