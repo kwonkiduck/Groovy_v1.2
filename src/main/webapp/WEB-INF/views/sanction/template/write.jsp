@@ -17,9 +17,6 @@
         <div class="formHeader">
             <div class="btnWrap">
                 <button id="getLine">결재선 지정</button>
-                <div id="approvalLine">
-                    <%@include file="../line/line.jsp" %>
-                </div>
             </div>
             <br/>
             <div class="formTitle">
@@ -66,6 +63,9 @@
         let file = $('#sanctionFile')[0].files[0];
         let num = opener.$("#sanctionNum").text();
 
+        /*  팝업  */
+        const getLineBtn = document.querySelector("#getLine");
+
         $(document).ready(function () {
             $("#sanctionNo").html(etprCode);
             $("#writeDate").html(today);
@@ -79,6 +79,24 @@
             } else {
                 loadVacationData()
             }
+
+            /*  팝업  */
+            const url = "/sanction/line";
+            const option = "width = 1024, height = 768, top = 100, left = 200, location = no";
+            let popupWindow;
+            getLineBtn.addEventListener("click",()=>{
+                popupWindow = window.open(url, 'line', option);
+
+            })
+            /*  팝업에서 값 받아오기 */
+            window.addEventListener('message', function(event) {
+                const data = event.data;
+                console.log('부모 창에서 받은 데이터:', data);
+                popupWindow.close();
+
+                document.querySelector(".approval").innerHTML = data;
+
+            });
         });
 
         function loadVacationData() {

@@ -19,8 +19,8 @@
         <form action="${pageContext.request.contextPath}/signIn" method="post">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-            <input type="text" class="userId btn-free-white" name="emplId" id="empl-id" placeholder="ID" value=""/>
-            <input type="password" class="userPw btn-free-white" name="emplPassword" id="empl-password"
+            <input type="text" class="userId btn-free-white input-l" name="emplId" id="empl-id" placeholder="ID" value=""/>
+            <input type="password" class="userPw btn-free-white input-l" name="emplPassword" id="empl-password"
                    placeholder="PASSWORD"/>
             <div class="service-wrap">
                 <div class="checkboxWrap">
@@ -34,7 +34,7 @@
             <c:if test="${message=='true'}">
                 <div> 아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.</div>
             </c:if>
-            <input type="submit" class="btn-free-blue" id="loginBtn" value="LOGIN">
+            <input type="submit" class="btn-free-blue input-l" id="loginBtn" value="LOGIN">
         </form>
     </div>
 </div>
