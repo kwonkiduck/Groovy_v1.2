@@ -1,12 +1,16 @@
 package kr.co.groovy.job;
 
+import kr.co.groovy.enums.DutyKind;
+import kr.co.groovy.enums.DutyProgress;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.JobDiaryVO;
 import kr.co.groovy.vo.JobProgressVO;
 import kr.co.groovy.vo.JobVO;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class JobService {
@@ -16,53 +20,101 @@ public class JobService {
         this.mapper = mapper;
     }
 
-    String getLeader(String emplId) {
+    public String getLeader(String emplId) {
         return mapper.getLeader(emplId);
     }
 
-    int insertDiary(JobDiaryVO jobDiaryVO) {
+    public int insertDiary(JobDiaryVO jobDiaryVO) {
         return mapper.insertDiary(jobDiaryVO);
     }
 
-    EmployeeVO getInfoById(String emplId) {
+    public EmployeeVO getInfoById(String emplId) {
         return mapper.getInfoById(emplId);
     }
 
-    List<JobDiaryVO> getDiaryByDept(String commonCodeDept) {
+    public List<JobDiaryVO> getDiaryByDept(String commonCodeDept) {
         return mapper.getDiaryByDept(commonCodeDept);
     }
 
-    List<JobDiaryVO> getDiaryByInfo(EmployeeVO employeeVO) {
+    public List<JobDiaryVO> getDiaryByInfo(EmployeeVO employeeVO) {
         return mapper.getDiaryByInfo(employeeVO);
     }
 
-    JobDiaryVO getDiaryByDateAndId(JobDiaryVO jobDiaryVO) {
+    public JobDiaryVO getDiaryByDateAndId(JobDiaryVO jobDiaryVO) {
         return mapper.getDiaryByDateAndId(jobDiaryVO);
     }
 
-    int getMaxJobNo() {return mapper.getMaxJobNo();}
+    public int getMaxJobNo() {return mapper.getMaxJobNo();}
 
-    void insertJob(JobVO jobVO) {mapper.insertJob(jobVO);}
+    public void insertJob(JobVO jobVO) {mapper.insertJob(jobVO);}
 
-    void insertJobProgress(JobProgressVO jobProgressVO) {mapper.insertJobProgress(jobProgressVO);}
+    public void insertJobProgress(JobProgressVO jobProgressVO) {mapper.insertJobProgress(jobProgressVO);}
 
-    List<JobVO> getAllJobById(String jobRequstEmplId) {
+    public List<JobVO> getAllJobById(String jobRequstEmplId) {
         return mapper.getAllJobById(jobRequstEmplId);
     }
 
-    JobVO getJobByNo(int jobNo) {
+    public JobVO getJobByNo(int jobNo) {
         return mapper.getJobByNo(jobNo);
     }
 
-    List<JobVO> getAllReceiveJobById(String jobRecptnEmplId) {
+    public List<JobVO> getAllReceiveJobById(String jobRecptnEmplId) {
         return mapper.getAllReceiveJobById(jobRecptnEmplId);
     }
 
-    JobVO getReceiveJobByNo(int jobNo) {
+    public JobVO getReceiveJobByNo(int jobNo) {
         return mapper.getReceiveJobByNo(jobNo);
     }
 
-    void updateJobStatus(JobProgressVO jobProgressVO) {
+    public void updateJobStatus(JobProgressVO jobProgressVO) {
         mapper.updateJobStatus(jobProgressVO);
+    }
+
+    public List<JobVO> getJobByDate(Map<String, Object> map) {
+        return mapper.getJobByDate(map);
+    }
+
+    public List<Map<String,Object>> dayOfWeek() {
+        List<Map<String, Object>> weekly = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date startDate = new Date(calendar.getTimeInMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd (E)");
+
+        for (int i = 0; i < 5; i++) {
+            String formattedDate = dateFormat.format(startDate);
+
+            Map<String, Object> dayInfo = new HashMap<>();
+            dayInfo.put("date", startDate);
+            dayInfo.put("day", formattedDate.substring(formattedDate.indexOf("(") + 1, formattedDate.indexOf(")")));
+
+            weekly.add(dayInfo);
+            calendar.add(Calendar.DATE, 1);
+            startDate = new Date(calendar.getTimeInMillis());
+        }
+        return weekly;
+    }
+
+    public List<List<JobVO>> jobListByDate(String emplId) {
+        List<List<JobVO>> jobListByDate = new ArrayList<>();
+        List<Map<String, Object>> dayOfWeek = dayOfWeek();
+        for (Map<String, Object> map : dayOfWeek) {
+            Map<String, Object> jobMap = new HashMap<>();
+            jobMap.put("jobRecptnEmplId", emplId);
+            Date date = (Date) map.get("date");
+            jobMap.put("date", date);
+            List<JobVO> jobByDate = getJobByDate(jobMap);
+            for (JobVO jobVO : jobByDate) {
+                String dutyKind = DutyKind.getLabelByValue(jobVO.getCommonCodeDutyKind());
+                jobVO.setCommonCodeDutyKind(dutyKind);
+                List<JobProgressVO> jobProgressVOList = jobVO.getJobProgressVOList();
+                for (JobProgressVO jobProgressVO : jobProgressVOList) {
+                    String dutyProgress = DutyProgress.getLabelByValue(jobProgressVO.getCommonCodeDutyProgrs());
+                    jobProgressVO.setCommonCodeDutyProgrs(dutyProgress);
+                }
+            }
+            jobListByDate.add(jobByDate);
+        }
+        return jobListByDate;
     }
 }

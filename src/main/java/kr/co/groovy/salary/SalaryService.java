@@ -19,24 +19,27 @@ public class SalaryService {
         this.mapper = mapper;
     }
 
-    List<AnnualSalaryVO> loadSalary(){
+    List<AnnualSalaryVO> loadSalary() {
         List<AnnualSalaryVO> list = mapper.loadSalary();
         for (AnnualSalaryVO vo : list) {
             vo.setCommonCodeDeptCrsf(Department.valueOf(vo.getCommonCodeDeptCrsf()).label());
         }
         return list;
     }
-    List<AnnualSalaryVO> loadBonus(){
+
+    List<AnnualSalaryVO> loadBonus() {
         List<AnnualSalaryVO> list = mapper.loadBonus();
         for (AnnualSalaryVO vo : list) {
             vo.setCommonCodeDeptCrsf(ClassOfPosition.valueOf(vo.getCommonCodeDeptCrsf()).label());
         }
         return list;
     }
-    List<TariffVO> loadTariff(String year){
+
+    List<TariffVO> loadTariff(String year) {
         return mapper.loadTariff(year);
     }
-    List<EmployeeVO> loadEmpList(){
+
+    List<EmployeeVO> loadEmpList() {
         List<EmployeeVO> list = mapper.loadEmpList();
         for (EmployeeVO vo : list) {
             vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
@@ -44,7 +47,8 @@ public class SalaryService {
         }
         return list;
     }
-    List<SalaryVO> loadPaymentList(String emplId, String year){
-        return mapper.loadPaymentList(emplId,year);
+
+    List<SalaryVO> loadPaymentList(String emplId, String year) {
+        return mapper.loadPaymentList(emplId, year);
     }
 }

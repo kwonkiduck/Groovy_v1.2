@@ -11,6 +11,7 @@ function closeModal() {
     document.querySelector("#modal").style.display = "none";
 }
 
+
 let jobProgressVO;
 
 //들어온 업무 요청
@@ -62,12 +63,70 @@ document.querySelector("#receiveJobContainer").addEventListener("click", (event)
     }
 });
 
+//요청 받은 업무 목록
+document.querySelector(".new-request").addEventListener("click", (event) => {
+    const target = event.target;
+    let jobNo = null;
+
+    if (target.classList.contains("receiveJob")) {
+        jobNo = target.getAttribute("data-seq");
+    } else if (target.closest(".receiveJob")) {
+        jobNo = target.closest(".receiveJob").getAttribute("data-seq");
+    }
+
+    if (jobNo !== null) {
+        event.preventDefault();
+        let checkboxes = document.querySelectorAll(".receive-kind-box");
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        $.ajax({
+            type: 'get',
+            url: '/job/getReceiveJobByNo?jobNo=' + jobNo,
+            success: function (rslt) {
+                console.log(rslt);
+                document.querySelector("#receive-sj").innerText = rslt.jobSj;
+                document.querySelector("#receive-cn").innerText = rslt.jobCn;
+                document.querySelector("#receive-begin").innerText = rslt.jobBeginDate;
+                document.querySelector("#receive-close").innerText = rslt.jobClosDate;
+                let kind = rslt.commonCodeDutyKind;
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.disabled = true;
+                    if (checkbox.value === kind) {
+                        checkbox.checked = true;
+                    }
+                });
+
+                jobProgressVO = {
+                    "jobNo": jobNo
+                };
+            },
+            error: function (xhr) {
+                console.log(xhr.status);
+            }
+        });
+    }
+});
+
 document.querySelector("#reject").addEventListener("click", () => {
     jobProgressVO["commonCodeDutySttus"] = "거절"
     rejectOrAgree(jobProgressVO);
 })
 
 document.querySelector("#agree").addEventListener("click", () => {
+    jobProgressVO["commonCodeDutySttus"] = "승인"
+    rejectOrAgree(jobProgressVO);
+})
+
+document.querySelector("#rejectJob").addEventListener("click", () => {
+    jobProgressVO["commonCodeDutySttus"] = "거절"
+    rejectOrAgree(jobProgressVO);
+})
+
+document.querySelector("#agreeJob").addEventListener("click", () => {
     jobProgressVO["commonCodeDutySttus"] = "승인"
     rejectOrAgree(jobProgressVO);
 })

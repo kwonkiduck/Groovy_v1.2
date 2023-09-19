@@ -1,3 +1,8 @@
+@import "../commonStyle.css";
+
+* {
+    font-family: var(--font-reg);
+}
 
 /* classes attached to <body> */
 /* TODO: make fc-event selector work when calender in shadow DOM */
@@ -35,9 +40,11 @@
   }
 .fc th {
     text-align: center;
+    color: var(--color-main);
   }
 .fc th,
   .fc td {
+    font-size: var(--font-size-14);
     vertical-align: top;
     padding: 0;
   }
@@ -55,11 +62,11 @@
   direction: rtl;
   text-align: right;
 }
-.fc-theme-standard td,
+/*.fc-theme-standard td,
   .fc-theme-standard th {
     border: 1px solid #ddd;
     border: 1px solid var(--fc-border-color, #ddd);
-  }
+  }*/
 /* for FF, which doesn't expand a 100% div within a table cell. use absolute positioning */
 /* inner-wrappers are responsible for being absolute */
 /* TODO: best place for this? */
@@ -177,8 +184,8 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
             user-select: none;
     background-color: transparent;
     border: 1px solid transparent;
-    padding: 0.4em 0.65em;
-    font-size: 1em;
+    padding: 5px;
+    font-size: var(--font-size-14);
     line-height: 1.5;
     border-radius: 0.25em;
   }
@@ -189,37 +196,33 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);
   }
-.fc .fc-button:disabled {
+/*.fc .fc-button:disabled {
     opacity: 0.65;
-  }
+  }*/
 .fc {
 
   /* "primary" coloring */
 
 }
-.fc .fc-button-primary {
+.fc-today-button:hover {
     color: #fff;
-    color: var(--fc-button-text-color, #fff);
-    background-color: #2C3E50;
-    background-color: var(--fc-button-bg-color, #2C3E50);
-    border-color: #2C3E50;
-    border-color: var(--fc-button-border-color, #2C3E50);
+    background-color: var(--color-main);
+    box-shadow: var(--clay-btn);
+}
+.fc .fc-button-primary {
+    color: var(--color-font-md);
+    box-shadow: var(--clay-card);
+    border-color: var(--color-stroke);
   }
 .fc .fc-button-primary:hover {
     color: #fff;
-    color: var(--fc-button-text-color, #fff);
-    background-color: #1e2b37;
-    background-color: var(--fc-button-hover-bg-color, #1e2b37);
-    border-color: #1a252f;
-    border-color: var(--fc-button-hover-border-color, #1a252f);
+    background-color: var(--color-main);
+    box-shadow: var(--clay-btn);
   }
 .fc .fc-button-primary:disabled { /* not DRY */
-    color: #fff;
-    color: var(--fc-button-text-color, #fff);
-    background-color: #2C3E50;
-    background-color: var(--fc-button-bg-color, #2C3E50);
-    border-color: #2C3E50;
-    border-color: var(--fc-button-border-color, #2C3E50); /* overrides :hover */
+   /* color: var(--color-font-md);
+    box-shadow: var(--clay-card);
+    border-color: var(--color-stroke);*/
   }
 .fc .fc-button-primary:focus {
     box-shadow: 0 0 0 0.2rem rgba(76, 91, 106, 0.5);
@@ -227,16 +230,13 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
 .fc .fc-button-primary:not(:disabled):active,
   .fc .fc-button-primary:not(:disabled).fc-button-active {
     color: #fff;
-    color: var(--fc-button-text-color, #fff);
-    background-color: #1a252f;
-    background-color: var(--fc-button-active-bg-color, #1a252f);
-    border-color: #151e27;
-    border-color: var(--fc-button-active-border-color, #151e27);
+    background-color: var(--color-main);
+    box-shadow: var(--clay-btn);
   }
-.fc .fc-button-primary:not(:disabled):active:focus,
+/*.fc .fc-button-primary:not(:disabled):active:focus,
   .fc .fc-button-primary:not(:disabled).fc-button-active:focus {
     box-shadow: 0 0 0 0.2rem rgba(76, 91, 106, 0.5);
-  }
+  */
 .fc {
 
   /* icons within buttons */
@@ -257,6 +257,8 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
   }
 .fc .fc-button-group > .fc-button:hover {
     z-index: 1;
+    box-shadow: var(--clay-btn);
+    background-color: var(--color-main);
   }
 .fc .fc-button-group > .fc-button:focus,
   .fc .fc-button-group > .fc-button:active,
@@ -265,21 +267,9 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
   }
 .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
     margin-left: -1px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
   }
 .fc-direction-rtl .fc-button-group > .fc-button:not(:first-child) {
     margin-right: -1px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-.fc-direction-rtl .fc-button-group > .fc-button:not(:last-child) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
   }
 .fc .fc-toolbar {
     display: flex;
@@ -293,7 +283,8 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     margin-top: 1.5em;
   }
 .fc .fc-toolbar-title {
-    font-size: 1.75em;
+    font-size: var(--font-size-18);
+    font-family: var(--font-md);
     margin: 0;
   }
 .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
@@ -309,6 +300,9 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     -webkit-overflow-scrolling: touch;
     position: relative; /* for abs-positioned elements within */
   }
+.fc-scroller.fc-scroller-liquid-absolute{
+    overflow: hidden;
+}
 .fc .fc-scroller-liquid {
     height: 100%;
   }
@@ -331,10 +325,6 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
   }
 .fc-direction-rtl .fc-scroller-harness > .fc-scroller { /* undo above hack */
     direction: rtl;
-  }
-.fc-theme-standard .fc-scrollgrid {
-    border: 1px solid #ddd;
-    border: 1px solid var(--fc-border-color, #ddd); /* bootstrap does this. match */
   }
 .fc .fc-scrollgrid,
     .fc .fc-scrollgrid table { /* all tables (self included) */
@@ -575,10 +565,7 @@ A HORIZONTAL event
 */
 .fc-h-event { /* allowed to be top-level */
   display: block;
-  border: 1px solid #3788d8;
-  border: 1px solid var(--fc-event-border-color, #3788d8);
-  background-color: #3788d8;
-  background-color: var(--fc-event-bg-color, #3788d8)
+  background-color: var(--color-main);
 
 }
 .fc-h-event .fc-event-main {
@@ -679,8 +666,6 @@ A HORIZONTAL event
     font-size: 1.1em;
   }
 .fc-theme-standard .fc-popover {
-    border: 1px solid #ddd;
-    border: 1px solid var(--fc-border-color, #ddd);
     background: #fff;
     background: var(--fc-page-bg-color, #fff);
   }
@@ -1378,7 +1363,9 @@ A VERTICAL event
 
 }
 .fc .fc-list-table tbody > tr:first-child th {
+    font-size: var(--font-size-14);
     border-top: 0;
+
   }
 .fc .fc-list-table th {
     padding: 0; /* uses an inner-wrapper instead... */

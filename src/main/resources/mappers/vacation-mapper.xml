@@ -19,25 +19,27 @@
                Y.COMMON_CODE_YRYC_STATE
         FROM YRYC_USE_DTLS Y, EMPL E
         WHERE Y.YRYC_USE_DTLS_EMPL_ID = #{emplId}
-        AND Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
+          AND Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
         ORDER BY YRYC_USE_DTLS_BEGIN_DATE DESC
     </select>
 
     <insert id="inputVacation" parameterType="vacationUseVO" useGeneratedKeys="true" keyProperty="generatedKey">
         INSERT INTO YRYC_USE_DTLS( YRYC_USE_DTLS_SN
-                                 , YRYC_USE_DTLS_BEGIN_DATE
-                                 , YRYC_USE_DTLS_END_DATE
-                                 , YRYC_USE_DTLS_RM
-                                 , COMMON_CODE_YRYC_USE_KIND
-                                 , COMMON_CODE_YRYC_USE_SE
-                                 , YRYC_USE_DTLS_EMPL_ID)
+        , YRYC_USE_DTLS_BEGIN_DATE
+        , YRYC_USE_DTLS_END_DATE
+        , YRYC_USE_DTLS_RM
+        , COMMON_CODE_YRYC_USE_KIND
+        , COMMON_CODE_YRYC_USE_SE
+        , YRYC_USE_DTLS_EMPL_ID
+        , COMMON_CODE_YRYC_STATE)
         VALUES (YRYC_USE_DTLS_SEQ.nextval,
-                #{yrycUseDtlsBeginDate},
-                #{yrycUseDtlsEndDate},
-                #{yrycUseDtlsRm},
-                #{commonCodeYrycUseKind},
-                #{commonCodeYrycUseSe},
-                #{yrycUseDtlsEmplId})
+        #{yrycUseDtlsBeginDate},
+        #{yrycUseDtlsEndDate},
+        #{yrycUseDtlsRm},
+        #{commonCodeYrycUseKind},
+        #{commonCodeYrycUseSe},
+        #{yrycUseDtlsEmplId},
+        'N')
         <selectKey keyProperty="yrycUseDtlsSn" resultType="int" order="AFTER">
             SELECT YRYC_USE_DTLS_SEQ.CURRVAL FROM DUAL
         </selectKey>
@@ -64,12 +66,12 @@
         FROM DUAL
     </select>
 
-    <update id="modifySanctionCode" parameterType="map">
+    <update id="modifyStatus" parameterType="map">
         UPDATE YRYC_USE_DTLS
-        SET ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
+        SET COMMON_CODE_YRYC_STATE = #{state}
         WHERE YRYC_USE_DTLS_SN = #{approveId}
     </update>
-    
+
     <select id="loadConfirmedVacation" parameterType="String" resultType="vacationUseVO">
         SELECT Y.YRYC_USE_DTLS_BEGIN_DATE,
                Y.YRYC_USE_DTLS_END_DATE,
@@ -90,8 +92,8 @@
                E.EMPL_NM AS YRYC_USE_DTLS_EMPL_NM,
                UF.UPLOAD_FILE_STRE_NM AS PROFILE_FILE_NAME
         FROM YRYC_USE_DTLS Y
-            JOIN EMPL E ON Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
-            JOIN UPLOAD_FILE UF ON E.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
+                 JOIN EMPL E ON Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
+                 JOIN UPLOAD_FILE UF ON E.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
         WHERE E.COMMON_CODE_DEPT = (SELECT E1.COMMON_CODE_DEPT FROM EMPL E1 WHERE E1.EMPL_ID = #{emplId})
           AND TO_CHAR(SYSDATE,'YYYY-MM-DD') BETWEEN Y.YRYC_USE_DTLS_BEGIN_DATE AND Y.YRYC_USE_DTLS_END_DATE
           AND Y.COMMON_CODE_YRYC_STATE = 'YRYC032'

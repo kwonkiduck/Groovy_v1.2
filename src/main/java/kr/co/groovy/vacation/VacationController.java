@@ -60,12 +60,6 @@ public class VacationController {
         return ResponseEntity.ok(vo);
     }
 
-    @PostMapping("/inputVacation")
-    public String inputVacation(VacationUseVO vo) {
-        service.inputVacation(vo);
-        int generatedKey = vo.getYrycUseDtlsSn();
-        return "redirect:/vacation/detail/" + generatedKey;
-    }
 
     /* 휴가 신청 폼 */
     @GetMapping("/request")
@@ -73,4 +67,11 @@ public class VacationController {
         return "employee/vacation/request";
     }
 
+    /* 휴가 신청 submit */
+    @PostMapping("/request")
+    public String inputVacation(VacationUseVO vo) {
+        service.inputVacation(vo);
+        int generatedKey = vo.getYrycUseDtlsSn();
+        return "redirect:/vacation/detail/" + generatedKey;
+    }
 }

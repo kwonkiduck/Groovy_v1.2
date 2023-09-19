@@ -75,7 +75,7 @@
                 <td><input type="checkbox" class="selectmail"></td>
                 <td onclick="modifyTableAt(this)" data-type="redng">
                         ${emailVO.emailRedngAt}
-                    <input type="hidden" value="${emailVO.emailDeleteAt}">
+                    <input type="hidden" value="${emailVO.emailDeleteAt}" name="deleteAt">
                 </td>
                 <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
                 <td>파일존재여부</td>

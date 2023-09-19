@@ -23,7 +23,7 @@
             </div>
             <br/>
             <div class="formTitle">
-                    ${template.formatSj}
+                    ${format.formatSj}
             </div>
         </div>
         <div class="approvalWrap">
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="formContent">
-                ${template.formatCn}
+                ${format.formatCn}
         </div>
         <div>
             <input type="file" id="sanctionFile" style="width: 99%"/>
@@ -57,19 +57,19 @@
         let referrer;
 
         const etprCode = "${etprCode}";
-        const formatCode = "${template.commonCodeSanctnFormat}";
+        const formatCode = "${format.commonCodeSanctnFormat}";
         const writer = "${CustomUser.employeeVO.emplId}"
         const today = year + '-' + month + '-' + day;
-        const title = "${template.formatSj}";
+        const title = "${format.formatSj}";
         let content;
         let file = $('#sanctionFile')[0].files[0];
         let vacationId = opener.$("#vacationId").text();
 
-
         $(document).ready(function () {
+            console.log(vacationId)
             $("#sanctionNo").html(etprCode);
             $("#writeDate").html(today);
-            $("#writer").html(writer)
+            $("#writer").html("${CustomUser.employeeVO.emplNm}")
 
             $.ajax({
                 url: `/vacation/loadData/\${vacationId}`,
@@ -88,6 +88,7 @@
                 }
             })
         });
+
         $(".submitLine").on("click", function () {
             approver = $("#sanctionLine input[type=hidden]").map(function () {
                 return $(this).val();
@@ -103,9 +104,17 @@
             }
         })
         $("#sanctionSubmit").on("click", function () {
-
-            updateVacation()
+            updateStatus()
             content = $(".formContent").html();
+            const param = {
+                vacationId: vacationId
+            }
+            const afterProcess = {
+                className: "kr.co.groovy.commute.CommuteService",
+                methodName: "insertCommuteByVacation",
+                parameters: param
+            }
+            const afterProcessData = JSON.stringify(afterProcess)
             const jsonData = {
                 approver: approver,
                 receiver: receiver,
@@ -116,9 +125,10 @@
                 today: today,
                 title: title,
                 content: content,
-                vacationId: vacationId
+                vacationId: vacationId,
+                afterProcess: afterProcessData
             };
-
+            console.log(jsonData)
             $.ajax({
                 url: "/sanction/api/sanction",
                 type: "POST",
@@ -140,7 +150,7 @@
             });
         });
 
-        // 연차 테이블 updatq & 결재 테이블 insert 후 첨부 파일 있다면 업로드 실행
+        // 결재 테이블 insert 후 첨부 파일 있다면 업로드 실행
         function uploadFile() {
             let form = $('#sanctionFile')[0].files[0];
             let formData = new FormData();
@@ -162,25 +172,26 @@
             });
         }
 
-        function updateVacation() {
+        // 연차 문서의 결재 상태 변경
+        function updateStatus() {
             let data = {
-                approvalType: 'kr.co.groovy.sanction.AnnualLeaveService',
-                methodName: 'afterApprove',
+                className: 'kr.co.groovy.vacation.VacationService',
+                methodName: 'modifyStatus',
                 parameters: {
                     approveId: vacationId,
-                    elctrnSanctnEtprCode: etprCode
+                    state: 'Y'
                 }
             };
             $.ajax({
-                url: `/sanction/reflection`,
+                url: `/sanction/api/reflection`,
                 type: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (data) {
-                    console.log("연차 테이블 업데이트 성공");
+                    alert("연차 테이블 업데이트 성공");
                 },
                 error: function (xhr) {
-                    console.log("연차 테이블 업데이트 실패");
+                    alert("연차 테이블 업데이트 실패");
                 }
             });
         }

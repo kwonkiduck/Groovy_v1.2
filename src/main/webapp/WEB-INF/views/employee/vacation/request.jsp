@@ -14,15 +14,9 @@
     <main>
         <h1>휴가 신청</h1>
         <div>
-            <form action="/vacation/inputVacation" method="post">
+            <form action="${pageContext.request.contextPath}/vacation/request" method="post">
                 <table border="1">
                     <input type="hidden" name="yrycUseDtlsEmplId" value="${CustomUser.employeeVO.emplId}"/>
-                        <%--                <tr>--%>
-                        <%--                    <th>제목</th>--%>
-                        <%--                    <td>--%>
-                        <%--                        <input type="text" name="title" id="title" placeholder="제목">--%>
-                        <%--                    </td>--%>
-                        <%--                </tr>--%>
                     <tr>
                         <th>휴가 구분</th>
                         <td>
@@ -31,18 +25,6 @@
 
                             <input type="radio" name="commonCodeYrycUseKind" value="YRYC011" id="vacation2">
                             <label for="vacation2">공가</label>
-
-<%--                            <input type="radio" name="commonCodeYrycUseKind" value="YRYC011" id="vacation3">--%>
-<%--                            <label for="vacation3">여름휴가</label>--%>
-
-<%--                            <input type="radio" name="commonCodeYrycUseKind" value="YRYC011" id="vacation4">--%>
-<%--                            <label for="vacation4">경사</label>--%>
-
-<%--                            <input type="radio" name="commonCodeYrycUseKind" value="YRYC011" id="vacation5">--%>
-<%--                            <label for="vacation5">조사</label>--%>
-
-<%--                            <input type="radio" name="commonCodeYrycUseKind" value="YRYC011" id="vacation6">--%>
-<%--                            <label for="vacation6">병가</label>--%>
                         </td>
                     </tr>
                     <tr>

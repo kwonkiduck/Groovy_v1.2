@@ -71,12 +71,12 @@ public class DietController {
 		
 		} 
 		map.put("res", "ok");
-		map.put("msg", "txt.success");
+		map.put("msg", "파일 업로드 성공");
 		
 		} catch(Exception e){
 			System.out.println(e.toString());
 			map.put("res", "error");
-			map.put("msg", "txt.fail");
+			map.put("msg", "파일 업로드 실패");
 		}
 		
 		redirectAttributes.addFlashAttribute("map", map);

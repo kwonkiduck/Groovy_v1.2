@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.groovy.weather.WeatherMapper">
+    <update id="saveWeather" parameterType="String">
+        UPDATE WETHR
+        SET WETHR_DATA = #{data}
+        WHERE WETHR_SN = 1
+    </update>
+    <select id="loadWeather" resultType="String">
+        SELECT WETHR_DATA
+        FROM WETHR
+        WHERE WETHR_SN = 1
+    </select>
+</mapper>
+

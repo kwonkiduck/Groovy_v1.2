@@ -19,7 +19,7 @@
     <sec:authentication property="principal" var="CustomUser"/>
     <div class="content">
         <div class="content-header">
-            <h2 class="font-36 font-md hello">안녕하세요, ${CustomUser.employeeVO.emplNm}님 <br>
+            <h2 class="font-24 font-md hello"><strong class="strong">안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
                 오늘 업무도 힘차게 파이팅! &#x1F64C;</h2>
         </div>
         <div class="content-body">
@@ -28,13 +28,13 @@
                     <div class="section-inner flex-inner">
                         <div class="commute">
                             <div class="commute-area commute-work card-df card">
-                                <button type="button" id="work" data-io="0" class="btn-commute pd-32">
+                                <button type="button" id="work" data-io="0" class="btn-commute icon-area pd-32">
                                     <h3 class="content-title font-b">출근</h3>
                                     <p id="workTime">00:00</p>
                                 </button>
                             </div>
                             <div class="commute-area commute-leave card-df card">
-                                <button type="button" id="leave" data-io="1" class="btn-commute pd-32">
+                                <button type="button" id="leave" data-io="1" class="btn-commute icon-area pd-32">
                                     <h3 class="content-title font-b">퇴근</h3>
                                     <p id="leaveTime">00:00</p>
                                 </button>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="job">
-                            <div class="job-area card card-df pd-32">
+                            <div class="job-area scroll-area card card-df pd-32">
                                 <div class="area-header">
                                     <h3 class="content-title font-b">해야할 일</h3>
                                     <a href="#" class="more">
@@ -94,7 +94,7 @@
                 <section class="right">
                     <div class="section-inner grid-inner">
                         <div class="saction">
-                            <div class="saction-area card card-df pd-32">
+                            <div class="saction-area scroll-area card card-df pd-32">
                                 <div class="area-header">
                                     <h3 class="content-title font-b">진행중인 결재</h3>
                                     <a href="#" class="more">
@@ -104,6 +104,42 @@
                                 <div class="area-body">
                                     <ul class="content-list saction-list">
                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calendar">
+                            <div class="calendar-area card card-df pd-32">
+
+                            </div>
+                        </div>
+                        <div class="diet">
+                            <div class="diet-area card card-df pd-32 icon-area">
+                                <div class="area-header">
+                                    <h3 class="content-title font-b">오늘의 식단</h3>
+                                </div>
+                                <div class="area-body">
+                                    <ul class="content-list diet-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="birthday">
+                            <div class="birthday-area card card-df pd-32">
+                                <div class="area-header">
+                                    <h3 class="content-title font-b">이달의 생일</h3>
+                                </div>
+                                <div class="area-body">
+                                    <ul class="content-list birthday-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weather">
+                            <div class="weather-area card card-df">
+                                <img id="weatherImg"></img>
+                                <div id="weather">
+                                    <div class="sky"></div>
+                                    <div class="temperature"></div>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +253,7 @@
                 $.each(data, function (index, item) {
                     code += `
                            <li><a href="#" class="list-item">
-                                    <span class="badge">공지사항</span>
+                                    <span class="badge badge-default">공지사항</span>
                                     <p class="list-context">\${item.notiCtgryIconFileStreNm} \${item.notiTitle}</p>
                                     <span class="list-date">\${item.notiDate}</span>
                                 </a></li>`
@@ -359,14 +395,18 @@
                 $.each(data, function (index, item) {
                     const birthday = item.emplBrthdy.split("-")[2];
                     console.log(birthday)
-                    code += `<tr><td><img src="/uploads/profile/\${item.proflPhotoFileStreNm}" width="50px;"/></td>
-                             <td>\${item.emplNm}</td></tr>
-                             <td>\${birthday}일</td></tr>`
+                    code += `
+                            <li class="list-item">
+                                <div class="item-img">
+                                    <img src="/uploads/profile/\${item.proflPhotoFileStreNm}" width="50px;" title="\${item.emplNm}"/>
+                                </div>
+                                <div class="item-desc">
+                                    <p>\${item.emplNm}</p>
+                                    <p>\${birthday}일</p>
+                                </div>
+                            </li>`
                 })
-
-                code += `</table>`
-
-                $("#birthdayWrap").html(code);
+                $(".birthday-list").html(code);
             },
             error: function (xhr, status, error) {
                 console.log("code: " + xhr.status)
@@ -383,21 +423,24 @@
                 });
 
                 request.done(function (data) {
-                    let calendarEl = document.getElementById('calendar');
+                    let calendarEl = document.querySelector(".calendar-area");
                     calendar = new FullCalendar.Calendar(calendarEl, {
-                        height: '500px',
+                        height: '100%',
                         slotMinTime: '08:00',
                         slotMaxTime: '20:00',
                         headerToolbar: {
-                            left: false,
-                            center: false,
+                            left: 'prev,next today',
+                            center: 'title',
                             right: false
                         },
                         initialView: 'dayGridMonth',
                         navLinks: true,
                         selectable: true,
                         events: data,
-                        locale: 'ko'
+                        locale: 'ko',
+                        dayCellContent: function(e) {
+                            e.dayNumberText = e.dayNumberText.replace('일', '');
+                        }
                     });
                     calendar.render();
                 });
@@ -409,14 +452,15 @@
             url: `/common/\${today}`,
             type: 'GET',
             success: function (data) {
-                let dietRes = `<p>\${data.dietRice}</p>
-                            <p>\${data.dietSoup}</p>
-                            <p>\${data.dietDish1}</p>
-                            <p>\${data.dietDish2}</p>
-                            <p>\${data.dietDish3}</p>
-                            <p>\${data.dietDessert}</p>
+                let dietRes = `
+                            <li class="diet-item">\${data.dietRice}</li>
+                            <li class="diet-item">\${data.dietSoup}</li>
+                            <li class="diet-item">\${data.dietDish1}</li>
+                            <li class="diet-item">\${data.dietDish2}</li>
+                            <li class="diet-item">\${data.dietDish3}</li>
+                            <li class="diet-item">\${data.dietDessert}</li>
                             `
-                $("#dietWrap").html(dietRes);
+                $(".diet-list").html(dietRes);
 
             },
             error: function (xhr, status, error) {
@@ -478,7 +522,8 @@
                         temperature = '' + fcstValue + '℃';
                     }
                 }
-                $('#weather').html(sky + " " + temperature);
+                $('.sky').html(sky);
+                $('.temperature').html(temperature);
                 $('#weatherImg').attr('src', imgSrc);
             },
             error: function (xhr) {

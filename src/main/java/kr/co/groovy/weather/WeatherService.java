@@ -1,9 +1,9 @@
-package kr.co.groovy.main;
+package kr.co.groovy.weather;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,17 +16,25 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-@RestController
-@RequestMapping("/weatherTemp")
-public class Weather {
+@Service
+@EnableScheduling
+public class WeatherService {
+
     private String nx = "68";
     private String ny = "100";
     private String baseDate;
     private String baseTime;
     private String type = "json";
+    final
+    WeatherMapper mapper;
 
-    @GetMapping("/getWeatherTemp")
-    public String GetWeather() throws IOException {
+    public WeatherService(WeatherMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    //    @Scheduled(fixedRate = 30 * 1000) // 30초마다
+    @Scheduled(cron = "0 0 2,5,8,11,14,17,20,23 * * *")
+    public void saveWeather() throws IOException {
         String[] baseTimes = {"0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300"};
 
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -73,9 +81,10 @@ public class Weather {
         rd.close();
         conn.disconnect();
         String result = sb.toString();
-
-        return result;
+        mapper.saveWeather(result);
+//        return result;
     }
+
     public static String findClosestBaseTime(LocalTime currentTime, String[] baseTimes) {
         LocalTime closestTime = null;
         long minDifference = Long.MAX_VALUE;
@@ -95,5 +104,9 @@ public class Weather {
         }
 
         return closestTime.format(DateTimeFormatter.ofPattern("HHmm"));
+    }
+
+    public String loadWeather() {
+        return mapper.loadWeather();
     }
 }
