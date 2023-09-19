@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/index.css">
 <link href="/resources/css/schedule/calendar.css" rel="stylesheet"/>
 <script src="/resources/fullcalendar/main.js"></script>
 <script src="/resources/fullcalendar/ko.js"></script>
