@@ -47,10 +47,18 @@
     class ClassComp {
         init(params) {
             this.eGui = document.createElement('div');
-            this.eGui.innerHTML = `
+            if (rowData.pop().vhcleResveReturnAt == 'Y') {
+                this.eGui.innerHTML = `
+                    <button class="returnCarBtn" id="\${params.value}" style="display: none;">반납 확인</button>
+                    <p class="returnStatus">반납완료</p>
+                `;
+
+            } else if (rowData.pop().vhcleResveReturnAt == 'N') {
+                this.eGui.innerHTML = `
                     <button class="returnCarBtn" id="\${params.value}">반납 확인</button>
                     <p class="returnStatus" style="display: none;">반납완료</p>
                 `;
+            }
             this.id = params.value;
             this.btnReturn = this.eGui.querySelector(".returnCarBtn");
             this.returnStatus = this.eGui.querySelector(".returnStatus");

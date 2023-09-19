@@ -21,5 +21,5 @@ public class VehicleVO {
     private String vhcleResveEmplId;
     private String vhcleResveEmplNm;
     private String commonCodeResveAt;
-    private String vhcleResveRetrunAt;
+    private String vhcleResveReturnAt;
 }
