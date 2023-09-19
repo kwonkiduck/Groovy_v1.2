@@ -418,7 +418,7 @@
         $(document).ready(function () {
             $(function () {
                 var request = $.ajax({
-                    url: "/calendar/schedule",
+                    url: "/schedule/schedule",
                     method: "GET",
                     dataType: "json"
                 });
@@ -435,7 +435,6 @@
                             right: false
                         },
                         initialView: 'dayGridMonth',
-                        navLinks: true,
                         selectable: true,
                         events: data,
                         locale: 'ko',

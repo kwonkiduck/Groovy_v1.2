@@ -39,5 +39,9 @@ public interface JobMapper {
 
     void updateJobStatus(JobProgressVO jobProgressVO);
 
+    void updateJobProgress(JobProgressVO jobProgressVO);
+
     List<JobVO> getJobByDate(Map<String, Object> map);
+
+    JobVO getJobByNoAndId(JobProgressVO jobProgressVO);
 }

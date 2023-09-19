@@ -4,27 +4,13 @@
            uri="http://www.springframework.org/security/tags" %>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
-    private int cprCardResveSn;
-    private Date cprCardResveBeginDate;
-    private Date cprCardResveClosDate;
-
-
-    private String cprCardNo;
-    private String cprCardNm;
-    private String cprCardResveEmplId;
-
-
-    private String commonCodeResveAt;
-    private String cprCardResveRturnAt;
-    private String cprCardResveEmplNm;
-
     <main>
         <h1>법인카드 신청</h1>
         <div>
             <form action="${pageContext.request.contextPath}/card/request" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <table border="1">
                     <input type="hidden" name="cprCardResveEmplId" value="${CustomUser.employeeVO.emplId}"/>
-                    <input type="hidden" name="commonCodeResveAt" value="RESVE010"/>
                     <tr>
                         <th>기간</th>
                         <td>
@@ -33,9 +19,22 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>내용</th>
+                        <th>사용처</th>
                         <td>
-                            <textarea name="yrycUseDtlsRm" id="content" cols="30" rows="10" placeholder="내용"></textarea>
+                            <input type="text" name="cprCardUseLoca" id="useLocation">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사용목적</th>
+                        <td>
+                            <textarea name="cprCardUsePurps" id="content" cols="30" rows="10"
+                                      placeholder="사용 목적"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사용예상금액</th>
+                        <td>
+                            <input type="number" name="cprCardUseExpectAmount" id="amount">
                         </td>
                     </tr>
                 </table>
@@ -43,4 +42,25 @@
             </form>
         </div>
     </main>
+    <div>
+        <h2>법인카드 신청 기록</h2>
+        <table border="1">
+            <tr>
+                <td>신청 번호</td>
+                <td>사용 기간</td>
+                <td>사용처</td>
+                <td>사용 목적</td>
+                <td>상신 여부</td>
+            </tr>
+            <c:forEach var="recodeVO" items="${cardRecord}" varStatus="stat">
+                <tr>
+                    <td><a href="/card/detail/${recodeVO.cprCardResveSn}">${recodeVO.cprCardResveSn}</a></td>
+                    <td>${recodeVO.cprCardResveBeginDate} - ${recodeVO.cprCardResveClosDate}</td>
+                    <td>${recodeVO.cprCardUseLoca}</td>
+                    <td>${recodeVO.cprCardUsePurps}</td>
+                    <td>${recodeVO.commonCodeYrycState == 'YRYC031'? '상신' : '미상신'}</td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
 </sec:authorize>

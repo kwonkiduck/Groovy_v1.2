@@ -5,21 +5,25 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 
 @Getter
 @Setter
 @ToString
 public class CardReservationVO {
     private int cprCardResveSn;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date cprCardResveBeginDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date cprCardResveClosDate;
-    private String cprCardNo;
-    private String cprCardNm;
     private String cprCardResveEmplId;
-    private String commonCodeResveAt;
-    private String cprCardResveRturnAt;
-    private String cprCardResveEmplNm;
+    private String commonCodeResveAt; // RESVE010: 비예약, RESVE011: 예약
+    private String cprCardNo;
+    private int cprCardResveRturnAt; // 0: 반납X / 1: 반납O
+    private String cprCardUseLoca;
+    private String cprCardUsePurps;
+    private int cprCardUseExpectAmount;
+    private String commonCodeYrycState;
+    private int generatedKey;
 
 }

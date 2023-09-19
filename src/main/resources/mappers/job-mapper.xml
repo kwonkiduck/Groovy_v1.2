@@ -196,9 +196,33 @@
           AND J.JOB_NO = #{jobNo}
     </select>
 
+    <select id="getJobByNoAndId" parameterType="jobProgressVO" resultMap="jobMap">
+        SELECT J.JOB_SJ,
+               J.JOB_CN,
+               J.JOB_BEGIN_DATE,
+               J.JOB_CLOS_DATE,
+               J.COMMON_CODE_DUTY_KIND,
+               E.EMPL_NM AS JOB_REQUST_EMPL_NM,
+               P.COMMON_CODE_DUTY_PROGRS
+        FROM JOB J,
+             EMPL E,
+             JOB_PROGRS P
+        WHERE J.JOB_REQUST_EMPL_ID = E.EMPL_ID
+          AND P.JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
+          AND J.JOB_NO = P.JOB_NO
+          AND J.JOB_NO = #{jobNo}
+    </select>
+
     <update id="updateJobStatus" parameterType="jobProgressVO">
         UPDATE JOB_PROGRS
         SET COMMON_CODE_DUTY_STTUS = #{commonCodeDutySttus}
+        WHERE JOB_NO = #{jobNo}
+          AND JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
+    </update>
+
+    <update id="updateJobProgress" parameterType="jobProgressVO">
+        UPDATE  JOB_PROGRS
+        SET COMMON_CODE_DUTY_PROGRS = #{commonCodeDutyProgrs}
         WHERE JOB_NO = #{jobNo}
           AND JOB_RECPTN_EMPL_ID = #{jobRecptnEmplId}
     </update>

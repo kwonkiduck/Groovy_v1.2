@@ -1058,3 +1058,7 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/mappers/weather-mapper.xml
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/read.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/email/sendMine.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/checkPassword.jsp
+target/classes/kr/co/groovy/community/CommunityController.class
+target/classes/kr/co/groovy/community/CommunityMapper.class
+target/classes/kr/co/groovy/community/CommunityService.class
+target/classes/kr/co/groovy/vo/PaystubVO.class

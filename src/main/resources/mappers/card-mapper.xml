@@ -38,9 +38,10 @@
                C.CPR_CARD_RESVE_CLOS_DATE,
                C.CPR_CARD_RESVE_EMPL_ID,
                E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM
-        FROM CPR_CARD_RESVE C, EMPL E
+        FROM CPR_CARD_RESVE C,
+             EMPL E
         WHERE COMMON_CODE_RESVE_AT = 'RESVE010'
-        AND C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
+          AND C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
         ORDER BY CPR_CARD_RESVE_SN
     </select>
 
@@ -49,8 +50,8 @@
             DECLARE
             BEGIN
                 UPDATE CPR_CARD_RESVE
-                SET CPR_CARD_NO = #{cprCardNo},
-                COMMON_CODE_RESVE_AT = 'RESVE011'
+                SET CPR_CARD_NO          = #{cprCardNo},
+                    COMMON_CODE_RESVE_AT = 'RESVE011'
                 WHERE CPR_CARD_RESVE_SN = #{cprCardResveSn};
 
                 UPDATE CPR_CARD
@@ -68,7 +69,9 @@
                CR.CPR_CARD_RESVE_EMPL_ID,
                E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM,
                CR.CPR_CARD_RESVE_RTURN_AT
-        FROM CPR_CARD_RESVE CR, CPR_CARD C, EMPL E
+        FROM CPR_CARD_RESVE CR,
+             CPR_CARD C,
+             EMPL E
         WHERE CR.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
           AND CR.CPR_CARD_NO = C.CPR_CARD_NO
           AND COMMON_CODE_RESVE_AT = 'RESVE011'
@@ -90,4 +93,79 @@
             END}
     </update>
 
+
+    <insert id="inputRequest" parameterType="cardReservationVO" useGeneratedKeys="true" keyProperty="generatedKey">
+        INSERT INTO CPR_CARD_RESVE(CPR_CARD_RESVE_SN,
+                                   CPR_CARD_RESVE_BEGIN_DATE,
+                                   CPR_CARD_RESVE_CLOS_DATE,
+                                   CPR_CARD_RESVE_EMPL_ID,
+                                   COMMON_CODE_RESVE_AT,
+                                   CPR_CARD_RESVE_RTURN_AT,
+                                   CPR_CARD_USE_LOCA,
+                                   CPR_CARD_USE_PURPS,
+                                   CPR_CARD_USE_EXPECT_AMOUNT,
+                                   COMMON_CODE_YRYC_STATE)
+        VALUES (CPR_CARD_RESVE_SEQ.nextval,
+                #{cprCardResveBeginDate},
+                #{cprCardResveClosDate},
+                #{cprCardResveEmplId},
+                'RESVE010',
+                0,
+                #{cprCardUseLoca},
+                #{cprCardUsePurps},
+                #{cprCardUseExpectAmount},
+                'YRYC030')
+        <selectKey keyProperty="cprCardResveSn" resultType="int" order="AFTER">
+            SELECT CPR_CARD_RESVE_SEQ.CURRVAL FROM DUAL
+        </selectKey>
+    </insert>
+    <select id="loadRequestDetail" parameterType="int" resultType="cardReservationVO">
+        SELECT CPR_CARD_RESVE_SN,
+               CPR_CARD_RESVE_BEGIN_DATE,
+               CPR_CARD_RESVE_CLOS_DATE,
+               CPR_CARD_RESVE_EMPL_ID,
+               COMMON_CODE_RESVE_AT,
+               CPR_CARD_NO,
+               CPR_CARD_RESVE_RTURN_AT,
+               CPR_CARD_USE_LOCA,
+               CPR_CARD_USE_PURPS,
+               CPR_CARD_USE_EXPECT_AMOUNT,
+               COMMON_CODE_YRYC_STATE
+        FROM CPR_CARD_RESVE
+        WHERE CPR_CARD_RESVE_SN = #{cprCardResveSn}
+    </select>
+    <select id="loadCardRecord" parameterType="String" resultType="cardReservationVO">
+        SELECT CPR_CARD_RESVE_SN,
+               CPR_CARD_RESVE_BEGIN_DATE,
+               CPR_CARD_RESVE_CLOS_DATE,
+               CPR_CARD_RESVE_EMPL_ID,
+               COMMON_CODE_RESVE_AT,
+               CPR_CARD_NO,
+               CPR_CARD_RESVE_RTURN_AT,
+               CPR_CARD_USE_LOCA,
+               CPR_CARD_USE_PURPS,
+               CPR_CARD_USE_EXPECT_AMOUNT,
+               COMMON_CODE_YRYC_STATE
+        FROM CPR_CARD_RESVE
+        WHERE CPR_CARD_RESVE_EMPL_ID = #{emplId}
+    </select>
+    <update id="modifyStatus" parameterType="map">
+        UPDATE CPR_CARD_RESVE
+        SET COMMON_CODE_YRYC_STATE = #{state}
+        WHERE CPR_CARD_RESVE_SN = #{approveId}
+    </update>
+    <select id="loadSanctionList" resultType="cardReservationVO">
+        SELECT CPR_CARD_RESVE_SN,
+               CPR_CARD_RESVE_BEGIN_DATE,
+               CPR_CARD_RESVE_CLOS_DATE,
+               CPR_CARD_RESVE_EMPL_ID,
+               COMMON_CODE_RESVE_AT,
+               CPR_CARD_NO,
+               CPR_CARD_RESVE_RTURN_AT,
+               CPR_CARD_USE_LOCA,
+               CPR_CARD_USE_PURPS,
+               CPR_CARD_USE_EXPECT_AMOUNT,
+               COMMON_CODE_YRYC_STATE
+        FROM CPR_CARD_RESVE
+    </select>
 </mapper>

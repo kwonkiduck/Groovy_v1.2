@@ -17,7 +17,8 @@
                Y.COMMON_CODE_YRYC_USE_KIND,
                Y.COMMON_CODE_YRYC_USE_SE,
                Y.COMMON_CODE_YRYC_STATE
-        FROM YRYC_USE_DTLS Y, EMPL E
+        FROM YRYC_USE_DTLS Y,
+             EMPL E
         WHERE Y.YRYC_USE_DTLS_EMPL_ID = #{emplId}
           AND Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
         ORDER BY YRYC_USE_DTLS_BEGIN_DATE DESC
@@ -39,7 +40,7 @@
         #{commonCodeYrycUseKind},
         #{commonCodeYrycUseSe},
         #{yrycUseDtlsEmplId},
-        'N')
+        'YRYC030')
         <selectKey keyProperty="yrycUseDtlsSn" resultType="int" order="AFTER">
             SELECT YRYC_USE_DTLS_SEQ.CURRVAL FROM DUAL
         </selectKey>
@@ -76,7 +77,8 @@
         SELECT Y.YRYC_USE_DTLS_BEGIN_DATE,
                Y.YRYC_USE_DTLS_END_DATE,
                Y.COMMON_CODE_YRYC_USE_KIND
-        FROM YRYC_USE_DTLS Y, EMPL E
+        FROM YRYC_USE_DTLS Y,
+             EMPL E
         WHERE Y.YRYC_USE_DTLS_EMPL_ID = #{emplId}
           AND Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
           AND Y.COMMON_CODE_YRYC_STATE = 'YRYC032'
@@ -89,13 +91,13 @@
                Y.YRYC_USE_DTLS_BEGIN_DATE,
                Y.YRYC_USE_DTLS_END_DATE,
                Y.COMMON_CODE_YRYC_USE_KIND,
-               E.EMPL_NM AS YRYC_USE_DTLS_EMPL_NM,
+               E.EMPL_NM              AS YRYC_USE_DTLS_EMPL_NM,
                UF.UPLOAD_FILE_STRE_NM AS PROFILE_FILE_NAME
         FROM YRYC_USE_DTLS Y
                  JOIN EMPL E ON Y.YRYC_USE_DTLS_EMPL_ID = E.EMPL_ID
                  JOIN UPLOAD_FILE UF ON E.PROFL_ETPR_CODE = UF.UPLOAD_FILE_ETPR_CODE
         WHERE E.COMMON_CODE_DEPT = (SELECT E1.COMMON_CODE_DEPT FROM EMPL E1 WHERE E1.EMPL_ID = #{emplId})
-          AND TO_CHAR(SYSDATE,'YYYY-MM-DD') BETWEEN Y.YRYC_USE_DTLS_BEGIN_DATE AND Y.YRYC_USE_DTLS_END_DATE
+          AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN Y.YRYC_USE_DTLS_BEGIN_DATE AND Y.YRYC_USE_DTLS_END_DATE
           AND Y.COMMON_CODE_YRYC_STATE = 'YRYC032'
           AND Y.YRYC_USE_DTLS_EMPL_ID != #{emplId}
         ORDER BY YRYC_USE_DTLS_BEGIN_DATE DESC
