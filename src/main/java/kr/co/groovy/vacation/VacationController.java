@@ -1,6 +1,5 @@
 package kr.co.groovy.vacation;
 
-import kr.co.groovy.enums.VacationKind;
 import kr.co.groovy.vo.VacationUseVO;
 import kr.co.groovy.vo.VacationVO;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -27,31 +27,12 @@ public class VacationController {
     @GetMapping("")
     public String myVacation(Model model, Principal principal) {
         String emplId = principal.getName();
-        VacationVO vacationVO = service.loadVacationCnt(emplId);
-        if (vacationVO != null) {
-            double usedVacationCnt = vacationVO.getYrycUseCo();
-            double nowVacationCnt = vacationVO.getYrycNowCo();
-            double totalVacationCnt = usedVacationCnt + nowVacationCnt;
-            if (usedVacationCnt == (int) usedVacationCnt) {
-                model.addAttribute("usedVacationCnt", (int) usedVacationCnt);
-            } else {
-                model.addAttribute("usedVacationCnt", usedVacationCnt);
-            }
-
-            if (nowVacationCnt == (int) nowVacationCnt) {
-                model.addAttribute("nowVacationCnt", (int) nowVacationCnt);
-            } else {
-                model.addAttribute("nowVacationCnt", nowVacationCnt);
-            }
-
-            if (totalVacationCnt == (int) totalVacationCnt) {
-                model.addAttribute("totalVacationCnt", (int) totalVacationCnt);
-            } else {
-                model.addAttribute("totalVacationCnt", totalVacationCnt);
-            }
-        }
+        Map<String, Object> vacationCnt = service.loadVacationCnt(emplId);
         List<VacationUseVO> myVacation = service.loadConfirmedVacation(emplId);
         List<VacationUseVO> teamMemVacation = service.loadTeamMemVacation(emplId);
+        model.addAttribute("usedVacationCnt", vacationCnt.get("usedVacationCnt"));
+        model.addAttribute("nowVacationCnt", vacationCnt.get("nowVacationCnt"));
+        model.addAttribute("totalVacationCnt", vacationCnt.get("totalVacationCnt"));
         model.addAttribute("myVacation", myVacation);
         model.addAttribute("teamMemVacation", teamMemVacation);
         return "employee/myVacation";
