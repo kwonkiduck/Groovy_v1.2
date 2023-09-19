@@ -230,13 +230,10 @@
                S.ELCTRN_SANCTN_AFTER_PRCS,
                E.EMPL_NM,
                E.COMMON_CODE_CLSF,
-               E.COMMON_CODE_DEPT,
-               U.UPLOAD_FILE_STRE_NM
+               E.COMMON_CODE_DEPT
         FROM ELCTRN_SANCTN S,
-             EMPL E,
-             UPLOAD_FILE U
+             EMPL E
         WHERE S.ELCTRN_SANCTN_DRFT_EMPL_ID = E.EMPL_ID
-          AND E.SIGN_ETPR_CODE = U.UPLOAD_FILE_ETPR_CODE
           AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}
     </select>
     <select id="loadAwaiting" parameterType="String" resultType="sanctionLineVO">

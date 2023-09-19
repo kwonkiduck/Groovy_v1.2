@@ -75,7 +75,7 @@
             $("#writer").html("${CustomUser.employeeVO.emplNm}")
             console.log(dept)
 
-            if (dept == 'DEPT010') {
+            if (dept == 'DEPT011') {
                 loadCardData()
             } else {
                 loadVacationData()
@@ -103,7 +103,7 @@
 
         function loadCardData() {
             $.ajax({
-                url: `/vacation/loadData/\${num}`,
+                url: `/card/data/\${num}`,
                 type: "GET",
                 success: function (data) {
                     console.log(data)
@@ -137,15 +137,6 @@
         $("#sanctionSubmit").on("click", function () {
             updateStatus()
             content = $(".formContent").html();
-            const param = {
-                vacationId: num
-            }
-            const afterProcess = {
-                className: "kr.co.groovy.commute.CommuteService",
-                methodName: "insertCommuteByVacation",
-                parameters: param
-            }
-            const afterProcessData = JSON.stringify(afterProcess)
             const jsonData = {
                 approver: approver,
                 receiver: receiver,
@@ -157,9 +148,19 @@
                 title: title,
                 content: content,
                 vacationId: num,
-                afterProcess: afterProcessData
             };
-            console.log(jsonData)
+
+            if (dept === 'DEPT010') {
+                const param = {
+                    vacationId: num
+                };
+                const afterProcess = {
+                    className: "kr.co.groovy.commute.CommuteService",
+                    methodName: "insertCommuteByVacation",
+                    parameters: param
+                };
+                jsonData.afterProcess = JSON.stringify(afterProcess);
+            }
             $.ajax({
                 url: "/sanction/api/sanction",
                 type: "POST",
@@ -203,10 +204,16 @@
             });
         }
 
-        // 연차 문서의 결재 상태 변경
+        // 문서의 결재 상태 변경
         function updateStatus() {
+            let className;
+            if (dept === 'DEPT011') {
+                className = 'kr.co.groovy.card.CardService'
+            } else {
+                className = 'kr.co.groovy.vacation.VacationService'
+            }
             let data = {
-                className: 'kr.co.groovy.vacation.VacationService',
+                className: className,
                 methodName: 'modifyStatus',
                 parameters: {
                     approveId: num,
@@ -219,10 +226,10 @@
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (data) {
-                    alert("연차 테이블 업데이트 성공");
+                    alert("결재 상태 업데이트 성공");
                 },
                 error: function (xhr) {
-                    alert("연차 테이블 업데이트 실패");
+                    alert("결재 상태 업데이트 실패");
                 }
             });
         }

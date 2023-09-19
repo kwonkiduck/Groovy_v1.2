@@ -1,11 +1,13 @@
 package kr.co.groovy.card;
 
+import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.CardReservationVO;
 import kr.co.groovy.vo.CardVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -74,8 +76,18 @@ public class CardService {
         return mapper.inputRequest(cardReservationVO);
     }
 
-    CardReservationVO loadRequestDetail(int cprCardResveSn){
+    CardReservationVO loadRequestDetail(int cprCardResveSn) {
         return mapper.loadRequestDetail(cprCardResveSn);
+    }
+
+    List<CardReservationVO> loadCardRecord() {
+        return mapper.loadCardRecord();
+    }
+    public void modifyStatus(Map<String, Object> paramMap) {
+        ParamMap map = ParamMap.init();
+        map.put("approveId", paramMap.get("approveId"));
+        map.put("state", paramMap.get("state"));
+        mapper.modifyStatus(map);
     }
 
 }
