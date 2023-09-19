@@ -37,7 +37,10 @@
                C.CPR_CARD_RESVE_BEGIN_DATE,
                C.CPR_CARD_RESVE_CLOS_DATE,
                C.CPR_CARD_RESVE_EMPL_ID,
-               E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM
+               E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM,
+               C.CPR_CARD_USE_LOCA,
+               C.CPR_CARD_USE_PURPS,
+               C.CPR_CARD_USE_EXPECT_AMOUNT
         FROM CPR_CARD_RESVE C,
              EMPL E
         WHERE COMMON_CODE_RESVE_AT = 'RESVE010'
@@ -68,7 +71,10 @@
                C.CPR_CARD_NM,
                CR.CPR_CARD_RESVE_EMPL_ID,
                E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM,
-               CR.CPR_CARD_RESVE_RTURN_AT
+               CR.CPR_CARD_RESVE_RTURN_AT,
+               CR.CPR_CARD_USE_LOCA,
+               CR.CPR_CARD_USE_PURPS,
+               CR.CPR_CARD_USE_EXPECT_AMOUNT
         FROM CPR_CARD_RESVE CR,
              CPR_CARD C,
              EMPL E

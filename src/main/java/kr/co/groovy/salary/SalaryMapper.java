@@ -1,12 +1,10 @@
 package kr.co.groovy.salary;
 
-import kr.co.groovy.vo.AnnualSalaryVO;
-import kr.co.groovy.vo.EmployeeVO;
-import kr.co.groovy.vo.SalaryVO;
-import kr.co.groovy.vo.TariffVO;
+import kr.co.groovy.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SalaryMapper {
 
@@ -19,4 +17,10 @@ public interface SalaryMapper {
     List<EmployeeVO> loadEmpList();
 
     List<SalaryVO> loadPaymentList(@Param("emplId") String emplId, @Param("year") String year);
+
+    PaystubVO loadRecentPaystub(String emplId);
+
+    List<Integer> loadYearsForSortPaystub(String emplId);
+
+    List<PaystubVO> loadPaystubList(@Param("emplId") String emplId, @Param("year") String year);
 }

@@ -97,15 +97,15 @@
     <!-- 수신받은 메일함 -->
     <select id="getAllReceivedMailsToMe" resultType="emailVO" parameterType="Map">
         SELECT distinct ef.EMAIL_ETPR_CODE
-             , ef.EMAIL_SN
-             , ef.EMAIL_FROM_ADDR
-             , ef.EMAIL_FROM_SJ
-             , ef.EMAIL_FROM_SEND_DATE
-             , et.EMAIL_TO_ADDR
-             , et.EMAIL_TO_RECEIVED_DATE
-             , ers.EMAIL_DELETE_AT
-             , ers.EMAIL_IMPRTNC_AT
-             , ers.EMAIL_REDNG_AT
+                      , ef.EMAIL_SN
+                      , ef.EMAIL_FROM_ADDR
+                      , ef.EMAIL_FROM_SJ
+                      , ef.EMAIL_FROM_SEND_DATE
+                      , et.EMAIL_TO_ADDR
+                      , et.EMAIL_TO_RECEIVED_DATE
+                      , ers.EMAIL_DELETE_AT
+                      , ers.EMAIL_IMPRTNC_AT
+                      , ers.EMAIL_REDNG_AT
         FROM EMAIL_FROM ef
                  left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
@@ -119,15 +119,15 @@
     <!-- 참조받은 메일함 -->
     <select id="getAllReferencedMailsToMe" resultType="emailVO" parameterType="Map">
         SELECT distinct ef.email_etpr_code
-             , ef.EMAIL_SN
-             , ef.EMAIL_FROM_ADDR
-             , ef.EMAIL_FROM_SJ
-             , ef.EMAIL_FROM_SEND_DATE
-             , ec.EMAIL_CC_ADDR
-             , ec.EMAIL_CC_RECEIVED_DATE
-             , ers.EMAIL_DELETE_AT
-             , ers.EMAIL_IMPRTNC_AT
-             , ers.EMAIL_REDNG_AT
+                      , ef.EMAIL_SN
+                      , ef.EMAIL_FROM_ADDR
+                      , ef.EMAIL_FROM_SJ
+                      , ef.EMAIL_FROM_SEND_DATE
+                      , ec.EMAIL_CC_ADDR
+                      , ec.EMAIL_CC_RECEIVED_DATE
+                      , ers.EMAIL_DELETE_AT
+                      , ers.EMAIL_IMPRTNC_AT
+                      , ers.EMAIL_REDNG_AT
         FROM EMAIL_FROM ef
                  left JOIN EMAIL_CC ec on ef.EMAIL_ETPR_CODE = ec.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
@@ -141,13 +141,13 @@
     <!-- 내게 쓴 메일함 -->
     <select id="getAllSentMailsToMe" resultType="emailVO" parameterType="Map">
         SELECT distinct ef.EMAIL_ETPR_CODE
-             , ef.EMAIL_SN
-             , ef.EMAIL_FROM_ADDR
-             , ef.EMAIL_FROM_SJ
-             , ef.EMAIL_FROM_SEND_DATE
-             , et.EMAIL_TO_ADDR
-             , et.EMAIL_TO_RECEIVED_DATE
-             , ers.EMAIL_DELETE_AT
+                      , ef.EMAIL_SN
+                      , ef.EMAIL_FROM_ADDR
+                      , ef.EMAIL_FROM_SJ
+                      , ef.EMAIL_FROM_SEND_DATE
+                      , et.EMAIL_TO_ADDR
+                      , et.EMAIL_TO_RECEIVED_DATE
+                      , ers.EMAIL_DELETE_AT
         FROM EMAIL_FROM ef
                  left JOIN EMAIL_TO et on ef.EMAIL_ETPR_CODE = et.EMAIL_ETPR_CODE
                  left join EMAIL_RECEIVED_STTUS ers on ef.EMAIL_ETPR_CODE = ers.EMAIL_ETPR_CODE
@@ -207,10 +207,60 @@
         from EMAIL_FROM
     </select>
 
+    <select id="getNowEmail" resultType="emailVO" parameterType="Map">
+        SELECT EF.EMAIL_ETPR_CODE
+             , EF.EMAIL_FROM_ADDR
+             , EF.EMAIL_SN
+             , EF.EMAIL_FROM_SJ
+             , EF.EMAIL_FROM_CN
+             , EF.EMAIL_FROM_CN_TYPE
+             , EF.EMAIL_FROM_SEND_DATE
+             , ERS.EMAIL_DELETE_AT
+             , (SELECT EMPL_NM FROM EMPL E WHERE E.EMPL_EMAIL = EF.EMAIL_FROM_ADDR) AS EMAIL_FROM_NM
+        FROM EMAIL_FROM EF
+                 LEFT JOIN EMAIL_RECEIVED_STTUS ERS
+                           ON EF.EMAIL_ETPR_CODE = ERS.EMAIL_ETPR_CODE and EF.EMAIL_FROM_ADDR = ERS.EMAIL_FROM_ADDR
+        WHERE EF.EMAIL_ETPR_CODE = #{emailEtprCode}
+          AND ERS.EMAIL_DELETE_AT = 'N'
+    </select>
+
+    <select id="getToPerEmail" resultType="emailVO" parameterType="Map">
+        SELECT ET.EMAIL_TO_ADDR
+             , (SELECT EMPL_NM FROM EMPL E WHERE E.EMPL_EMAIL = ET.EMAIL_TO_ADDR) AS EMAIL_TO_NM
+        FROM EMAIL_FROM EF
+                 LEFT JOIN EMAIL_TO ET ON EF.EMAIL_ETPR_CODE = ET.EMAIL_ETPR_CODE
+        WHERE EF.EMAIL_ETPR_CODE = #{emailEtprCode}
+    </select>
+
+    <select id="getCcPerEmail" resultType="emailVO" parameterType="Map">
+        SELECT EC.EMAIL_CC_ADDR
+             , (SELECT EMPL_NM FROM EMPL E WHERE E.EMPL_EMAIL = EC.EMAIL_CC_ADDR) AS EMAIL_CC_NM
+        FROM EMAIL_FROM EF
+                 LEFT JOIN EMAIL_CC EC ON EF.EMAIL_ETPR_CODE = EC.EMAIL_ETPR_CODE
+        WHERE EF.EMAIL_ETPR_CODE = #{emailEtprCode}
+    </select>
+
+    <select id="getAllMailCount" resultType="int" parameterType="String">
+        SELECT COUNT(DISTINCT EMAIL_ETPR_CODE)
+        FROM (SELECT EMAIL_ETPR_CODE
+              FROM EMAIL_FROM
+              WHERE EMAIL_FROM_ADDR = #{emailAddr}
+              UNION ALL
+              SELECT EMAIL_ETPR_CODE
+              FROM EMAIL_TO
+              WHERE EMAIL_TO_ADDR = #{emailAddr}
+              UNION ALL
+              SELECT EMAIL_ETPR_CODE
+              FROM EMAIL_CC
+              WHERE EMAIL_CC_ADDR = #{emailAddr})
+    </select>
+
     <update id="modifyEmailRedngAt" parameterType="Map">
         update EMAIL_RECEIVED_STTUS
         set ${emailAtKind} = #{at}
         where EMAIL_ETPR_CODE in #{emailEtprCode}
     </update>
+
+
 </mapper>
 

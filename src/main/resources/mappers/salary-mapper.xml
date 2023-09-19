@@ -60,6 +60,7 @@
           AND SALARY_EMPL_ID = #{emplId}
           AND TO_CHAR(SALARY_PYMNT_DATE, 'YYYY') = #{year}
     </select>
+
     <insert id="inputSalary" parameterType="String">
         INSERT INTO SALARY(SALARY_PYMNT_DATE, SALARY_EMPL_ID, SALARY_BSLRY, SALARY_OVTIME_ALLWNC)
         WITH TOTAL_OVERTIME AS (SELECT SUM(CASE
@@ -91,4 +92,57 @@
         WHERE E.EMPL_ID = #{emplId}
         GROUP BY TO_DATE(TO_CHAR(LAST_DAY(ADD_MONTHS(SYSDATE, -1)), 'YYYY-MM') || '-10', 'YYYY-MM-DD'), #{emplId};
     </insert>
+
+    <select id="loadRecentPaystub" parameterType="String" resultType="paystubVO">
+        SELECT SALARY_DTSMT_ETPR_CODE,
+               SALARY_DTSMT_ISSU_DATE,
+               SALARY_EMPL_ID,
+               SALARY_DTSMT_DDC_TOTAMT,
+               SALARY_DTSMT_PYMNT_TOTAMT,
+               SALARY_DTSMT_NET_PAY,
+               SALARY_DTSMT_SIS_NP,
+               SALARY_DTSMT_SIS_HI,
+               SALARY_DTSMT_SIS_EI,
+               SALARY_DTSMT_SIS_WCI,
+               SALARY_DTSMT_INCMTAX,
+               SALARY_DTSMT_LOCALITY_INCMTAX,
+               SALARY_BSLRY,
+               SALARY_OVTIME_ALLWNC
+        FROM (SELECT SD.SALARY_DTSMT_ETPR_CODE,
+                     SD.SALARY_DTSMT_ISSU_DATE,
+                     SD.SALARY_EMPL_ID,
+                     SD.SALARY_DTSMT_DDC_TOTAMT,
+                     SD.SALARY_DTSMT_PYMNT_TOTAMT,
+                     SD.SALARY_DTSMT_NET_PAY,
+                     SD.SALARY_DTSMT_SIS_NP,
+                     SD.SALARY_DTSMT_SIS_HI,
+                     SD.SALARY_DTSMT_SIS_EI,
+                     SD.SALARY_DTSMT_SIS_WCI,
+                     SD.SALARY_DTSMT_INCMTAX,
+                     SD.SALARY_DTSMT_LOCALITY_INCMTAX,
+                     S.SALARY_BSLRY,
+                     S.SALARY_OVTIME_ALLWNC
+              FROM SALARY_DTSMT SD, SALARY S
+              WHERE SD.SALARY_EMPL_ID = #{emplId}
+                AND SD.SALARY_DTSMT_ISSU_DATE = S.SALARY_PYMNT_DATE
+              ORDER BY SD.SALARY_DTSMT_ISSU_DATE DESC)
+        WHERE ROWNUM = 1
+    </select>
+    
+    <select id="loadYearsForSortPaystub" parameterType="String" resultType="int">
+        SELECT EXTRACT(YEAR FROM SALARY_DTSMT_ISSU_DATE) FROM SALARY_DTSMT
+        WHERE SALARY_EMPL_ID = #{emplId}
+        GROUP BY EXTRACT(YEAR FROM SALARY_DTSMT_ISSU_DATE)
+        ORDER BY EXTRACT(YEAR FROM SALARY_DTSMT_ISSU_DATE) DESC
+    </select>
+
+    <select id="loadPaystubList" parameterType="String" resultType="paystubVO">
+        SELECT SALARY_DTSMT_ETPR_CODE,
+               SALARY_DTSMT_ISSU_DATE,
+               SALARY_DTSMT_NET_PAY
+        FROM SALARY_DTSMT
+        WHERE SALARY_EMPL_ID = #{emplId}
+          AND EXTRACT(YEAR FROM SALARY_DTSMT_ISSU_DATE) = #{year}
+        ORDER BY SALARY_DTSMT_ISSU_DATE DESC
+    </select>
 </mapper>

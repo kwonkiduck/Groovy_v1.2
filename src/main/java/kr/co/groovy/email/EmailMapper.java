@@ -34,6 +34,8 @@ public interface EmailMapper {
 
     int getUnreadMailCount(String emplId);
 
+    int getAllMailCount(String emailAddr);
+
     int getEmailSeq();
 
     void uploadEmailFile(Map<String, Object> map);
@@ -41,4 +43,10 @@ public interface EmailMapper {
     String getEmplNmByEmplEmail(String emailAddr);
 
     int getMaxEmailSn();
+
+    EmailVO getNowEmail(Map<String, String> map);
+
+    List<EmailVO> getToPerEmail(Map<String, String> map);
+
+    List<EmailVO> getCcPerEmail(Map<String, String> map);
 }

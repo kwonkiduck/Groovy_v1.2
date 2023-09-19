@@ -2,13 +2,12 @@ package kr.co.groovy.salary;
 
 import kr.co.groovy.enums.ClassOfPosition;
 import kr.co.groovy.enums.Department;
-import kr.co.groovy.vo.AnnualSalaryVO;
-import kr.co.groovy.vo.EmployeeVO;
-import kr.co.groovy.vo.SalaryVO;
-import kr.co.groovy.vo.TariffVO;
+import kr.co.groovy.vo.*;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SalaryService {
@@ -50,5 +49,17 @@ public class SalaryService {
 
     List<SalaryVO> loadPaymentList(String emplId, String year) {
         return mapper.loadPaymentList(emplId, year);
+    }
+
+    PaystubVO loadRecentPaystub(String emplId) {
+        return mapper.loadRecentPaystub(emplId);
+    }
+
+    List<Integer> loadYearsForSortPaystub(String emplId) {
+        return mapper.loadYearsForSortPaystub(emplId);
+    }
+
+    List<PaystubVO> loadPaystubList(String emplId, String year) {
+        return mapper.loadPaystubList(emplId, year);
     }
 }

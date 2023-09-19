@@ -32,16 +32,23 @@
             </div>
             <div id="myVacation">
                 <ul>
-                    <c:forEach items="${myVacation}" var="myVacation">
-                        <c:choose>
-                            <c:when test="${myVacation.yrycUseDtlsBeginDate == myVacation.yrycUseDtlsEndDate}">
-                                <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate}</li>
-                            </c:when>
-                            <c:otherwise>
-                                <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate} ~ ${myVacation.yrycUseDtlsEndDate}</li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${not empty myVacation}">
+                            <c:forEach items="${myVacation}" var="myVacation">
+                                <c:choose>
+                                    <c:when test="${myVacation.yrycUseDtlsBeginDate == myVacation.yrycUseDtlsEndDate}">
+                                        <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate}</li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li>${myVacation.commonCodeYrycUseKind} | ${myVacation.yrycUseDtlsBeginDate} ~ ${myVacation.yrycUseDtlsEndDate}</li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <li>휴가 정보가 없습니다.</li>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
             </div>
         </div>
@@ -49,22 +56,29 @@
             <div><p>구성원의 휴가(연락금지)</p></div>
             <div id="memVacation">
                 <ul>
-                    <c:forEach items="${teamMemVacation}" var="memVacation">
-                        <c:choose>
-                            <c:when test="${memVacation.yrycUseDtlsBeginDate == memVacation.yrycUseDtlsEndDate}">
-                                <li>
-                                    <img src="${memVacation.profileFileName}"/>
-                                        ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate}
-                                </li>
-                            </c:when>
-                            <c:otherwise>
-                                <li>
-                                    <img src="${memVacation.profileFileName}"/>
-                                        ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate} ~ ${memVacation.yrycUseDtlsEndDate}
-                                </li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${not empty myVacation}">
+                            <c:forEach items="${teamMemVacation}" var="memVacation">
+                                <c:choose>
+                                    <c:when test="${memVacation.yrycUseDtlsBeginDate == memVacation.yrycUseDtlsEndDate}">
+                                        <li>
+                                            <img src="${memVacation.profileFileName}"/>
+                                                ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate}
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li>
+                                            <img src="${memVacation.profileFileName}"/>
+                                                ${memVacation.yrycUseDtlsEmplNm} | ${memVacation.commonCodeYrycUseKind} ${memVacation.yrycUseDtlsBeginDate} ~ ${memVacation.yrycUseDtlsEndDate}
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <li>휴가 정보가 없습니다.</li>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
             </div>
         </div>
