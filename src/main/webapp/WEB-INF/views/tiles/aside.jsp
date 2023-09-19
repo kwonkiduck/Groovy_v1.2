@@ -57,7 +57,7 @@
             <div class="team">
                 <span class="nav-cate">팀</span>
                 <ul>
-                    <li class="nav-list"><a href="${pageContext.request.contextPath}/calendar/emplScheduleMain"><i
+                    <li class="nav-list"><a href="${pageContext.request.contextPath}/schedule/emplScheduleMain"><i
                             class="icon i-org"></i>캘린더</a></li>
                     <li class="nav-list"><a href="${pageContext.request.contextPath}/teamCommunity"><i
                             class="icon i-community"></i>팀 커뮤니티</a></li>
