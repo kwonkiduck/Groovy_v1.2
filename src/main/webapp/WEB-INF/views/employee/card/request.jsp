@@ -58,7 +58,7 @@
                     <td>${recodeVO.cprCardResveBeginDate} - ${recodeVO.cprCardResveClosDate}</td>
                     <td>${recodeVO.cprCardUseLoca}</td>
                     <td>${recodeVO.cprCardUsePurps}</td>
-                    <td>${recodeVO.commonCodeYrycState == 'Y'? '상신' : '미상신'}</td>
+                    <td>${recodeVO.commonCodeYrycState == 'YRYC031'? '상신' : '미상신'}</td>
                 </tr>
             </c:forEach>
         </table>

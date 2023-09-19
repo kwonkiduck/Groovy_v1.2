@@ -58,7 +58,7 @@
             </div>
             <br/>
             <div class="formTitle">
-                    ${sanction.elctrnSanctnSj}${sanction.elctrnSanctnAfterPrcs}
+                    ${sanction.elctrnSanctnSj}
             </div>
         </div>
         <div class="formContent">
@@ -115,7 +115,7 @@
         let etprCode = '${sanction.elctrnSanctnEtprCode}';
         let afterPrcs = '${sanction.elctrnSanctnAfterPrcs}'
         $(function () {
-
+            $("#elctrnSanctnFinalDate").html('${sanction.elctrnSanctnFinalDate}');
             console.log(afterPrcs);
         })
 

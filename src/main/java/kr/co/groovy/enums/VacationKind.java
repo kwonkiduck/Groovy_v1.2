@@ -14,9 +14,7 @@ public enum VacationKind {
     YRYC022("하루종일"),
     YRYC030("미상신"),
     YRYC031("상신"),
-    YRYC032("승인"),
-    Y("상신"),
-    N("미상신");
+    YRYC032("승인");
     private final String label;
 
     VacationKind(String label) {

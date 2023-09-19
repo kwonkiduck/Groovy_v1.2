@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +30,7 @@ public class CardController {
         model.addAttribute("waitingListCnt", loadCardWaitingList.size());
         return "admin/at/card/manage";
     }
+
 
     @PostMapping("/inputCard")
     @ResponseBody
@@ -76,8 +78,8 @@ public class CardController {
 
     /* 신청 및 결재 */
     @GetMapping("/request")
-    public String requestCard(Model model) {
-        List<CardReservationVO> list = service.loadCardRecord();
+    public String requestCard(Principal principal, Model model) {
+        List<CardReservationVO> list = service.loadCardRecord(principal.getName());
         model.addAttribute("cardRecord", list);
         return "employee/card/request";
     }
@@ -103,5 +105,14 @@ public class CardController {
         CardReservationVO vo = service.loadRequestDetail(cprCardResveSn);
         log.info(vo.toString());
         return ResponseEntity.ok(vo);
+    }
+
+    // 결재 관리 페이지
+    @GetMapping("/sanction")
+    public String loadSanction(Model model) {
+        List<CardReservationVO> loadCardWaitingList = service.loadCardWaitingList();
+        model.addAttribute("loadCardWaitingList", loadCardWaitingList);
+        model.addAttribute("waitingListCnt", loadCardWaitingList.size());
+        return "admin/at/card/manage";
     }
 }

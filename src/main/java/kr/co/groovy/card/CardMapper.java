@@ -31,7 +31,7 @@ public interface CardMapper {
 
     CardReservationVO loadRequestDetail(int cprCardResveSn);
 
-    List<CardReservationVO> loadCardRecord();
+    List<CardReservationVO> loadCardRecord(String emplId);
 
     void modifyStatus(ParamMap map);
 }

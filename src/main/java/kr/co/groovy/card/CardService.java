@@ -80,8 +80,8 @@ public class CardService {
         return mapper.loadRequestDetail(cprCardResveSn);
     }
 
-    List<CardReservationVO> loadCardRecord() {
-        return mapper.loadCardRecord();
+    List<CardReservationVO> loadCardRecord(String emplId) {
+        return mapper.loadCardRecord(emplId);
     }
     public void modifyStatus(Map<String, Object> paramMap) {
         ParamMap map = ParamMap.init();

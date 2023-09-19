@@ -51,14 +51,11 @@
         let month = String(before.getMonth() + 1).padStart(2, '0');
         let day = String(before.getDate()).padStart(2, '0');
 
-
         let approver;
         let receiver;
         let referrer;
 
-
         const dept = "${dept}" // 문서 구분용
-
 
         const etprCode = "${etprCode}";
         const formatCode = "${format.commonCodeSanctnFormat}";
@@ -112,6 +109,9 @@
                             let value = data[key];
                             let element = document.getElementById(key);
                             if (element) {
+                                if (key === "cprCardUseExpectAmount") {
+                                    value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "원";
+                                }
                                 element.textContent = value;
                             }
                         }
@@ -127,7 +127,6 @@
             referrer = $("#refrnLine input[type=hidden]").map(function () {
                 return $(this).val();
             }).get();
-            console.log(file);
             if (approver.length > 0) {
                 $("#sanctionSubmit").prop("disabled", false);
             } else {
@@ -157,6 +156,17 @@
                 const afterProcess = {
                     className: "kr.co.groovy.commute.CommuteService",
                     methodName: "insertCommuteByVacation",
+                    parameters: param
+                };
+                jsonData.afterProcess = JSON.stringify(afterProcess);
+            } else {
+                const param = {
+                    approveId: num,
+                    state: 'YRYC032'
+                };
+                const afterProcess = {
+                    className: "kr.co.groovy.card.CardService",
+                    methodName: "modifyStatus",
                     parameters: param
                 };
                 jsonData.afterProcess = JSON.stringify(afterProcess);
@@ -217,7 +227,7 @@
                 methodName: 'modifyStatus',
                 parameters: {
                     approveId: num,
-                    state: 'Y'
+                    state: 'YRYC031'
                 }
             };
             $.ajax({

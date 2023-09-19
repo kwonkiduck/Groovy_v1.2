@@ -114,7 +114,7 @@
                 #{cprCardUseLoca},
                 #{cprCardUsePurps},
                 #{cprCardUseExpectAmount},
-                'N')
+                'YRYC030')
         <selectKey keyProperty="cprCardResveSn" resultType="int" order="AFTER">
             SELECT CPR_CARD_RESVE_SEQ.CURRVAL FROM DUAL
         </selectKey>
@@ -134,7 +134,27 @@
         FROM CPR_CARD_RESVE
         WHERE CPR_CARD_RESVE_SN = #{cprCardResveSn}
     </select>
-    <select id="loadCardRecord" resultType="cardReservationVO">
+    <select id="loadCardRecord" parameterType="String" resultType="cardReservationVO">
+        SELECT CPR_CARD_RESVE_SN,
+               CPR_CARD_RESVE_BEGIN_DATE,
+               CPR_CARD_RESVE_CLOS_DATE,
+               CPR_CARD_RESVE_EMPL_ID,
+               COMMON_CODE_RESVE_AT,
+               CPR_CARD_NO,
+               CPR_CARD_RESVE_RTURN_AT,
+               CPR_CARD_USE_LOCA,
+               CPR_CARD_USE_PURPS,
+               CPR_CARD_USE_EXPECT_AMOUNT,
+               COMMON_CODE_YRYC_STATE
+        FROM CPR_CARD_RESVE
+        WHERE CPR_CARD_RESVE_EMPL_ID = #{emplId}
+    </select>
+    <update id="modifyStatus" parameterType="map">
+        UPDATE CPR_CARD_RESVE
+        SET COMMON_CODE_YRYC_STATE = #{state}
+        WHERE CPR_CARD_RESVE_SN = #{approveId}
+    </update>
+    <select id="loadSanctionList" resultType="cardReservationVO">
         SELECT CPR_CARD_RESVE_SN,
                CPR_CARD_RESVE_BEGIN_DATE,
                CPR_CARD_RESVE_CLOS_DATE,
@@ -148,9 +168,4 @@
                COMMON_CODE_YRYC_STATE
         FROM CPR_CARD_RESVE
     </select>
-    <update id="modifyStatus" parameterType="map">
-        UPDATE CPR_CARD_RESVE
-        SET COMMON_CODE_YRYC_STATE = #{state}
-        WHERE CPR_CARD_RESVE_SN = #{approveId}
-    </update>
 </mapper>
