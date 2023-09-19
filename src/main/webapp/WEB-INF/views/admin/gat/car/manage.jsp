@@ -72,7 +72,7 @@
                 <tbody>
                 <c:forEach var="vehicleVO" items="${todayReservedVehicles}">
                     <tr>
-                        <td>${vehicleVO.vhcleResveNo}</td>
+                        <td>${vehicleVO.vhcleResveNoRedefine}</td>
                         <td>${vehicleVO.vhcleNo}</td>
                         <c:set var="beginTimeStr" value="${vehicleVO.vhcleResveBeginTime}"/>
                         <fmt:formatDate value="${beginTimeStr}" pattern="HH:mm" var="beginTime"/>
@@ -82,7 +82,13 @@
                         <td>${endTime}</td>
                         <td>${vehicleVO.vhcleResveEmplNm}(${vehicleVO.vhcleResveEmplId})</td>
                         <td>
-                            <button>반납 확인</button>
+                            <c:if test="${vehicleVO.vhcleResveReturnAt == 'N'}">
+                                <button class="returnCarBtn" id="\${params.value}">반납 확인</button>
+                                <p class="returnStatus" style="display: none;">반납완료</p>
+                            </c:if>
+                            <c:if test="${vehicleVO.vhcleResveReturnAt == 'Y'}">
+                                <p class="returnStatus">반납완료</p>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>
@@ -128,3 +134,22 @@
         </div>
     </div>
 </div>
+<script>
+    let btnReturn = document.querySelectorAll(".returnCarBtn");
+    let returnStatus = document.querySelector(".returnStatus");
+
+    function modifyReturnAt() {
+        let vhcleResveNo = rowData.pop().chk;
+        let xhr = new XMLHttpRequest();
+        xhr.open("put", "/reserve/return", true);
+        xhr.onreadystatechange = () => {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                if (xhr.responseText == 1) {
+                    this.btnReturn.style.display = 'none';
+                    this.returnStatus.style.display = 'block';
+                }
+            }
+        }
+        xhr.send(vhcleResveNo);
+    }
+</script>

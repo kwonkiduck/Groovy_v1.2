@@ -24,4 +24,9 @@ public interface CardMapper {
     List<CardReservationVO> loadAllResveRecords();
 
     int returnChecked(CardReservationVO cardReservationVO);
+
+    /* */
+    int inputRequest(CardReservationVO cardReservationVO);
+
+    CardReservationVO loadRequestDetail(int cprCardResveSn);
 }

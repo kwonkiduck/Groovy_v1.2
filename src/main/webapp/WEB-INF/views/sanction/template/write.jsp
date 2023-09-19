@@ -56,6 +56,10 @@
         let receiver;
         let referrer;
 
+
+        const dept = "${dept}" // 문서 구분용
+
+
         const etprCode = "${etprCode}";
         const formatCode = "${format.commonCodeSanctnFormat}";
         const writer = "${CustomUser.employeeVO.emplId}"
@@ -63,16 +67,24 @@
         const title = "${format.formatSj}";
         let content;
         let file = $('#sanctionFile')[0].files[0];
-        let vacationId = opener.$("#vacationId").text();
+        let num = opener.$("#sanctionNum").text();
 
         $(document).ready(function () {
-            console.log(vacationId)
             $("#sanctionNo").html(etprCode);
             $("#writeDate").html(today);
             $("#writer").html("${CustomUser.employeeVO.emplNm}")
+            console.log(dept)
 
+            if (dept == 'DEPT010') {
+                loadCardData()
+            } else {
+                loadVacationData()
+            }
+        });
+
+        function loadVacationData() {
             $.ajax({
-                url: `/vacation/loadData/\${vacationId}`,
+                url: `/vacation/loadData/\${num}`,
                 type: "GET",
                 success: function (data) {
                     console.log(data)
@@ -87,7 +99,26 @@
                     }
                 }
             })
-        });
+        }
+
+        function loadCardData() {
+            $.ajax({
+                url: `/vacation/loadData/\${num}`,
+                type: "GET",
+                success: function (data) {
+                    console.log(data)
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let value = data[key];
+                            let element = document.getElementById(key);
+                            if (element) {
+                                element.textContent = value;
+                            }
+                        }
+                    }
+                }
+            })
+        }
 
         $(".submitLine").on("click", function () {
             approver = $("#sanctionLine input[type=hidden]").map(function () {
@@ -107,7 +138,7 @@
             updateStatus()
             content = $(".formContent").html();
             const param = {
-                vacationId: vacationId
+                vacationId: num
             }
             const afterProcess = {
                 className: "kr.co.groovy.commute.CommuteService",
@@ -125,7 +156,7 @@
                 today: today,
                 title: title,
                 content: content,
-                vacationId: vacationId,
+                vacationId: num,
                 afterProcess: afterProcessData
             };
             console.log(jsonData)
@@ -178,7 +209,7 @@
                 className: 'kr.co.groovy.vacation.VacationService',
                 methodName: 'modifyStatus',
                 parameters: {
-                    approveId: vacationId,
+                    approveId: num,
                     state: 'Y'
                 }
             };

@@ -75,14 +75,6 @@ public class EmailController {
     @PutMapping("/{code}/{emailEtprCode}")
     @ResponseBody
     public String modifyEmailRedngAt(@PathVariable String code, @PathVariable String emailEtprCode, @RequestBody String at) {
-        log.info(code);
-        log.info(emailEtprCode);
-        log.info(at);
-        /**
-         * INFO : kr.co.groovy.email.EmailController - redng
-         * INFO : kr.co.groovy.email.EmailController - EMAIL-524-20230918
-         * INFO : kr.co.groovy.email.EmailController - N
-         */
         Map<String, String> map = emailService.getEmailAtMap(code, emailEtprCode, at);
         return map.get("at");
     }

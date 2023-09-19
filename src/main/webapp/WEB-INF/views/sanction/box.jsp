@@ -27,7 +27,7 @@
         <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">경조사</a></li>
         <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">병가</a></li>
 
-        <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT011?format=SANCTN_FORMAT010">법인카드 신청</a></li>
+        <li><a href="${pageContext.request.contextPath}/card/request">법인카드 신청</a></li>
     </ul>
 
     <script>

@@ -2,6 +2,7 @@ package kr.co.groovy.card;
 
 import kr.co.groovy.vo.CardReservationVO;
 import kr.co.groovy.vo.CardVO;
+import kr.co.groovy.vo.VacationUseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,5 +73,26 @@ public class CardController {
     public int returnChecked(@RequestBody CardReservationVO cardReservationVO) {
         return service.returnChecked(cardReservationVO);
     }
+
+    /* 신청 및 결재 */
+    @GetMapping("/request")
+    public String requestCard() {
+        return "employee/card/request";
+    }
+
+    @PostMapping("/request")
+    public String inputRequest(CardReservationVO cardReservationVO) {
+        log.info(cardReservationVO.toString());
+        service.inputRequest(cardReservationVO);
+        int generatedKey = cardReservationVO.getCprCardResveSn();
+        return "redirect:/card/detail/" + generatedKey;
+    }
+    @GetMapping("/detail/{cprCardResveSn}")
+    public String loadRequestDetail(@PathVariable int cprCardResveSn, Model model) {
+        CardReservationVO vo = service.loadRequestDetail(cprCardResveSn);
+        model.addAttribute("detailVO", vo);
+        return "employee/card/detail";
+    }
+
 
 }

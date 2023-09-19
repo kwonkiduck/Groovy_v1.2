@@ -1,8 +1,6 @@
 package kr.co.groovy.reservation;
 
 import kr.co.groovy.enums.Hipass;
-import kr.co.groovy.vo.CardReservationVO;
-import kr.co.groovy.vo.CardVO;
 import kr.co.groovy.vo.VehicleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,9 +19,13 @@ public class ReservationService {
 
     /* 차량 예약 */
     public List<VehicleVO> getTodayReservedVehicles() {
-        List<VehicleVO> todayReservedVehicles = mapper.getTodayReservedVehicles();
+        List<VehicleVO> todayReservedVehicles = getReservedVehicles(mapper.getTodayReservedVehicles());
         setCommonCodeToHipass(todayReservedVehicles);
         return todayReservedVehicles;
+    }
+
+    public List<VehicleVO> getAllReservation() {
+        return getReservedVehicles(mapper.getAllReservation());
     }
 
     public List<VehicleVO> getAllVehicles() {
@@ -40,6 +42,19 @@ public class ReservationService {
         for (VehicleVO vehicleVO : list) {
             vehicleVO.setCommonCodeHipassAsnAt(Hipass.valueOf(vehicleVO.getCommonCodeHipassAsnAt()).getLabel());
         }
+    }
+
+    private List<VehicleVO> getReservedVehicles(List<VehicleVO> list) {
+        for (VehicleVO vehicleVO : list) {
+            int vhcleResveNo = vehicleVO.getVhcleResveNo();
+            vhcleResveNo = 0;
+            vehicleVO.setVhcleResveNoRedefine(++vhcleResveNo);
+        }
+        return list;
+    }
+
+    public int modifyReturnAt(String vhcleResveNo) {
+        return mapper.modifyReturnAt(vhcleResveNo);
     }
 
 }

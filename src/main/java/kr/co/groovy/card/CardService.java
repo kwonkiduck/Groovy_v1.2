@@ -47,6 +47,7 @@ public class CardService {
     public int modifyCardNm(CardVO cardVO) {
         return mapper.modifyCardNm(cardVO);
     }
+
     public int modifyCardStatusDisabled(String cprCardNo) {
         return mapper.modifyCardStatusDisabled(cprCardNo);
     }
@@ -65,6 +66,16 @@ public class CardService {
 
     public int returnChecked(CardReservationVO cardReservationVO) {
         return mapper.returnChecked(cardReservationVO);
+    }
+
+
+    /* */
+    public int inputRequest(CardReservationVO cardReservationVO) {
+        return mapper.inputRequest(cardReservationVO);
+    }
+
+    CardReservationVO loadRequestDetail(int cprCardResveSn){
+        return mapper.loadRequestDetail(cprCardResveSn);
     }
 
 }
