@@ -70,6 +70,8 @@
             $("#sanctionNo").html(etprCode);
             $("#writeDate").html(today);
             $("#writer").html("${CustomUser.employeeVO.emplNm}")
+            $("#requestDate").html(`\${year}년 \${month}월 \${day}일`);
+
             console.log(dept)
 
             if (dept == 'DEPT011') {

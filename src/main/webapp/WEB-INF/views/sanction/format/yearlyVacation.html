@@ -29,35 +29,33 @@
             <td class="form-title">기안 일자</td>
             <td><span id="writeDate"></span></td>
             <td class="form-title">완료 일자</td>
-            <td><span id="finishDate"></span></td>
+            <td><span id="elctrnSanctnFinalDate"></span></td>
         </tr>
         <tr>
             <td class="form-title">휴가 구분</td>
-            <td colspan="3"><span id="vacationKind" style="width: 99%">${data.commonCodeYrycUseKind}</span></td>
+            <td colspan="3"><span id="commonCodeYrycUseKind" style="width: 99%"></span></td>
         </tr>
         <tr>
             <td class="form-title">휴가 종류</td>
-            <td colspan="3"><span id="vacationSe" style="width: 99%">${data.commonCodeYrycUseSe}</span></td>
+            <td colspan="3"><span id="commonCodeYrycUseSe" style="width: 99%"></span></td>
 
         </tr>
         <tr>
             <td class="form-title">시작 날짜</td>
             <td>
-                <span id="startDay" style="width: 99%">${data.yrycUseDtlsBeginDate}</span></td>
+                <span id="yrycUseDtlsBeginDate" style="width: 99%"></span></td>
             <td class="form-title">종료 일자</td>
             <td>
-                <span id="endDate" style="width: 99%">${data.yrycUseDtlsEndDate}</span></td>
+                <span id="yrycUseDtlsEndDate" style="width: 99%"></span></td>
             </td>
         </tr>
         <tr>
             <td class="form-title">내용</td>
-            <td colspan="3"><span id="sanctionContent" style="width: 99%">${data.yrycUseDtlsRm}</span>
-        </tr>
-        <tr>
-            <td class="form-title">파일 첨부</td>
-            <td colspan="3"><input type="file" id="sanctionFile" style="width: 99%"/></td>
+            <td colspan="3"><span id="yrycUseDtlsRm" style="width: 99%"></span>
         </tr>
     </table>
+    <p>위와 같이 휴가를 신청하오니 허락하여 주시기 바랍니다.</p>
+    <p id="requestDate"></p>
 </form>
 </body>
 </html>

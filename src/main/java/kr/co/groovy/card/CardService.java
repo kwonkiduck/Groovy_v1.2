@@ -1,5 +1,6 @@
 package kr.co.groovy.card;
 
+import kr.co.groovy.enums.Department;
 import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.CardReservationVO;
 import kr.co.groovy.vo.CardVO;
@@ -90,4 +91,11 @@ public class CardService {
         mapper.modifyStatus(map);
     }
 
+    public List<CardReservationVO> loadSanctionList(){
+        List<CardReservationVO> list = mapper.loadSanctionList();
+        for(CardReservationVO vo : list){
+            vo.setCommonCodeDept(Department.valueOf(vo.getCommonCodeDept()).label());
+        }
+        return mapper.loadSanctionList();
+    }
 }
