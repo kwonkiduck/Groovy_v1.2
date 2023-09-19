@@ -1,17 +1,16 @@
 package kr.co.groovy.vacation;
 
-import kr.co.groovy.enums.Department;
 import kr.co.groovy.enums.VacationKind;
-import kr.co.groovy.sanction.SanctionMapper;
 import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.VacationUseVO;
 import kr.co.groovy.vo.VacationVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Service
 public class VacationService {
@@ -22,8 +21,32 @@ public class VacationService {
         this.mapper = vacationMapper;
     }
 
-    public VacationVO loadVacationCnt(String emplId) {
-        return mapper.loadVacationCnt(emplId);
+    public Map<String, Object> loadVacationCnt(String emplId) {
+        VacationVO vo = mapper.loadVacationCnt(emplId);
+        Map<String, Object> map = new HashMap<>();
+        if (vo != null) {
+            double usedVacationCnt = vo.getYrycUseCo();
+            double nowVacationCnt = vo.getYrycNowCo();
+            double totalVacationCnt = usedVacationCnt + nowVacationCnt;
+            if (usedVacationCnt == (int) usedVacationCnt) {
+                map.put("usedVacationCnt", (int) usedVacationCnt);
+            } else {
+                map.put("usedVacationCnt", usedVacationCnt);
+            }
+
+            if (nowVacationCnt == (int) nowVacationCnt) {
+                map.put("nowVacationCnt", (int) nowVacationCnt);
+            } else {
+                map.put("nowVacationCnt", nowVacationCnt);
+            }
+
+            if (totalVacationCnt == (int) totalVacationCnt) {
+                map.put("totalVacationCnt", (int) totalVacationCnt);
+            } else {
+                map.put("totalVacationCnt", totalVacationCnt);
+            }
+        }
+        return map;
     }
 
     public List<VacationUseVO> loadVacationRecord(String emplId) {

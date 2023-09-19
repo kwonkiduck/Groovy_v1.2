@@ -12,7 +12,9 @@
 		COMMON_CODE_FIXING_AT, 
 		COMMON_CODE_BKMK_AT 
 	FROM
-	MEMO
+		MEMO
+	ORDER BY 
+		MEMO_WRTNG_DATE DESC
 </select>
 
 <select id="getOneMemo" parameterType="int" resultType="memoVO">
