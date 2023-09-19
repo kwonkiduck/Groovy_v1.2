@@ -7,6 +7,9 @@ body {
 * {
     transition: 0.35s;
 }
+.wrapper {
+    display: flex;
+}
 /* aside */
 #sideBar{
     display: flex;
@@ -156,15 +159,22 @@ i.icon {
     align-items: center;
 }
 
-input[type="text"], input[type="submit"], input[type="password"] {
+/*  input   */
+input[type="text"]{
+    border: none;
+}
+.input-l {
+    width: calc((516 / var(--vw)) * 100vw);
+    height: var(--vh-64);
+    padding: 0 var(--vh-24);
+    border-radius: var(--vw-32);
+}
+/*input[type="text"], input[type="submit"], input[type="password"] {
     width: calc((516 / var(--vw)) * 100vw);
     height: var(--vh-64);
     border-radius: var(--vw-32);
-}
-input[type="text"],  input[type="password"]{
-    padding: var(--vw-24) var(--vh-24);
-}
-input[type="text"]::placeholder,  input[type="password"]::placeholder {
+}*/
+.input-l::placeholder {
     font-size: var(--font-size-14);
     font-weight: 500;
 }
@@ -194,8 +204,27 @@ input[type="text"]::placeholder,  input[type="password"]::placeholder {
     width: 100%;
 }
 
+/*  검색  */
+.search {
+    width: calc((560/1920)*100vw);
+    height: var(--vh-64);
+    display: flex;
+    align-items: center;
+}
+.search input {
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+.btn-search {
+    width: calc((88/1920)*100vw);
+    display: flex;
+    align-items: center;
+    padding: var(--vh-12) var(--vw-24);
+    font-size: var(--font-size-11);
 
-/*  더보기 */
+}
+    /*  더보기 */
 .more {
     font-size: var(--font-size-14);
     color: var(--color-font-md);
