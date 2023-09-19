@@ -110,9 +110,8 @@ public class CardController {
     // 결재 관리 페이지
     @GetMapping("/sanction")
     public String loadSanction(Model model) {
-        List<CardReservationVO> loadCardWaitingList = service.loadCardWaitingList();
-        model.addAttribute("loadCardWaitingList", loadCardWaitingList);
-        model.addAttribute("waitingListCnt", loadCardWaitingList.size());
-        return "admin/at/card/manage";
+        List<CardReservationVO> sanctionList = service.loadSanctionList();
+        model.addAttribute("sanctionList", sanctionList);
+        return "admin/at/card/sanction";
     }
 }

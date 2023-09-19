@@ -26,4 +26,7 @@ public class CardReservationVO {
     private String commonCodeYrycState;
     private int generatedKey;
 
+    private String emplNm;
+    private String commonCodeDept;
+    private String commonCodeClsf;
 }

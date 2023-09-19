@@ -3,90 +3,66 @@
 <mapper namespace="kr.co.groovy.sanction.SanctionMapper">
     <select id="loadFormat" resultType="sanctionFormatVO">
         /* kr.co.groovy.sanction.SanctionMapper 결재 템플릿 불러오기 */
-        SELECT
-            F.COMMON_CODE_SANCTN_FORMAT,
-            F.FORMAT_SANCTN_KND,
-            F.FORMAT_SJ,
-            F.FORMAT_CN,
-            F.FORMAT_USE_AT
-        FROM
-            SANCTN_FORMAT F
-        WHERE
-            COMMON_CODE_SANCTN_FORMAT = #{format}
+        SELECT F.COMMON_CODE_SANCTN_FORMAT,
+               F.FORMAT_SANCTN_KND,
+               F.FORMAT_SJ,
+               F.FORMAT_CN,
+               F.FORMAT_USE_AT
+        FROM SANCTN_FORMAT F
+        WHERE COMMON_CODE_SANCTN_FORMAT = #{format}
     </select>
     <select id="getSeq" parameterType="String" resultType="String">
         /* kr.co.groovy.sanction.SanctionMapper 부서별 결재 문서 번호 생성 */
-        SELECT
-                #{formatSanctnKnd} || '-' || TO_CHAR(SYSDATE, 'YYYY') || '-' ||
-                LPAD(
-                        (SELECT TO_NUMBER(COUNT(*)) + 1
-                         FROM ELCTRN_SANCTN
-                         WHERE SUBSTR(ELCTRN_SANCTN_ETPR_CODE, 1,
-                                      INSTR(ELCTRN_SANCTN_ETPR_CODE, '-') - 1) = #{formatSanctnKnd}), 4,
-                        '0') AS elctrnSanctnEtprCode
-        FROM
-            DUAL
+        SELECT #{formatSanctnKnd} || '-' || TO_CHAR(SYSDATE, 'YYYY') || '-' ||
+               LPAD(
+                       (SELECT TO_NUMBER(COUNT(*)) + 1
+                        FROM ELCTRN_SANCTN
+                        WHERE SUBSTR(ELCTRN_SANCTN_ETPR_CODE, 1,
+                                     INSTR(ELCTRN_SANCTN_ETPR_CODE, '-') - 1) = #{formatSanctnKnd}), 4,
+                       '0') AS elctrnSanctnEtprCode
+        FROM DUAL
     </select>
     <select id="getStatus" parameterType="String" resultType="int">
         /* kr.co.groovy.sanction.SanctionMapper 결재함 기안, 완료, 반려 결재 개수 불러오기 */
-        SELECT
-            COUNT(*)
-        FROM
-            ELCTRN_SANCTN
-        WHERE
-            ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
-          AND
-            COMMON_CODE_SANCT_PROGRS = #{commonCodeSanctProgrs}
+        SELECT COUNT(*)
+        FROM ELCTRN_SANCTN
+        WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
+          AND COMMON_CODE_SANCT_PROGRS = #{commonCodeSanctProgrs}
     </select>
     <select id="loadRequest" parameterType="String" resultType="sanctionVO">
         /* 기안 문서함(상신) 불러오기 */
-        SELECT
-            E.ELCTRN_SANCTN_ETPR_CODE,
-            E.ELCTRN_SANCTN_FORMAT_CODE,
-            E.ELCTRN_SANCTN_SJ,
-            E.ELCTRN_SANCTN_DC,
-            E.ELCTRN_SANCTN_DRFT_EMPL_ID,
-            E.ELCTRN_SANCTN_RECOM_DATE,
-            E.COMMON_CODE_SANCT_PROGRS
-        FROM
-            ELCTRN_SANCTN E
-        WHERE
-            ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
-        ORDER BY
-            COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
+        SELECT E.ELCTRN_SANCTN_ETPR_CODE,
+               E.ELCTRN_SANCTN_FORMAT_CODE,
+               E.ELCTRN_SANCTN_SJ,
+               E.ELCTRN_SANCTN_DC,
+               E.ELCTRN_SANCTN_DRFT_EMPL_ID,
+               E.ELCTRN_SANCTN_RECOM_DATE,
+               E.COMMON_CODE_SANCT_PROGRS
+        FROM ELCTRN_SANCTN E
+        WHERE ELCTRN_SANCTN_DRFT_EMPL_ID = #{elctrnSanctnDrftEmplId}
+        ORDER BY COMMON_CODE_SANCT_PROGRS, ELCTRN_SANCTN_RECOM_DATE ASC
     </select>
     <update id="approve" parameterType="String">
         /* kr.co.groovy.sanction.SanctionMapper 결재 승인 - 다음 결재 순번자의 상태 변경 */
         {CALL DECLARE
         BEGIN
-            UPDATE
-                SANCTN_LINE
-            SET
-                COMMON_CODE_SANCT_PROGRS = 'SANCTN016',
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN016',
                 SANCTN_LINE_DATE         = SYSDATE
-            WHERE
-                ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
-            AND
-                ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+            WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
 
-            UPDATE
-                ELCTRN_SANCTN
-            SET
-                COMMON_CODE_SANCT_PROGRS = 'SANCTN011'
-            WHERE
-                ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+            UPDATE ELCTRN_SANCTN
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN011'
+            WHERE ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
 
-            UPDATE
-                SANCTN_LINE
-            SET
-                COMMON_CODE_SANCT_PROGRS = 'SANCTN013'
-            WHERE
-                SANCTN_LINE_ORDR = (SELECT SANCTN_LINE_ORDR
+            UPDATE SANCTN_LINE
+            SET COMMON_CODE_SANCT_PROGRS = 'SANCTN013'
+            WHERE SANCTN_LINE_ORDR = (SELECT SANCTN_LINE_ORDR
                                       FROM SANCTN_LINE
-                                     WHERE ELCTRN_SANCTNEMPL_ID    = #{elctrnSanctnemplId}
-                                       AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}) + 1
-            AND
-                ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
+                                      WHERE ELCTRN_SANCTNEMPL_ID = #{elctrnSanctnemplId}
+                                        AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode}) + 1
+              AND ELCTRN_SANCTN_ETPR_CODE = #{elctrnSanctnEtprCode};
         END}
     </update>
     <update id="finalApprove" parameterType="String">

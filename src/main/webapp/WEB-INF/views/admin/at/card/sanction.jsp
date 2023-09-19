@@ -20,10 +20,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <div class="wrap">
-    <ul>
-        <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>
-        <li><a href="/reserve/loadVehicle" class="tab">예약 현황</a></li>
-    </ul>
+<%--    <ul>--%>
+<%--        <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>--%>
+<%--        <li><a href="/reserve/loadVehicle" class="tab">예약 현황</a></li>--%>
+<%--    </ul>--%>
 </div>
 <br/>
 <div class="serviceWrap">
@@ -38,48 +38,48 @@
 
 <script>
     /*예시*/
-    const returnCar = (params) => params.value;
+    // const returnCar = (params) => params.value;
 
-    class ClassComp {
-        init(params) {
-            this.eGui = document.createElement('div');
-            if (rowData.pop().vhcleResveReturnAt == 'Y') {
-                this.eGui.innerHTML = `
-                    <p class="returnStatus">반납완료</p>
-                `;
-
-            } else if (rowData.pop().vhcleResveReturnAt == 'N') {
-                this.eGui.innerHTML = `
-                    <button class="returnCarBtn" id="\${params.value}">반납 확인</button>
-                    <p class="returnStatus" style="display: none;">반납완료</p>
-                `;
-            }
-            this.id = params.value;
-            this.btnReturn = this.eGui.querySelector(".returnCarBtn");
-            this.returnStatus = this.eGui.querySelector(".returnStatus");
-            this.btnReturn.onclick = () => {
-                let vhcleResveNo = rowData.pop().chk;
-                let xhr = new XMLHttpRequest();
-                xhr.open("put", "/reserve/return", true);
-                xhr.onreadystatechange = () => {
-                    if (xhr.status == 200 && xhr.readyState == 4) {
-                        if (xhr.responseText == 1) {
-                            this.btnReturn.style.display = 'none';
-                            this.returnStatus.style.display = 'block';
-                        }
-                    }
-                }
-                xhr.send(vhcleResveNo);
-            }
-        }
-
-        getGui() {
-            return this.eGui;
-        }
-
-        destroy() {
-        }
-    }
+    // class ClassComp {
+    //     init(params) {
+    //         this.eGui = document.createElement('div');
+    //         if (rowData.pop().vhcleResveReturnAt == 'Y') {
+    //             this.eGui.innerHTML = `
+    //                 <p class="returnStatus">반납완료</p>
+    //             `;
+    //
+    //         } else if (rowData.pop().vhcleResveReturnAt == 'N') {
+    //             this.eGui.innerHTML = `
+    //                 <button class="returnCarBtn" id="\${params.value}">반납 확인</button>
+    //                 <p class="returnStatus" style="display: none;">반납완료</p>
+    //             `;
+    //         }
+    //         this.id = params.value;
+    //         this.btnReturn = this.eGui.querySelector(".returnCarBtn");
+    //         this.returnStatus = this.eGui.querySelector(".returnStatus");
+    //         this.btnReturn.onclick = () => {
+    //             let vhcleResveNo = rowData.pop().chk;
+    //             let xhr = new XMLHttpRequest();
+    //             xhr.open("put", "/reserve/return", true);
+    //             xhr.onreadystatechange = () => {
+    //                 if (xhr.status == 200 && xhr.readyState == 4) {
+    //                     if (xhr.responseText == 1) {
+    //                         this.btnReturn.style.display = 'none';
+    //                         this.returnStatus.style.display = 'block';
+    //                     }
+    //                 }
+    //             }
+    //             xhr.send(vhcleResveNo);
+    //         }
+    //     }
+    //
+    //     getGui() {
+    //         return this.eGui;
+    //     }
+    //
+    //     destroy() {
+    //     }
+    // }
 
     const getMedalString = function (param) {
         const str = `\${param} `;
@@ -94,33 +94,34 @@
     }
 
     const columnDefs = [
-        {field: "vhcleResveNo", headerName: "예약번호", cellRenderer: returnCar},
-        {
-            field: "vhcleNo", headerName: "차량번호", getQuickFilterText: (params) => {
-                return getMedalString(params.value);
-            }
-        },
-        {field: "vhcleResveBeginTime", headerName: "시작 시간"},
-        {field: "vhcleResveEndTime", headerName: "끝 시간"},
-        {field: "vhcleResveEmpNm", headerName: "예약 사원"},
-        {field: "vhcleResveEmplId", headerName: "사번"},
-        {field: "chk", headerName: " ", cellRenderer: ClassComp},
+        {field: "cprCardResveSn", headerName: "예약번호"},
+        // {
+        //     field: "vhcleNo", headerName: "차량번호", getQuickFilterText: (params) => {
+        //         return getMedalString(params.value);
+        //     }
+        // },
+        {field: "cprCardUsePurps", headerName: "사용 목적"},
+        {field: "cprCardUseExpectAmount", headerName: "사용 예상 금액"},
+        {field: "cprCardResveBeginDate", headerName: "사용 시작 일자"},
+        {field: "cprCardResveClosDate", headerName: "사용 종료 일자"},
+        {field: "commonCodeDept", headerName: "부서"},
+        {field: "cprCardResveEmplId", headerName: "사번"},
+        {field: "emplNm", headerName: "이름"},
+        // {field: "chk", headerName: " ", cellRenderer: ClassComp},
     ];
     const rowData = [];
-    <c:forEach var="vehicleVO" items="${allReservation}" varStatus="status"> <!-- 12: 공지사항 개수(length) -->
-    <c:set var="beginTimeStr" value="${vehicleVO.vhcleResveBeginTime}"/>
-    <fmt:formatDate var="beginTime" value="${beginTimeStr}" pattern="HH:mm"/>
-    <c:set var="endTimeStr" value="${vehicleVO.vhcleResveEndTime}"/>
-    <fmt:formatDate var="endTime" value="${endTimeStr}" pattern="HH:mm"/>
+    <c:forEach var="sanctionVO" items="${sanctionList}" varStatus="status">
+
     rowData.push({
-        vhcleResveNo: "${vehicleVO.vhcleResveNoRedefine}",
-        vhcleNo: "${vehicleVO.vhcleNo}",
-        vhcleResveBeginTime: "${beginTime}",
-        vhcleResveEndTime: "${endTime}",
-        vhcleResveEmpNm: "${vehicleVO.vhcleResveEmplNm}",
-        vhcleResveEmplId: "${vehicleVO.vhcleResveEmplId}",
-        chk: "${vehicleVO.vhcleResveNo}",
-        vhcleResveReturnAt: "${vehicleVO.vhcleResveReturnAt}"
+        cprCardResveSn: "${sanctionVO.cprCardResveSn}",
+        cprCardUsePurps: "${sanctionVO.cprCardUsePurps}",
+        cprCardUseExpectAmount: "${sanctionVO.cprCardUseExpectAmount}",
+        cprCardResveBeginDate: "${sanctionVO.cprCardResveBeginDate}",
+        cprCardResveClosDate: "${sanctionVO.cprCardResveClosDate}",
+        commonCodeDept: "${sanctionVO.commonCodeDept}",
+        cprCardResveEmplId: "${sanctionVO.cprCardResveEmplId}",
+        emplNm: "${sanctionVO.emplNm}",
+
     })
     </c:forEach>
     const gridOptions = {
@@ -135,41 +136,41 @@
 
     });
 
-
-    /* 실제 ajax에서 데이터 가져올 때 */
-    const realGrid = () => {
-        const columnDefs = [
-            {field: "vhcleResveNo", headerName: "예약번호", cellRenderer: returnCar},
-            {
-                field: "vhcleNo", headerName: "차량번호", getQuickFilterText: (params) => {
-                    return getMedalString(params.value);
-                }
-            },
-            {field: "vhcleResveBeginTime", headerName: "시작 시간"},
-            {field: "vhcleResveEndTime", headerName: "끝 시간"},
-            {field: "vhcleResveEmpNm", headerName: "예약 사원"},
-            {field: "vhcleResveEmplId", headerName: "사번"},
-            {field: "chk", headerName: " ", cellRenderer: ClassComp},
-        ];
-
-        const gridOptions = {
-            columnDefs: columnDefs,
-        };
-        document.addEventListener('DOMContentLoaded', () => {
-            const gridDiv = document.querySelector('#myGrid');
-            new agGrid.Grid(gridDiv, gridOptions);
-
-            $.ajax({
-                url: '',
-                method: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    gridOptions.api.setRowData(data);
-                },
-                error: function (error) {
-                    console.error('Error fetching data:', error);
-                },
-            });
-        });
-    }
+    //
+    // /* 실제 ajax에서 데이터 가져올 때 */
+    // const realGrid = () => {
+    //     const columnDefs = [
+    //         {field: "vhcleResveNo", headerName: "예약번호", cellRenderer: returnCar},
+    //         {
+    //             field: "vhcleNo", headerName: "차량번호", getQuickFilterText: (params) => {
+    //                 return getMedalString(params.value);
+    //             }
+    //         },
+    //         {field: "vhcleResveBeginTime", headerName: "시작 시간"},
+    //         {field: "vhcleResveEndTime", headerName: "끝 시간"},
+    //         {field: "vhcleResveEmpNm", headerName: "예약 사원"},
+    //         {field: "vhcleResveEmplId", headerName: "사번"},
+    //         {field: "chk", headerName: " ", cellRenderer: ClassComp},
+    //     ];
+    //
+    //     const gridOptions = {
+    //         columnDefs: columnDefs,
+    //     };
+    //     document.addEventListener('DOMContentLoaded', () => {
+    //         const gridDiv = document.querySelector('#myGrid');
+    //         new agGrid.Grid(gridDiv, gridOptions);
+    //
+    //         $.ajax({
+    //             url: '',
+    //             method: 'GET',
+    //             dataType: 'json',
+    //             success: function (data) {
+    //                 gridOptions.api.setRowData(data);
+    //             },
+    //             error: function (error) {
+    //                 console.error('Error fetching data:', error);
+    //             },
+    //         });
+    //     });
+    // }
 </script>

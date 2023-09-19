@@ -155,17 +155,22 @@
         WHERE CPR_CARD_RESVE_SN = #{approveId}
     </update>
     <select id="loadSanctionList" resultType="cardReservationVO">
-        SELECT CPR_CARD_RESVE_SN,
-               CPR_CARD_RESVE_BEGIN_DATE,
-               CPR_CARD_RESVE_CLOS_DATE,
-               CPR_CARD_RESVE_EMPL_ID,
-               COMMON_CODE_RESVE_AT,
-               CPR_CARD_NO,
-               CPR_CARD_RESVE_RTURN_AT,
-               CPR_CARD_USE_LOCA,
-               CPR_CARD_USE_PURPS,
-               CPR_CARD_USE_EXPECT_AMOUNT,
-               COMMON_CODE_YRYC_STATE
-        FROM CPR_CARD_RESVE
+        SELECT C.CPR_CARD_RESVE_SN,
+               C.CPR_CARD_RESVE_BEGIN_DATE,
+               C.CPR_CARD_RESVE_CLOS_DATE,
+               C.CPR_CARD_RESVE_EMPL_ID,
+               C.COMMON_CODE_RESVE_AT,
+               C.CPR_CARD_NO,
+               C.CPR_CARD_RESVE_RTURN_AT,
+               C.CPR_CARD_USE_LOCA,
+               C.CPR_CARD_USE_PURPS,
+               C.CPR_CARD_USE_EXPECT_AMOUNT,
+               C.COMMON_CODE_YRYC_STATE,
+               E.EMPL_NM,
+               E.COMMON_CODE_DEPT,
+               E.COMMON_CODE_CLSF
+        FROM CPR_CARD_RESVE C, EMPL E
+        WHERE C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
+          AND COMMON_CODE_YRYC_STATE = 'YRYC032'
     </select>
 </mapper>
