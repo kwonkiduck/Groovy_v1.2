@@ -37,10 +37,8 @@ success하면 자동으로 셀 리프레시하게 해놨는데 innerHTML이 안 
             console.log(data.cprCardResveRturnAt);
             this.eGui = document.createElement('div');
             if(data.cprCardResveRturnAt == 0) {
-                console.log("중")
                 this.eGui.innerHTML = "<button id='returnChkBtn'>반납 확인</button>";
             } else {
-                console.log("완료")
                 this.eGui.innerHTML = "<p>반납 완료</p>";
             }
 
@@ -53,10 +51,10 @@ success하면 자동으로 셀 리프레시하게 해놨는데 innerHTML이 안 
                     contentType: "application/json;charset:utf-8",
                     success: function (result) {
                         console.log(result);
-                       /* data.cprCardResveRturnAt = 1;
+                        data.cprCardResveRturnAt = 1;
                         this.eGui.innerHTML = "<p>반납 완료</p>";
-                        gridOptions.api.refreshCells({ force: true });
-                        alert("카드 반납 완료 처리하였습니다.");*/
+                        gridOptions.api.refreshCells({force: true});
+                        alert("카드 반납 완료 처리하였습니다.");
                     },
                     error: function (xhr) {
                         alert("오류로 인한 처리 실패");
@@ -95,11 +93,14 @@ success하면 자동으로 셀 리프레시하게 해놨는데 innerHTML이 안 
         { field: "cprCardResveSn", headerName:"예약 순번", hide: true, getQuickFilterText: (params) => {
                 return getMedalString(params.value);
             }},
-        { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},
         { field: "cprCardNo",  headerName:"대여 카드 번호", hide: true},
         { field: "cprCardNm",  headerName:"대여 카드"},
         { field: "cprCardResveBeginDate", headerName:"사용 시작 일자"},
         { field: "cprCardResveClosDate", headerName:"사용 마감 일자"},
+        { field: "cprCardUseLoca", headerName:"사용처"},
+        { field: "cprCardUsePurps", headerName:"사용 목적"},
+        { field: "cprCardUseExpectAmount", headerName:"사용 예상 금액"},
+        { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},
         { field: "cprCardResveRturnAt", headerName: "반납 여부", hide: true},
         { field: "cardReturnChk", headerName: "카드 반납", cellRenderer: ClassComp},
     ];
@@ -108,13 +109,17 @@ success하면 자동으로 셀 리프레시하게 해놨는데 innerHTML이 안 
     <c:forEach items="${records}" var="resve">
     <fmt:formatDate var= "cprCardResveBeginDate" value="${resve.cprCardResveBeginDate}" type="date" pattern="yyyy-MM-dd" />
     <fmt:formatDate var= "cprCardResveClosDate" value="${resve.cprCardResveClosDate}" type="date" pattern="yyyy-MM-dd" />
+    <fmt:formatNumber var= "cprCardUseExpectAmount" value="${resve.cprCardUseExpectAmount}" type="number" maxFractionDigits="3" />
     rowData.push({
         cprCardResveSn : "${resve.cprCardResveSn}",
         cprCardNo : "${resve.cprCardNo}",
         cprCardNm: "${resve.cprCardNm}",
-        cprCardResveEmplIdAndName : "${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})",
         cprCardResveBeginDate : "${cprCardResveBeginDate}",
         cprCardResveClosDate : "${cprCardResveClosDate}",
+        cprCardUseLoca : "${resve.cprCardUseLoca}",
+        cprCardUsePurps : "${resve.cprCardUsePurps}",
+        cprCardUseExpectAmount : "${cprCardUseExpectAmount}원",
+        cprCardResveEmplIdAndName : "${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})",
         cprCardResveRturnAt : "${resve.cprCardResveRturnAt}"
     })
     </c:forEach>

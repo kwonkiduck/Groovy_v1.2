@@ -174,9 +174,12 @@
         { field: "cprCardResveSn", headerName:"예약 순번", hide: true, getQuickFilterText: (params) => {
                 return getMedalString(params.value);
             }},
-        { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},
         { field: "cprCardResveBeginDate", headerName:"사용 시작 일자"},
         { field: "cprCardResveClosDate", headerName:"사용 마감 일자"},
+        { field: "cprCardUseLoca", headerName:"사용처"},
+        { field: "cprCardUsePurps", headerName:"사용 목적"},
+        { field: "cprCardUseExpectAmount", headerName:"사용 예상 금액"},
+        { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},
         { field: "assign", headerName: "카드 지정", cellRenderer: ClassComp},
     ];
 
@@ -184,11 +187,15 @@
     <c:forEach items="${loadCardWaitingList}" var="resve">
     <fmt:formatDate var= "cprCardResveBeginDate" value="${resve.cprCardResveBeginDate}" type="date" pattern="yyyy-MM-dd" />
     <fmt:formatDate var= "cprCardResveClosDate" value="${resve.cprCardResveClosDate}" type="date" pattern="yyyy-MM-dd" />
+    <fmt:formatNumber var= "cprCardUseExpectAmount" value="${resve.cprCardUseExpectAmount}" type="number" maxFractionDigits="3" />
     rowData.push({
         cprCardResveSn : "${resve.cprCardResveSn}",
-        cprCardResveEmplIdAndName : "${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})",
         cprCardResveBeginDate : "${cprCardResveBeginDate}",
         cprCardResveClosDate : "${cprCardResveClosDate}",
+        cprCardUseLoca : "${resve.cprCardUseLoca}",
+        cprCardUsePurps : "${resve.cprCardUsePurps}",
+        cprCardUseExpectAmount : "${cprCardUseExpectAmount}원",
+        cprCardResveEmplIdAndName : "${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})",
     })
     </c:forEach>
 
