@@ -70,4 +70,8 @@ public class SalaryService {
         mapper.modifyIncmtax(code, value);
     }
 
+    public void modifySalary(String code, int value) {
+        mapper.modifySalary(code, value);
+    }
+
 }
