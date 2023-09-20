@@ -18,14 +18,5 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
     });
 
-    /*  tab */
-    tabList.forEach(item=>{
-        item.addEventListener("click",()=>{
-            tabList.forEach(list=>{
-                list.classList.remove("on");
-            })
-            item.classList.add("on");
-        })
-    })
 
 })
