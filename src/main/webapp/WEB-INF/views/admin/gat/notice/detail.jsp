@@ -56,27 +56,29 @@
 
 
 </style>
-<h1 class="font-36 font-md color-font-high">공지사항</h1>
-<div class="box-notices">
+<div class="content-container">
+    <h1 class="font-36 font-md color-font-high">공지사항</h1>
+    <div class="box-notices">
 
-    <div class="box-notice card-df">
-        <p>${noticeDetail.notiTitle}</p>
-        <p>${noticeDetail.notiContent}</p>
-        <div class="box-view-date">
-            <div class="box-view">
-                <i class="icon icon-view-24"></i>
-                <span class="text-view-count">${noticeDetail.notiRdcnt}</span> view
+        <div class="box-notice card-df">
+            <p>${noticeDetail.notiTitle}</p>
+            <p>${noticeDetail.notiContent}</p>
+            <div class="box-view-date">
+                <div class="box-view">
+                    <i class="icon icon-view-24"></i>
+                    <span class="text-view-count">${noticeDetail.notiRdcnt}</span> view
+                </div>
+                <div class="box-date">
+                    ${noticeDetail.notiDate}
+                </div>
+                <c:if test="${notiFiles != null}">
+                    <c:forEach var="notiFile" items="${notiFiles}" varStatus="stat">
+                        <a href="/file/download/notice?uploadFileSn=${notiFile.uploadFileSn}">${notiFile.uploadFileOrginlNm}</a>
+                        <fmt:formatNumber value="${notiFile.uploadFileSize / 1024.0}"
+                                          type="number" minFractionDigits="1" maxFractionDigits="1"/> KB</p>
+                    </c:forEach>
+                </c:if>
             </div>
-            <div class="box-date">
-                ${noticeDetail.notiDate}
-            </div>
-            <c:if test="${notiFiles != null}">
-                <c:forEach var="notiFile" items="${notiFiles}" varStatus="stat">
-                    <a href="/file/download/notice?uploadFileSn=${notiFile.uploadFileSn}">${notiFile.uploadFileOrginlNm}</a>
-                    <fmt:formatNumber value="${notiFile.uploadFileSize / 1024.0}"
-                                      type="number" minFractionDigits="1" maxFractionDigits="1"/> KB</p>
-                </c:forEach>
-            </c:if>
         </div>
     </div>
 </div>

@@ -12,45 +12,45 @@
     }
 
     .myroom {
-        overflow-y:auto;
-        height:300px;
+        overflow-y: auto;
+        height: 300px;
     }
 
     #inviteBtn, #inviteEmplBtn {
-        display : none;
+        display: none;
     }
 
 </style>
-<hr>
-<h1>채팅방 개설</h1>
-<div>
-    <ul id="employeeList">
+<div class="content-container">
+    <h1>채팅방 개설</h1>
+    <div>
+        <ul id="employeeList">
 
-    </ul>
-    <button type="button" id="createRoomBtn" style="background-color: lightsteelblue">채팅방 생성</button>
-    <button type="button" id="inviteEmplBtn" style="background-color: darkseagreen">채팅방 초대</button>
-    <button type="button" id="cancelBtn">취소</button>
-</div>
+        </ul>
+        <button type="button" id="createRoomBtn" style="background-color: lightsteelblue">채팅방 생성</button>
+        <button type="button" id="inviteEmplBtn" style="background-color: darkseagreen">채팅방 초대</button>
+        <button type="button" id="cancelBtn">취소</button>
+    </div>
 
-<hr>
+    <hr>
 
-<h1>채팅방 목록</h1>
-<div id="chatRoomList">
-
-</div>
-
-<hr>
-
-<h1>채팅창</h1>
-<div id="chatRoom">
-    <button type="button" id="inviteBtn">초대</button>
-    <div id="msgArea">
+    <h1>채팅방 목록</h1>
+    <div id="chatRoomList">
 
     </div>
-    <input type="text" id="msg">
-    <button type="button" id="sendBtn">전송</button>
-</div>
 
+    <hr>
+
+    <h1>채팅창</h1>
+    <div id="chatRoom">
+        <button type="button" id="inviteBtn">초대</button>
+        <div id="msgArea">
+
+        </div>
+        <input type="text" id="msg">
+        <button type="button" id="sendBtn">전송</button>
+    </div>
+</div>
 <script>
 
     const emplId = ${CustomUser.employeeVO.emplId};
@@ -69,21 +69,21 @@
     let chttRoomMem = []
 
     function connectToStomp() {
-        return new Promise(function(res, rej) {
-            client.connect({}, function() {
+        return new Promise(function (res, rej) {
+            client.connect({}, function () {
                 res();
             });
         });
     }
 
-    connectToStomp().then(function() {
-        $("#msg").on("keyup", function(event) {
+    connectToStomp().then(function () {
+        $("#msg").on("keyup", function (event) {
             if (event.keyCode === 13) {
                 sendMessage();
             }
         });
 
-        $("#sendBtn").on("click", function(){
+        $("#sendBtn").on("click", function () {
             sendMessage();
         });
 
@@ -91,15 +91,15 @@
             let message = msg.val();
             let date = new Date();
 
-            if(message.length == 0) return;
+            if (message.length == 0) return;
 
             let chatVO = {
-                chttNo : 0,
-                chttRoomNo : chttRoomNo,
-                chttMbrEmplId : emplId,
-                chttMbrEmplNm : emplNm,
-                chttCn : message,
-                chttInputDate : date
+                chttNo: 0,
+                chttRoomNo: chttRoomNo,
+                chttMbrEmplId: emplId,
+                chttMbrEmplNm: emplNm,
+                chttCn: message,
+                chttInputDate: date
             }
             client.send('/public/chat/message', {}, JSON.stringify(chatVO));
 
@@ -134,18 +134,18 @@
                 dataType: "json",
                 success: function (messages) {
                     $.each(messages, function (idx, obj) {
-                        if(obj.chttMbrEmplId == emplId) {
+                        if (obj.chttMbrEmplId == emplId) {
                             var code = `<div style="border: 1px solid blue" id="\${obj.chttNo}">`;
                             code += "<div>";
                             code += `<p>\${obj.chttMbrEmplNm} : \${obj.chttCn}</p>`;
                             code += "</div></div>";
-                            $(`#room\${currentRoomNo}`).append(code);
+                            $(`#room \${currentRoomNo}`).append(code);
                         } else {
                             var code = `<div style='border: 1px solid red' id='\${obj.chttNo}'>`;
                             code += "<div>";
                             code += `<p>\${obj.chttMbrEmplNm} : \${obj.chttCn}</p>`;
                             code += "</div></div>";
-                            $(`#room\${currentRoomNo}`).append(code);
+                            $(`#room \${currentRoomNo}`).append(code);
                         }
                     });
                     scrollToBottom();
@@ -156,9 +156,9 @@
             })
 
             $.ajax({
-                url : `/chat/loadRoomMembers/\${currentRoomNo}`,
-                type : "get",
-                success : function(members) {
+                url: `/chat/loadRoomMembers/\${currentRoomNo}`,
+                type: "get",
+                success: function (members) {
                     $.each(members, function (idx, obj) {
                         chttRoomMem.push(obj);
                     })
@@ -172,11 +172,11 @@
 
         }
 
-        $("#inviteBtn").on("click", function() {
+        $("#inviteBtn").on("click", function () {
             $("#createRoomBtn").hide();
             $("#inviteEmplBtn").show();
 
-            $('input[type="checkbox"][name="employees"]').each(function() {
+            $('input[type="checkbox"][name="employees"]').each(function () {
                 let memId = $(this).val().split("/")[0];
                 if (chttRoomMem.includes(memId)) {
                     $(this).prop('disabled', true);
@@ -184,7 +184,7 @@
             });
         })
 
-        $("#inviteEmplBtn").on("click", function() {
+        $("#inviteEmplBtn").on("click", function () {
 
             $("input[name='employees']:checked").each(function () {
                 let employees = $(this).val();
@@ -197,7 +197,7 @@
 
             let newMem = {
                 chttRoomNo: currentRoomNo,
-                chttRoomNm : currentRoomNm,
+                chttRoomNm: currentRoomNm,
                 employees: emplsToInvite
             }
 
@@ -230,7 +230,7 @@
             scrollRoom.scrollTop = scrollRoom.scrollHeight;
         }
 
-        $("#chatRoomList").on("click", ".rooms", function() {
+        $("#chatRoomList").on("click", ".rooms", function () {
 
             let selectedRoom = $(this);
             let chttRoomNo = selectedRoom.find("#chttRoomNo").val();
@@ -266,14 +266,14 @@
                     code += "<div>";
                     code += "<p>" + chttMbrEmplNm + " : " + chttCn + "</p>";
                     code += "</div></div>";
-                    $(`#room\${chttRoomNo}`).append(code);
+                    $(`#room \${chttRoomNo}`).append(code);
                     scrollToBottom();
                 } else {
                     code += "<div style='border: 1px solid red'>";
                     code += "<div>";
                     code += "<p>" + chttMbrEmplNm + " : " + chttCn + "</p>";
                     code += "</div></div>";
-                    $(`#room\${chttRoomNo}`).append(code);
+                    $(`#room \${chttRoomNo}`).append(code);
                     scrollToBottom();
                 }
 
@@ -318,7 +318,7 @@
             ul.append(li);
 
             let ulSub = $("<ul>");
-            groupedEmployees[deptNm].forEach(function(employee) {
+            groupedEmployees[deptNm].forEach(function (employee) {
                 let liSub = $("<li>");
                 let label = $("<label>");
                 let input = $("<input>").attr({
@@ -361,7 +361,7 @@
                 contentType: "application/json;charset:utf-8",
                 success: function (result) {
                     loadRoomList();
-                    if(result == 1) {
+                    if (result == 1) {
                         alert("채팅방 개설 성공");
                     } else {
                         alert("이미 존재하는 1:1 채팅방입니다")
@@ -426,7 +426,7 @@
             $("#chatRoomList").html(code);
         }
 
-        $("#cancelBtn").on("click", function() {
+        $("#cancelBtn").on("click", function () {
             $("input[type='checkbox'][name='employees']").prop("disabled", false).prop("checked", false);
             $("#inviteEmplBtn").hide();
             $("#createRoomBtn").show();

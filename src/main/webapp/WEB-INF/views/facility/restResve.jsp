@@ -1,32 +1,49 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<h1><a href="/facility/meeting">회의실 예약</a></h1>
-<h1><a href="/facility/rest">자리 예약</a></h1>
-<h1><a href="/facility/vehicle">차량 예약</a></h1>
+<div class="content-container">
+    <h1><a href="/facility/meeting">회의실 예약</a></h1>
+    <h1><a href="/facility/rest">자리 예약</a></h1>
+    <h1><a href="/facility/vehicle">차량 예약</a></h1>
 
-<div>
-    <c:forEach var="bed" items="${bedList}">
-        <button type="button" onclick="setRoomNumber(this);loadReservedList(this);"><i></i>
-            <h3>${bed.commonCodeFcltyKind}</h3></button>
-    </c:forEach>
-</div>
-<hr/>
-<div>
-    <c:forEach var="sofa" items="${sofaList}">
-        <button type="button" onclick="setRoomNumber(this);loadReservedList(this);"><i></i>
-            <h3>${sofa.commonCodeFcltyKind}</h3></button>
-    </c:forEach>
-</div>
-<hr/>
-<h2 onclick="goReservation()">예약하기</h2>
-<div id="reserveBox">
-    <input type="hidden" name="facltyNo" id="facltyNo"/>
-    <p id="today"></p>
-    <p id="time"></p>
-    <p>대여시간</p>
-    <label>
-        <select name="selectResveBeginTime" id="selectResveBeginTime">
-            <option value="대여시간" selected>대여시간</option>
+    <div>
+        <c:forEach var="bed" items="${bedList}">
+            <button type="button" onclick="setRoomNumber(this);loadReservedList(this);"><i></i>
+                <h3>${bed.commonCodeFcltyKind}</h3></button>
+        </c:forEach>
+    </div>
+    <hr/>
+    <div>
+        <c:forEach var="sofa" items="${sofaList}">
+            <button type="button" onclick="setRoomNumber(this);loadReservedList(this);"><i></i>
+                <h3>${sofa.commonCodeFcltyKind}</h3></button>
+        </c:forEach>
+    </div>
+    <hr/>
+    <h2 onclick="goReservation()">예약하기</h2>
+    <div id="reserveBox">
+        <input type="hidden" name="facltyNo" id="facltyNo"/>
+        <p id="today"></p>
+        <p id="time"></p>
+        <p>대여시간</p>
+        <label>
+            <select name="selectResveBeginTime" id="selectResveBeginTime">
+                <option value="대여시간" selected>대여시간</option>
+                <option value="9:00">9:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+            </select>
+        </label>
+
+        <p>반납시간</p>
+        <select name="selectResveEndTime" id="selectResveEndTime" required>
+            <option value="반납시간" selected>반납시간</option>
             <option value="9:00">9:00</option>
             <option value="10:00">10:00</option>
             <option value="11:00">11:00</option>
@@ -37,36 +54,21 @@
             <option value="16:00">16:00</option>
             <option value="17:00">17:00</option>
             <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
         </select>
-    </label>
+        <div>
+            <p><i></i>가능</p>
+            <p><i></i>불가능</p>
+        </div>
 
-    <p>반납시간</p>
-    <select name="selectResveEndTime" id="selectResveEndTime" required>
-        <option value="반납시간" selected>반납시간</option>
-        <option value="9:00">9:00</option>
-        <option value="10:00">10:00</option>
-        <option value="11:00">11:00</option>
-        <option value="12:00">12:00</option>
-        <option value="13:00">13:00</option>
-        <option value="14:00">14:00</option>
-        <option value="15:00">15:00</option>
-        <option value="16:00">16:00</option>
-        <option value="17:00">17:00</option>
-        <option value="18:00">18:00</option>
-        <option value="19:00">19:00</option>
-        <option value="20:00">20:00</option>
-        <option value="21:00">21:00</option>
-        <option value="22:00">22:00</option>
-    </select>
-    <div>
-        <p><i></i>가능</p>
-        <p><i></i>불가능</p>
+        <button onclick="createReservation()" type="button">예약하기</button>
     </div>
-
-    <button onclick="createReservation()" type="button">예약하기</button>
+    <h2 onclick="getMyReserveList()">내 예약 현황</h2>
+    <div id="myReserveList" style="display: none"></div>
 </div>
-<h2 onclick="getMyReserveList()">내 예약 현황</h2>
-<div id="myReserveList" style="display: none"></div>
 <script>
     //날짜
     let today = document.querySelector("#today");

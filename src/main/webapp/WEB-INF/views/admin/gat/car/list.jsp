@@ -19,27 +19,28 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
-<div class="wrap">
-    <ul>
-        <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>
-        <li><a href="/reserve/loadVehicle" class="tab">예약 현황</a></li>
-    </ul>
-</div>
-<br/>
-<div class="serviceWrap">
-    <!--<select name="filter" id="filter">
-        <option value="vhcleNo">차량번호</option>
-        <option value="vhcleVhcty">차종</option>
-    </select>-->
-    <input type="text" oninput="onQuickFilterChanged()" id="quickFilter" placeholder="검색어를 입력하세요"/>
-</div>
-<br/><br/>
-<div class="cardWrap">
-    <div class="card">
-        <div id="myGrid" class="ag-theme-alpine"></div>
+<div class="content-container">
+    <div class="wrap">
+        <ul>
+            <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>
+            <li><a href="/reserve/loadVehicle" class="tab">예약 현황</a></li>
+        </ul>
+    </div>
+    <br/>
+    <div class="serviceWrap">
+        <!--<select name="filter" id="filter">
+            <option value="vhcleNo">차량번호</option>
+            <option value="vhcleVhcty">차종</option>
+        </select>-->
+        <input type="text" oninput="onQuickFilterChanged()" id="quickFilter" placeholder="검색어를 입력하세요"/>
+    </div>
+    <br/><br/>
+    <div class="cardWrap">
+        <div class="card">
+            <div id="myGrid" class="ag-theme-alpine"></div>
+        </div>
     </div>
 </div>
-
 <script>
     /*예시*/
     const returnCar = (params) => params.value;

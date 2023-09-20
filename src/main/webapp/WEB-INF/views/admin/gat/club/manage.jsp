@@ -7,39 +7,43 @@
         display: flex;
         align-items: center;
     }
-    #request-club{
+
+    #request-club {
         height: 200px;
     }
+
     #manage-club {
         height: 400px;
     }
 </style>
-<h1 class="tab"><a href="/club/admin">동호회 관리</a></h1><br /><br />
-<div class="content-wrapper">
-    <div class="request-club-wrap">
-        <div class="short">
-            <h3>동호회 제안</h3>
-            <div class="total">
-                <a href="#" class="total-count"></a>
-                건
-                <a href="/club/admin/proposalList" class="more">더보기</a>
+<div class="content-container">
+    <h1 class="tab"><a href="/club/admin">동호회 관리</a></h1><br/><br/>
+    <div class="content-wrapper">
+        <div class="request-club-wrap">
+            <div class="short">
+                <h3>동호회 제안</h3>
+                <div class="total">
+                    <a href="#" class="total-count"></a>
+                    건
+                    <a href="/club/admin/proposalList" class="more">더보기</a>
+                </div>
             </div>
+            <div id="request-club" class="ag-theme-alpine"></div>
         </div>
-        <div id="request-club" class="ag-theme-alpine"></div>
-    </div><br /><br />
-    <div class="manage-club-wrap">
-        <div class="short">
-            <h3>등록된 동호회</h3>
-            <div class="total">
-                <a href="#" class="total-club"></a>
-                개
-                <a href="/club/admin/registList" class="more">더보기</a>
+        <br/><br/>
+        <div class="manage-club-wrap">
+            <div class="short">
+                <h3>등록된 동호회</h3>
+                <div class="total">
+                    <a href="#" class="total-club"></a>
+                    개
+                    <a href="/club/admin/registList" class="more">더보기</a>
+                </div>
             </div>
+            <div id="manage-club" class="ag-theme-alpine"></div>
         </div>
-        <div id="manage-club" class="ag-theme-alpine"></div>
     </div>
 </div>
-
 <script>
     const returnString = (params) => params.value;
     let totalProposal = 0;
@@ -62,15 +66,18 @@
             this.disapproveBtn = this.eGui.querySelector(".disapprove");
 
             this.approveBtn.onclick = () => {
-                acceptAjax(clbEtprCode,'1');
+                acceptAjax(clbEtprCode, '1');
             };
             this.disapproveBtn.onclick = () => {
-                acceptAjax(clbEtprCode,'2');
+                acceptAjax(clbEtprCode, '2');
             };
         }
 
-        getGui() {return this.eGui;}
+        getGui() {
+            return this.eGui;
+        }
     }
+
     class ClassClubBtn {
         init(params) {
             const clbEtprCode = params.data.clbEtprCode
@@ -84,14 +91,16 @@
             this.manageBtn = this.eGui.querySelector(".manage");
 
             this.dormacyBtn.onclick = () => {
-                acceptAjax(clbEtprCode,"3");
+                acceptAjax(clbEtprCode, "3");
             };
             this.manageBtn.onclick = () => {
                 window.location.href = "/club/admin/" + clbEtprCode;
             };
         }
 
-        getGui() {return this.eGui;}
+        getGui() {
+            return this.eGui;
+        }
     }
 
     /* 검색 */
@@ -106,7 +115,8 @@
     function onQuickFilterChanged() {
         gridOptions.api.setQuickFilter(document.getElementById('quickFilter').value);
     }
-    function acceptAjax(clbEtprCode,text){
+
+    function acceptAjax(clbEtprCode, text) {
         $.ajax({
             url: `/club/admin/update`,
             type: "PUT",
@@ -123,6 +133,7 @@
             }
         })
     }
+
     let rowDataRequest = [];
     const columnDefsRequest = [
         {field: "No", headerName: "No"},
@@ -139,16 +150,16 @@
         {field: "clbEtprCode", headerName: "clbEtprCode", hide: true},
     ];
     <c:forEach var="clubVO" items="${clubList}" varStatus="status">
-        rowDataRequest.push({
-            No: "${status.count}",
-            clbChirmnEmplId: "${clubVO.clbChirmnEmplNm} (${clubVO.clbChirmnEmplId})",
-            clbNm: "${clubVO.clbNm}",
-            clbDc: "${clubVO.clbDc}",
-            clbPsncpa: "${clubVO.clbPsncpa}",
-            clbDate: "${clubVO.clbDate}",
-            clbEtprCode: "${clubVO.clbEtprCode}",
-        })
-        totalProposal = ${status.count};
+    rowDataRequest.push({
+        No: "${status.count}",
+        clbChirmnEmplId: "${clubVO.clbChirmnEmplNm} (${clubVO.clbChirmnEmplId})",
+        clbNm: "${clubVO.clbNm}",
+        clbDc: "${clubVO.clbDc}",
+        clbPsncpa: "${clubVO.clbPsncpa}",
+        clbDate: "${clubVO.clbDate}",
+        clbEtprCode: "${clubVO.clbEtprCode}",
+    })
+    totalProposal = ${status.count};
     </c:forEach>
     const gridProposalOptions = {
         columnDefs: columnDefsRequest,
@@ -170,15 +181,15 @@
         {field: "clbEtprCode", headerName: "clbEtprCode", hide: true},
     ];
     <c:forEach var="clubRegist" items="${clubRegistList}" varStatus="status">
-        rowDataRegist.push({
-            No: "${status.count}",
-            clbDate: "${clubRegist.clbDate}",
-            clbNm: "${clubRegist.clbNm}",
-            clbPsncpa: "${clubRegist.clbPsncpa}",
-            clbChirmnEmplId: "${clubRegist.clbChirmnEmplId} (${clubRegist.clbChirmnEmplNm})",
-            clbEtprCode: "${clubRegist.clbEtprCode}",
-        })
-        totalClub = ${status.count};
+    rowDataRegist.push({
+        No: "${status.count}",
+        clbDate: "${clubRegist.clbDate}",
+        clbNm: "${clubRegist.clbNm}",
+        clbPsncpa: "${clubRegist.clbPsncpa}",
+        clbChirmnEmplId: "${clubRegist.clbChirmnEmplId} (${clubRegist.clbChirmnEmplNm})",
+        clbEtprCode: "${clubRegist.clbEtprCode}",
+    })
+    totalClub = ${status.count};
     </c:forEach>
     const gridRegistOptions = {
         columnDefs: columnDefsRegist,

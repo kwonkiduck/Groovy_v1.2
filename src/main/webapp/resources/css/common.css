@@ -11,10 +11,12 @@ body {
     display: flex;
 }
 .container {
-    margin-left: calc((344 / var(--vw)) * 100vw);
     width: 100%;
     padding: calc((93/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
     background-color: var(--color-bg-grey);
+}
+.content-container {
+    margin-left: calc((344 / var(--vw)) * 100vw);
 }
 /* aside */
 #sideBar{

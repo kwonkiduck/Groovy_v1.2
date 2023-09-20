@@ -1,9 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
-    ul {list-style: none; padding-left: 0; }
-    .wrap ul {display: flex; gap:10px}
-    input[type=text], input[type=number]{width: 95%}
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .wrap ul {
+        display: flex;
+        gap: 10px
+    }
+
+    input[type=text], input[type=number] {
+        width: 95%
+    }
 </style>
+<div class="content-container">
     <div class="wrap">
         <ul>
             <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>
@@ -33,7 +44,8 @@
                         <th>하이패스 부착 여부</th>
                         <td style="display: flex; gap: 24px;">
                             <div>
-                                <input type="radio" name="commonCodeHipassAsnAt" id="HIPASS010" value="HIPASS010" checked>
+                                <input type="radio" name="commonCodeHipassAsnAt" id="HIPASS010" value="HIPASS010"
+                                       checked>
                                 <label for="HIPASS010">부착</label>
                             </div>
                             <div>
@@ -47,3 +59,4 @@
             </form>
         </div>
     </div>
+</div>

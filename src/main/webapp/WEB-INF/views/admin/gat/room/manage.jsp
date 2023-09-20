@@ -5,160 +5,161 @@
   Time: 오후 2:24
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <style>
-ul {
-	list-style: none;
-	padding-left: 0;
-}
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
 
-.content ul {
-	dispaly: inline-block;
-}
+    .content ul {
+        dispaly: inline-block;
+    }
 
-.wrap ul {
-	display: flex;
-	gap: 10px
-}
+    .wrap ul {
+        display: flex;
+        gap: 10px
+    }
 
-.header, .titleWrap {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
+    .header, .titleWrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-table tr {
-	display: flex;
-}
+    table tr {
+        display: flex;
+    }
 
-table tr td, table tr th {
-	flex: 1;
-}
+    table tr td, table tr th {
+        flex: 1;
+    }
 
-.roomInfoList, .fxrpsList {
-	display: flex;
-	align-items: center;
-	gap: 24px;
-}
+    .roomInfoList, .fxrpsList {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
 
-.content>ul {
-	display: flex;
-	flex-direction: column;
-}
+    .content > ul {
+        display: flex;
+        flex-direction: column;
+    }
 
-.roomInfo {
-	display: grid;
-	grid-template-rows: repeat(2, 1fr);
-	grid-template-columns: repeat(2, 1fr)
-}
+    .roomInfo {
+        display: grid;
+        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr)
+    }
 
-#fcltyResveSn, .fcltyResveSn {
-	display: none;
-}
+    #fcltyResveSn, .fcltyResveSn {
+        display: none;
+    }
 </style>
-<div class="wrap">
-	<ul>
-		<li><a href="/run/manage" class="tab">시설 관리</a></li>
-		<li><a href="/run/manage" class="tab">예약 현황</a></li>
-	</ul>
-</div>
-<br />
-<br />
-<div class="cardWrap">
-	<div class="card">
-		<div class="header">
-			<h3>오늘 예약 현황</h3>
-			<p>
-				<a href="list" class="totalResve"><span id="countValue"></span>건</a>
-			</p>
-			<a href="list">더보기</a>
-		</div>
-		<br />
-		<div class="content">
-			<table border=1 style="width: 100%" id="allReservedRooms">
-				<thead>
-					<tr>
-						<th>순서</th>
-						<th id="fcltyResveSn">순번</th>
-						<th>시설 종류 구분</th>
-						<th>예약시설 이름</th>
-						<th>시작 날짜</th>
-						<th>끝 날짜</th>
-						<th>예약 사원(사번)</th>
-						<th>예약 취소</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${reservedRooms}" var="room" varStatus="stat">
-						<tr>
-							<td>${stat.count}</td>
-							<td class="fcltyResveSn">${room.fcltyResveSn}</td>
-							<td>${room.fcltyCode}</td>
-							<td>${room.fcltyName}</td>
-							<c:set var="fcltyResveBegin" value="${room.fcltyResveBeginTime}" />
-							<fmt:formatDate value="${fcltyResveBegin}" pattern="yyyy-MM-dd"
-								var="fbeginTime" />
-							<td>${fbeginTime}</td>
-							<c:set var="fcltyResveEnd" value="${room.fcltyResveEndTime}" />
-							<fmt:formatDate value="${fcltyResveEnd}" pattern="yyyy-MM-dd"
-								var="fendTime" />
-							<td>${fendTime}</td>
-							<td>${room.fcltyResveEmplId}</td>
-							<td><button class="delEvent" type="button"
-									data-fcltyResveSn="${room.fcltyResveSn}">예약취소</button></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<br />
-	<br />
-	<hr>
-	<br />
-	<br />
-	<div class="card">
-		<div class="header">
-			<div class="titleWrap" style="display: block">
-				<h3>시설 관리</h3>
-				<br />
-				<table border=1 style="width: 100%">
-					<tbody>
-						<tr>
-							<td>회의실 | ${meetingCount}개</td>
-						</tr>
-						<tr>
-							<td>휴게실 | ${retiringCount}개</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<br />
-		<br />
-		<div class="content">
-			<div class="roomInfo">
-				<ul id="conference">
-					<c:forEach items="${equipmentList}" var="equip" varStatus="stat">
-						<li class="roomInfoList">
-							<h4>${equip.commonCodeFcltyKind}</h4>
-							<h4 class="roomId">${equip.fcltyCode}</h4>
-							<span class="roomType">${equip.fcltyName}</span>
-							<h5>비품</h5>
-							<ul class="fxrpsList">
-								<li>${equip.equipName}</li>
-							</ul>
-						</li>
-					</c:forEach>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+<div class="content-container">
 
+    <div class="wrap">
+        <ul>
+            <li><a href="/run/manage" class="tab">시설 관리</a></li>
+            <li><a href="/run/manage" class="tab">예약 현황</a></li>
+        </ul>
+    </div>
+    <br/>
+    <br/>
+    <div class="cardWrap">
+        <div class="card">
+            <div class="header">
+                <h3>오늘 예약 현황</h3>
+                <p>
+                    <a href="list" class="totalResve"><span id="countValue"></span>건</a>
+                </p>
+                <a href="list">더보기</a>
+            </div>
+            <br/>
+            <div class="content">
+                <table border=1 style="width: 100%" id="allReservedRooms">
+                    <thead>
+                    <tr>
+                        <th>순서</th>
+                        <th id="fcltyResveSn">순번</th>
+                        <th>시설 종류 구분</th>
+                        <th>예약시설 이름</th>
+                        <th>시작 날짜</th>
+                        <th>끝 날짜</th>
+                        <th>예약 사원(사번)</th>
+                        <th>예약 취소</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${reservedRooms}" var="room" varStatus="stat">
+                        <tr>
+                            <td>${stat.count}</td>
+                            <td class="fcltyResveSn">${room.fcltyResveSn}</td>
+                            <td>${room.fcltyCode}</td>
+                            <td>${room.fcltyName}</td>
+                            <c:set var="fcltyResveBegin" value="${room.fcltyResveBeginTime}"/>
+                            <fmt:formatDate value="${fcltyResveBegin}" pattern="yyyy-MM-dd"
+                                            var="fbeginTime"/>
+                            <td>${fbeginTime}</td>
+                            <c:set var="fcltyResveEnd" value="${room.fcltyResveEndTime}"/>
+                            <fmt:formatDate value="${fcltyResveEnd}" pattern="yyyy-MM-dd"
+                                            var="fendTime"/>
+                            <td>${fendTime}</td>
+                            <td>${room.fcltyResveEmplId}</td>
+                            <td>
+                                <button class="delEvent" type="button"
+                                        data-fcltyResveSn="${room.fcltyResveSn}">예약취소
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br/>
+        <div class="card">
+            <div class="header">
+                <div class="titleWrap" style="display: block">
+                    <h3>시설 관리</h3>
+                    <br/>
+                    <table border=1 style="width: 100%">
+                        <tbody>
+                        <tr>
+                            <td>회의실 | ${meetingCount}개</td>
+                        </tr>
+                        <tr>
+                            <td>휴게실 | ${retiringCount}개</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="content">
+                <div class="roomInfo">
+                    <ul id="conference">
+                        <c:forEach items="${equipmentList}" var="equip" varStatus="stat">
+                            <li class="roomInfoList">
+                                <h4>${equip.commonCodeFcltyKind}</h4>
+                                <h4 class="roomId">${equip.fcltyCode}</h4>
+                                <span class="roomType">${equip.fcltyName}</span>
+                                <h5>비품</h5>
+                                <ul class="fxrpsList">
+                                    <li>${equip.equipName}</li>
+                                </ul>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 
     //각 버튼에 클릭 이벤트 핸들러 추가
@@ -215,6 +216,6 @@ table tr td, table tr th {
         // delClickEvent 함수 호출
         delClickEvent();
     });
-    
-    
+
+
 </script>

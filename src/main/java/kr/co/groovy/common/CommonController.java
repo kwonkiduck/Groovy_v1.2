@@ -97,5 +97,10 @@ public class CommonController {
     List<SanctionVO> loadSanction(@PathVariable String emplId){
         return service.loadSanction(emplId);
     }
+
+    @GetMapping("/line")
+    public String line(){
+        return "sanction/line/line";
+    }
 }
 

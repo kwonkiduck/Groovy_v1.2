@@ -15,23 +15,37 @@
         border: 1px solid #333333;
         width: 100%;
     }
+
     .taskBoxWrapper {
-        display: flex; gap: 24px;
+        display: flex;
+        gap: 24px;
         margin: 48px;
     }
+
     .inTaskBox {
         border: 1px solid #333333;
         flex: 7;
     }
+
     .outTaskBox {
         border: 1px solid #333333;
         flex: 3;
     }
-    .todoBoardListWrapper {display: flex; gap: 24px;}
+
+    .todoBoardListWrapper {
+        display: flex;
+        gap: 24px;
+    }
+
     .todoCard {
         margin: 4px 0;
     }
-    .list-header {display: flex; justify-content: space-between; align-items: center;}
+
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     #modal {
         width: 30%;
@@ -40,69 +54,86 @@
         align-items: flex-start;
         border: 1px solid red;
     }
-    .modal-container{
+
+    .modal-container {
         width: 100%;
     }
+
     .modal-header {
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    .modal-body{
+
+    .modal-body {
         display: flex;
         width: 100%;
     }
+
     .form-data-list {
         display: flex;
         flex-direction: column;
     }
+
     .modal-body > ul {
         padding: 0 24px;
         display: flex;
         flex-direction: column;
         gap: 12px;
     }
+
     form {
         width: 100%;
     }
+
     .input-date, .date {
         display: flex;
         gap: 12px;
     }
+
     .date > div {
         flex: 1;
     }
+
     .input-date > input {
         flex: 1;
     }
+
     .modal-footer {
         display: flex;
         justify-content: center;
     }
+
     .modal-footer > button {
         width: 40%;
         padding: 10px;
     }
+
     .modal-common, .modal-option {
         display: none;
     }
+
     .modal-common.on, .modal-option.on {
         display: block;
     }
-    .state-list,.tab-list {
+
+    .state-list, .tab-list {
         list-style: none;
         display: flex;
         gap: 12px;
     }
+
     .head {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
+
     .data-box {
         border: 1px solid black;
         padding: 12px;
     }
+
     .대기 {
         border-radius: 8px;
         background: var(--color-font-row);
@@ -124,64 +155,67 @@
         color: white;
     }
 </style>
-<a href="#">할 일</a>
-<a href="/job/jobDiary">업무 일지</a>
+<div class="content-container">
+    <a href="#">할 일</a>
+    <a href="/job/jobDiary">업무 일지</a>
 
-<div id="todoBoard">
-    <div class="todoBoardListWrapper">
-        <c:forEach var="dayInfo" items="${dayOfWeek}" varStatus="stat">
-            <div class="todoBoardList">
-                <div class="list-header">
-                    <div class="list-header-name">
-                        <p class="day" data-date="${dayInfo.date}">${dayInfo.day}</p>
+    <div id="todoBoard">
+        <div class="todoBoardListWrapper">
+            <c:forEach var="dayInfo" items="${dayOfWeek}" varStatus="stat">
+                <div class="todoBoardList">
+                    <div class="list-header">
+                        <div class="list-header-name">
+                            <p class="day" data-date="${dayInfo.date}">${dayInfo.day}</p>
+                        </div>
+                        <div class="list-header-add">
+                            <button class="addJob">+</button>
+                        </div>
                     </div>
-                    <div class="list-header-add">
-                        <button class="addJob">+</button>
+                    <br/>
+                    <div class="list-content">
+                        <c:forEach var="jobVO" items="${jobListByDate[stat.index]}">
+                            <button type="button" class="todoCard myJob" style="text-align: left"
+                                    data-seq="${jobVO.jobNo}">
+                                <div class="todoCard-title">
+                                    <span class="todoName">${jobVO.jobSj}</span>
+                                </div>
+                                <div class="todoCard-info">
+                                    <span class="dutyProgrs">${jobVO.jobProgressVOList[0].commonCodeDutyProgrs}</span>
+                                    <span class="dutykind">${jobVO.commonCodeDutyKind}</span>
+                                    <span class="toDoClosDate">${jobVO.jobClosDate}까지</span>
+                                </div>
+                            </button>
+                            <br>
+                        </c:forEach>
                     </div>
-                </div><br />
-                <div class="list-content">
-                    <c:forEach var="jobVO" items="${jobListByDate[stat.index]}">
-                        <button type="button" class="todoCard myJob" style="text-align: left" data-seq="${jobVO.jobNo}">
-                            <div class="todoCard-title">
-                                <span class="todoName">${jobVO.jobSj}</span>
-                            </div>
-                            <div class="todoCard-info">
-                                <span class="dutyProgrs">${jobVO.jobProgressVOList[0].commonCodeDutyProgrs}</span>
-                                <span class="dutykind">${jobVO.commonCodeDutyKind}</span>
-                                <span class="toDoClosDate">${jobVO.jobClosDate}까지</span>
-                            </div>
-                        </button>
-                        <br>
-                    </c:forEach>
                 </div>
-            </div>
+            </c:forEach>
+        </div>
+    </div>
+    <div id="receiveJobContainer">
+        <h1>들어온 업무 요청</h1>
+        <c:forEach var="receiveJobVO" items="${receiveJobList}">
+            <button class="receiveJob" data-seq="${receiveJobVO.jobNo}">
+                <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile" style="width: 50px;">
+                <span>${receiveJobVO.jobRequstEmplNm}</span>
+                <span> | ${receiveJobVO.jobSj}</span>
+                <span>&nbsp;&nbsp;<fmt:formatDate value="${receiveJobVO.jobRequstDate}" pattern="yy년 MM월 dd일"/></span>
+            </button>
         </c:forEach>
     </div>
-</div>
-<div id="receiveJobContainer">
-    <h1>들어온 업무 요청</h1>
-    <c:forEach var="receiveJobVO" items="${receiveJobList}" >
-        <button class="receiveJob" data-seq="${receiveJobVO.jobNo}">
-            <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile" style="width: 50px;">
-            <span>${receiveJobVO.jobRequstEmplNm}</span>
-            <span> | ${receiveJobVO.jobSj}</span>
-            <span>&nbsp;&nbsp;<fmt:formatDate value="${receiveJobVO.jobRequstDate}" pattern="yy년 MM월 dd일" /></span>
-        </button>
-    </c:forEach>
-</div>
 
-<div id="requestJobContainer">
-    <h1>요청한 업무</h1>
-    <c:forEach var="requestJobVO" items="${requestJobList}" >
-        <button type="button" class="requestJobDetail" data-seq="${requestJobVO.jobNo}">
-                ${requestJobVO.jobSj}
-            <fmt:formatDate value="${requestJobVO.jobRequstDate}" pattern="yy년 MM월 dd일" />
-        </button>
-        <br/>
-    </c:forEach>
+    <div id="requestJobContainer">
+        <h1>요청한 업무</h1>
+        <c:forEach var="requestJobVO" items="${requestJobList}">
+            <button type="button" class="requestJobDetail" data-seq="${requestJobVO.jobNo}">
+                    ${requestJobVO.jobSj}
+                <fmt:formatDate value="${requestJobVO.jobRequstDate}" pattern="yy년 MM월 dd일"/>
+            </button>
+            <br/>
+        </c:forEach>
+    </div>
+    <button class="requestJob">업무 요청하기</button>
 </div>
-<button class="requestJob">업무 요청하기</button><br />
-
 <div id="modal">
     <div class="modal-container">
         <div id="modal-receive-job" class="modal-common">
@@ -261,23 +295,25 @@
                         <li class="form-data-list">
                             <label>📅 업무 기간</label>
                             <div class="input-date">
-                                <input type="date" name="jobBeginDate" id="jobBeginDate" onchange="validateDate()" placeholder="시작 날짜">
+                                <input type="date" name="jobBeginDate" id="jobBeginDate" onchange="validateDate()"
+                                       placeholder="시작 날짜">
                                 ~
-                                <input type="date" name="jobClosDate" id="jobClosDate" onchange="validateDate()" placeholder="끝 날짜">
+                                <input type="date" name="jobClosDate" id="jobClosDate" onchange="validateDate()"
+                                       placeholder="끝 날짜">
                             </div>
                         </li>
                         <li class="form-data-list">
                             <label>💭 업무 분류</label>
                             <div class="input-data">
-                                <input type="radio" name="commonCodeDutyKind" id="meeting" value="DUTY010" />
+                                <input type="radio" name="commonCodeDutyKind" id="meeting" value="DUTY010"/>
                                 <label for="meeting">회의</label>
-                                <input type="radio" name="commonCodeDutyKind" id="team" value="DUTY012" />
+                                <input type="radio" name="commonCodeDutyKind" id="team" value="DUTY012"/>
                                 <label for="team">팀</label>
-                                <input type="radio" name="commonCodeDutyKind" id="personal" value="DUTY011" />
+                                <input type="radio" name="commonCodeDutyKind" id="personal" value="DUTY011"/>
                                 <label for="personal">개인</label>
-                                <input type="radio" name="commonCodeDutyKind" id="edu" value="DUTY013" />
+                                <input type="radio" name="commonCodeDutyKind" id="edu" value="DUTY013"/>
                                 <label for="edu">교육</label>
-                                <input type="radio" name="commonCodeDutyKind" id="etc" value="DUTY014" />
+                                <input type="radio" name="commonCodeDutyKind" id="etc" value="DUTY014"/>
                                 <label for="etc">기타</label>
                             </div>
                         </li>
@@ -407,9 +443,11 @@
                                 <li class="form-data-list">
                                     <label>📅 업무 기간</label>
                                     <div class="input-date">
-                                        <input type="date" name="jobBeginDate" placeholder="시작 날짜" onchange="newValidateDate()" id="date-begin">
+                                        <input type="date" name="jobBeginDate" placeholder="시작 날짜"
+                                               onchange="newValidateDate()" id="date-begin">
                                         ~
-                                        <input type="date" name="jobClosDate" placeholder="끝 날짜" onchange="newValidateDate()" id="date-close">
+                                        <input type="date" name="jobClosDate" placeholder="끝 날짜"
+                                               onchange="newValidateDate()" id="date-close">
                                     </div>
                                 </li>
                                 <li class="form-data-list">
@@ -446,12 +484,14 @@
                     <div class="modal-option new-request" data-target="tab-new-request">
                         <form action="">
                             <div class="request-list-wrap">
-                                <c:forEach var="receiveJobVO" items="${receiveJobList}" >
+                                <c:forEach var="receiveJobVO" items="${receiveJobList}">
                                     <button type="button" class="receiveJob" data-seq="${receiveJobVO.jobNo}">
-                                        <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile" style="width: 50px;">
+                                        <img src="/uploads/profile/${receiveJobVO.jobRequstEmplProfl}" alt="profile"
+                                             style="width: 50px;">
                                         <span>${receiveJobVO.jobRequstEmplNm}</span>
                                         <span> | ${receiveJobVO.jobSj}</span>
-                                        <span>&nbsp;&nbsp;<fmt:formatDate value="${receiveJobVO.jobRequstDate}" pattern="yy년 MM월 dd일" /></span>
+                                        <span>&nbsp;&nbsp;<fmt:formatDate value="${receiveJobVO.jobRequstDate}"
+                                                                          pattern="yy년 MM월 dd일"/></span>
                                     </button>
                                 </c:forEach>
                             </div>
@@ -504,7 +544,7 @@
             </div>
         </div>
 
-        <div id="modal-job-detail" class="modal-common" >
+        <div id="modal-job-detail" class="modal-common">
             <div class="modal-header">
                 <h4><i class="icon icon-idea"></i>업무 상세</h4>
                 <button class="close">&times;</button>
@@ -552,11 +592,14 @@
                     <li class="form-data-list">
                         <h5 for="">🔥 업무 상태</h5>
                         <div class="input-data">
-                            <input type="radio" name="commonCodeDutyProgrs" value="업무 전" id="before" class="progress" data-code="DUTY030">
+                            <input type="radio" name="commonCodeDutyProgrs" value="업무 전" id="before" class="progress"
+                                   data-code="DUTY030">
                             <label for="before">업무 전</label>
-                            <input type="radio" name="commonCodeDutyProgrs" value="업무 중" id="doing" class="progress" data-code="DUTY031">
+                            <input type="radio" name="commonCodeDutyProgrs" value="업무 중" id="doing" class="progress"
+                                   data-code="DUTY031">
                             <label for="doing">업무 중</label>
-                            <input type="radio" name="commonCodeDutyProgrs" value="업무 완" id="done" class="progress" data-code="DUTY032">
+                            <input type="radio" name="commonCodeDutyProgrs" value="업무 완" id="done" class="progress"
+                                   data-code="DUTY032">
                             <label for="done">업무 완료</label>
                         </div>
                     </li>
@@ -575,13 +618,13 @@
                 <button type="button" id="confirm" style="display: none">확인</button>
             </div>
         </div>
-    </div>\
+    </div>
 </div>
 <script src="/resources/js/orgChart.js"></script>
 <script src="/resources/js/job.js"></script>
 <script>
     <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser" />
-        let emplNm = `${CustomUser.employeeVO.emplNm}`;
+    let emplNm = `${CustomUser.employeeVO.emplNm}`;
     </sec:authorize>
 </script>

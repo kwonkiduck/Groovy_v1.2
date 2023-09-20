@@ -40,36 +40,11 @@
             border: 1px solid red;
         }
     </style>
+<div class="content-container">
     <h1>동호회</h1>
     <h2>그루비 사내 동호회를 소개합니다.&#x1F64C;</h2>
     <button id="proposalClb">동호회 제안하기</button>
-    <div id="modal-proposal" style="display: none;">
-        <h3>동호회 제안하기</h3>
-        <form action="${pageContext.request.contextPath}/club/inputClub" method="post" id="proposal" >
-            <table border="1">
-                <tr>
-                    <th>희망 동호회 종류</th>
-                    <td><input type="text" name="clbKind" id="clbKind"></td>
-                </tr>
-                <tr>
-                    <th>동호회 이름</th>
-                    <td><input type="text" name="clbNm" id="clbNm"></td>
-                </tr>
-                <tr>
-                    <th>동호회 설명</th>
-                    <td>
-                        <textarea name="clbDc" id="clbDc"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th>동호회 정원</th>
-                    <td><input type="text" name="clbPsncpa" id="clbPsncpa"></td>
-                </tr>
-            </table>
-            <button id="proposalBtn">제안하기</button>
-        </form>
-    </div>
-    <br /><hr /><br />
+
     <h3>등록된 동호회 리스트 불러오기</h3>
     <div class="card-wrap">
         <c:forEach var="clubVO" items="${clubList}" varStatus="status">
@@ -116,6 +91,33 @@
             </div>
         </div>
     </div>
+</div>
+<div id="modal-proposal" style="display: none;">
+    <h3>동호회 제안하기</h3>
+    <form action="${pageContext.request.contextPath}/club/inputClub" method="post" id="proposal" >
+        <table border="1">
+            <tr>
+                <th>희망 동호회 종류</th>
+                <td><input type="text" name="clbKind" id="clbKind"></td>
+            </tr>
+            <tr>
+                <th>동호회 이름</th>
+                <td><input type="text" name="clbNm" id="clbNm"></td>
+            </tr>
+            <tr>
+                <th>동호회 설명</th>
+                <td>
+                    <textarea name="clbDc" id="clbDc"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>동호회 정원</th>
+                <td><input type="text" name="clbPsncpa" id="clbPsncpa"></td>
+            </tr>
+        </table>
+        <button id="proposalBtn">제안하기</button>
+    </form>
+</div>
     <script>
         const form = document.querySelector("#proposal");
         const proposalBtn = document.querySelector("#proposalBtn");
