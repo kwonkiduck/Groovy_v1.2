@@ -17,7 +17,7 @@
                ANSLRY_ALLWNC
         FROM ANSLRY
         WHERE COMMON_CODE_DEPT_CRSF LIKE 'CLSF%'
-        ORDER BY COMMON_CODE_DEPT_CRSF ASC
+        ORDER BY COMMON_CODE_DEPT_CRSF DESC
     </select>
     <select id="loadTariff" parameterType="String" resultType="tariffVO">
         SELECT TARAT_STDR_YEAR,
@@ -145,4 +145,11 @@
           AND EXTRACT(YEAR FROM SALARY_DTSMT_ISSU_DATE) = #{year}
         ORDER BY SALARY_DTSMT_ISSU_DATE DESC
     </select>
+
+    <update id="modifyIncmtax">
+        /* 세율 기준 수정 */
+        UPDATE TARAT_STDR
+        SET TARAT_STDR_VALUE = #{value}
+        WHERE TARAT_STDR_CODE = #{code}
+    </update>
 </mapper>

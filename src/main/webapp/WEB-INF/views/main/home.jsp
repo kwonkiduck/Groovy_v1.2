@@ -189,8 +189,8 @@
                 $.each(data, function (index, item) {
                     code += `
                            <li><a href="#" class="list-item">
-                                    <span class="badge badge-default">공지사항</span>
-                                    <p class="list-context">\${item.notiCtgryIconFileStreNm} \${item.notiTitle}</p>
+                                    <span class="badge badge-default">\${item.notiCtgryIconFileStreNm} </span>
+                                    <p class="list-context">\${item.notiTitle}</p>
                                     <span class="list-date">\${item.notiDate}</span>
                                 </a></li>`
                 })
@@ -454,7 +454,7 @@
                         }
                     }
                     if (category === 'TMP') {
-                        temperature = '' + fcstValue + '℃';
+                        temperature = '' + fcstValue + '°';
                     }
                 }
                 $('.sky').html(sky);
