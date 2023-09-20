@@ -51,14 +51,19 @@ public class EmployeeController {
     @PostMapping("/findPassword")
     @ResponseBody
     public String findPassword(@RequestBody String emplId) {
+        emplId = emplId.substring(emplId.indexOf('=') + 1);
         String findTelNoResponse = service.findTelNoByEmplId(emplId);
         if (findTelNoResponse.equals("exists")) {
             // 문자보내기
             EmployeeVO employeeVO = service.loadEmp(emplId);
-            employeeVO.getEmplTelno();
-            service.modifyPassword(emplId, "welcomegroovy");
+            String password = "welcomegroovy";
+            String[] splitTelNo = employeeVO.getEmplTelno().split("-");
+            String emplTelno = splitTelNo[0] + splitTelNo[1] + splitTelNo[2];
+            service.sendMessage(emplTelno, password);
+            service.modifyPassword(emplId, password);
+            return "success";
         }
-        return null;
+        return "fail";
     }
 
     /* 사원 - 비밀번호 수정*/
