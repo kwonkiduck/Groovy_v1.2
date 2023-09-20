@@ -221,7 +221,12 @@ public class EmployeeService {
     }
 
     String findTelNoByEmplId(String emplId) {
-        return mapper.findTelNoByEmplId(emplId);
+        String telNo = mapper.findTelNoByEmplId(emplId);
+        if (telNo != null) {
+            return "exists";
+        } else {
+            return "null";
+        }
     }
 }
 

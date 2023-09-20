@@ -38,21 +38,27 @@ public class EmployeeController {
     }
 
     @GetMapping("/findPassword")
-    public String goFindPassword() {
+    public String findPasswordForm() {
         return "findPassword";
+    }
+
+    @PostMapping("/findTelNo")
+    @ResponseBody
+    public String findTelNoByEmplId(@RequestBody String emplId) {
+        return service.findTelNoByEmplId(emplId.substring(emplId.indexOf('=') + 1));
     }
 
     @PostMapping("/findPassword")
     @ResponseBody
-    public String findTelNoByEmplId(String emplId) {
-        String telNo = service.findTelNoByEmplId(emplId);
-        if (telNo == null) {
-            return "존재하는 사번이 없습니다.";
+    public String findPassword(@RequestBody String emplId) {
+        String findTelNoResponse = service.findTelNoByEmplId(emplId);
+        if (findTelNoResponse.equals("exists")) {
+            // 문자보내기
+            EmployeeVO employeeVO = service.loadEmp(emplId);
+            employeeVO.getEmplTelno();
+            service.modifyPassword(emplId, "welcomegroovy");
         }
-
-        // 문자보내기
-        service.modifyPassword(emplId, "welcomegroovy");
-        return "findPassword";
+        return null;
     }
 
     /* 사원 - 비밀번호 수정*/
