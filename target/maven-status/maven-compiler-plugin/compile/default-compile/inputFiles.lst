@@ -13,6 +13,7 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\hold\EmailReceptionKind.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\TariffVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\CloudVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\sanction\SanctionService.java
+D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\weather\WeatherService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\card\CardController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\sanction\SanctionController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vacation\VacationController.java
@@ -20,7 +21,6 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\NoticeVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\ConnectionLogVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\security\ErrorController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\email\EmailService.java
-D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\sanction\AnnualLeaveService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\email\EmailMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\hold\NotificationAlternative.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\facility\FacilityService.java
@@ -54,7 +54,6 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\reservation\ReservationController.
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\security\CustomUserHandlerInterceptor.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\attendance\AttendanceController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\sanction\SanctionMapper.java
-D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\cloud\AWSConfiguration.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\common\CommonMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vacation\VacationService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\card\CardMapper.java
@@ -76,7 +75,6 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\JobDiaryVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\diet\DietMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\hold\EmailReading.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\chat\StompWebSocketConfig.java
-D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\cloud\CloudService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\Hipass.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\attendance\AttendanceService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\schedule\ScheduleController.java
@@ -98,6 +96,7 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\main\Weather.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\SanctionBookmarkVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\attendance\AttendanceMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\Fixtures.java
+D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\weather\WeatherController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\memo\MemoService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\NotificationVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\SanctionFormatVO.java
@@ -116,9 +115,9 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\commute\CommuteMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\ChatRoomVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\commute\CommuteService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\job\JobService.java
-D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\SanctionVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\AnswerVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\ClubMbrVO.java
+D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\SanctionVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\salary\manage\SalaryManageController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\teamcommunity\CommunityMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\NoticeEssentialReading.java
@@ -131,10 +130,10 @@ D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\club\ClubMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\club\ClubService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\employee\EmployeeMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\CardReservationVO.java
+D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\weather\WeatherMapper.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\hold\NotificationKind.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\enums\VacationKind.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\commute\CommuteController.java
-D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\cloud\CloudController.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\reservation\ReservationService.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\CommuteVO.java
 D:\git\Groovy_v1.2\src\main\java\kr\co\groovy\vo\VoteRegisterVO.java
