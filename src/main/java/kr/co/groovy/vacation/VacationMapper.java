@@ -29,4 +29,8 @@ public interface VacationMapper {
     VacationUseVO loadVacationBySn(int yrycUseDtlsSn);
 
     List<VacationUseVO> loadConfirmedVacation(String emplId);
+
+    List<VacationVO> loadAllEmplVacation();
+
+    int modifyYrycNowCo(VacationVO vacationVO);
 }

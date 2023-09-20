@@ -74,4 +74,16 @@ public class VacationController {
         int generatedKey = vo.getYrycUseDtlsSn();
         return "redirect:/vacation/detail/" + generatedKey;
     }
+
+    @GetMapping("/manage")
+    public String manageVacation(Model model) {
+        List<VacationVO> allEmplVacation = service.loadAllEmplVacation();
+        model.addAttribute("allEmplVacation", allEmplVacation);
+        return "admin/hrt/employee/vacation";
+    }
+
+    @PostMapping("/manage")
+    public int modifyYrycNowCo(@RequestBody VacationVO vacationVO) {
+        return service.modifyYrycNowCo(vacationVO);
+    }
 }

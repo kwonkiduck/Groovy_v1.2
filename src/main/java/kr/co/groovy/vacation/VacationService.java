@@ -111,4 +111,12 @@ public class VacationService {
         log.info(map+"오긴 왔는데");
         mapper.modifyStatus(map);
     }
+
+    public List<VacationVO> loadAllEmplVacation() {
+        return mapper.loadAllEmplVacation();
+    }
+
+    public int modifyYrycNowCo(VacationVO vacationVO) {
+        return mapper.modifyYrycNowCo(vacationVO);
+    }
 }
