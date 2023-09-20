@@ -25,10 +25,6 @@ public class FacilityVO {
     private String commonCodeFxtrsKind;
     private String equipName;
     private String fcltyName;
-<<<<<<< HEAD
     private String fcltyCode; 
-=======
-    private String fcltyCode;
->>>>>>> branch 'main' of https://github.com/dditGroovy/Groovy_v1.2.git
     private String fcltyEmplName;
 }
