@@ -27,7 +27,7 @@
                     <input type="checkbox" name="remember-me" id="rememberId" class="checkBox"/>
                     <label for="rememberId" class="checkBoxLabel">아이디 기억하기</label>
                 </div>
-                <div class="find-id-pw"><a href="#" class="font-14 color-font-row">비밀번호를 잊으셨나요?</a></div>
+                <div class="find-id-pw"><a href="${pageContext.request.contextPath}/employee/findPassword" class="font-14 color-font-row">비밀번호를 잊으셨나요?</a></div>
 
             </div>
 

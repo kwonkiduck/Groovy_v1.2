@@ -5,6 +5,7 @@
         SELECT
             ANSLRY_STDR_YEAR,
             COMMON_CODE_DEPT_CRSF,
+            COMMON_CODE_DEPT_CRSF AS ORIGINAL_CODE,
             ANSLRY_ALLWNC
         FROM
             ANSLRY
@@ -14,6 +15,7 @@
     <select id="loadBonus" resultType="annualSalaryVO">
         SELECT ANSLRY_STDR_YEAR,
                COMMON_CODE_DEPT_CRSF,
+               COMMON_CODE_DEPT_CRSF AS ORIGINAL_CODE,
                ANSLRY_ALLWNC
         FROM ANSLRY
         WHERE COMMON_CODE_DEPT_CRSF LIKE 'CLSF%'
@@ -151,5 +153,11 @@
         UPDATE TARAT_STDR
         SET TARAT_STDR_VALUE = #{value}
         WHERE TARAT_STDR_CODE = #{code}
+    </update>
+    <update id="modifySalary" parameterType="map">
+        /* 세율 기준 수정 */
+        UPDATE ANSLRY
+        SET ANSLRY_ALLWNC = #{value}
+        WHERE COMMON_CODE_DEPT_CRSF = #{code}
     </update>
 </mapper>

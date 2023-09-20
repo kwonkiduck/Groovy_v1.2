@@ -1062,3 +1062,17 @@ target/classes/kr/co/groovy/community/CommunityController.class
 target/classes/kr/co/groovy/community/CommunityMapper.class
 target/classes/kr/co/groovy/community/CommunityService.class
 target/classes/kr/co/groovy/vo/PaystubVO.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/resources/css/sanction/sanction.css
+target/ddit-1.0.0-BUILD-SNAPSHOT/resources/images/icon/i-arr-right.svg
+target/ddit-1.0.0-BUILD-SNAPSHOT/resources/images/icon/view.svg
+target/ddit-1.0.0-BUILD-SNAPSHOT/resources/js/modal.js
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/community/CommunityController.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/community/CommunityMapper.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/community/CommunityService.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/classes/kr/co/groovy/vo/PaystubVO.class
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/findPassword.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/at/card/sanction.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/hrt/employee/vacation.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/card/detail.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/card/request.jsp
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/sanction/format/card.html

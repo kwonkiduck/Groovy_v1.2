@@ -219,5 +219,14 @@ public class EmployeeService {
         today = String.valueOf(LocalDate.now());
         return mapper.loadConnectionLog(today);
     }
+
+    String findTelNoByEmplId(String emplId) {
+        String telNo = mapper.findTelNoByEmplId(emplId);
+        if (telNo != null) {
+            return "exists";
+        } else {
+            return "null";
+        }
+    }
 }
 

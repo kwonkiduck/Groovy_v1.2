@@ -146,4 +146,23 @@
                              AND YRYC_USE_DTLS_SN = #{yrycUseDtlsSn})
         WHERE YRYC_EMP_ID = #{yrycUseDtlsEmplId}
     </update>
+
+    <select id="loadAllEmplVacation" resultType="vacationVO">
+        SELECT Y.YRYC_EMP_ID,
+               E.EMPL_NM,
+               (SELECT C.COMMON_NAME FROM COMMON C WHERE C.COMMON_CODE = E.COMMON_CODE_DEPT) AS DEPT_NM,
+               (SELECT C.COMMON_NAME FROM COMMON C WHERE C.COMMON_CODE = E.COMMON_CODE_CLSF) AS CLSF_NM,
+               E.EMPL_ENCPN,
+               Y.YRYC_NOW_CO
+        FROM YRYC Y, EMPL E
+        WHERE Y.YRYC_EMP_ID = E.EMPL_ID
+          AND E.COMMON_CODE_CLSF != 'CLSF010'
+        ORDER BY DEPT_NM , E.COMMON_CODE_CLSF
+    </select>
+
+    <update id="modifyYrycNowCo" parameterType="vacationVO">
+        UPDATE YRYC
+        SET YRYC_NOW_CO = ${yrycNowCo}
+        WHERE YRYC_EMP_ID = #{yrycEmpId}
+    </update>
 </mapper>
