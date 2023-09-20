@@ -46,5 +46,7 @@ public interface EmployeeMapper {
     void inputConectLog(ConnectionLogVO vo);
     List<ConnectionLogVO> loadConnectionLog(String date);
 
+    String findTelNoByEmplId(String emplId);
+
 }
 

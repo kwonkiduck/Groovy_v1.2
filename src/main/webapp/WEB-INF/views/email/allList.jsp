@@ -70,22 +70,22 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="emailVO" items="${list}">
-            <tr data-id="${emailVO.emailEtprCode}">
+        <c:forEach var="emailCc" items="${list}" varStatus="stat">
+            <tr data-id="${emailCc.emailEtprCode}" data-seq="${stat.index}">
                 <td><input type="checkbox" class="selectMail"></td>
                 <td onclick="modifyTableAt(this)" data-type="redng">
-                        ${emailVO.emailRedngAt}
-                    <input type="hidden" value="${emailVO.emailDeleteAt}" name="deleteAt">
+                        ${emailCc.emailRedngAt}
+                    <input type="hidden" value="${emailCc.emailDeleteAt}" name="deleteAt">
                 </td>
-                <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailVO.emailImprtncAt}</td>
+                <td onclick="modifyTableAt(this)" data-type="imprtnc">${emailCc.emailImprtncAt}</td>
                 <td>파일존재여부</td>
 
-                <td>${emailVO.emailFromAddr}</td>
+                <td>${emailCc.emailFromAddr}</td>
                 <td style="text-align: left">
-                    <span>[${emailVO.emailBoxName}] </span>
-                    <a href="/email/${emailVO.emailEtprCode}">${emailVO.emailFromSj}</a>
+                    <span>[${emailCc.emailBoxName}] </span>
+                    <a href="/email/${emailCc.emailEtprCode}">${emailCc.emailFromSj}</a>
                 </td>
-                <c:set var="sendDateStr" value="${emailVO.emailFromSendDate}"/>
+                <c:set var="sendDateStr" value="${emailCc.emailFromSendDate}"/>
                 <fmt:formatDate var="sendDate" value="${sendDateStr}" pattern="yy.MM.dd"/>
                 <td>${sendDate}</td>
             </tr>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.groovy.teamcommunity.CommunityMapper">
+<mapper namespace="kr.co.groovy.community.CommunityMapper">
     <insert id="inputPost" parameterType="sntncVO">
         INSERT INTO SNTNC(SNTNC_ETPR_CODE,
                           SNTNC_WRTING_EMPL_ID,

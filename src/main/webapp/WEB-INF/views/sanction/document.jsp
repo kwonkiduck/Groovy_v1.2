@@ -3,26 +3,29 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
-    <h2>
-        <a href="${pageContext.request.contextPath}/sanction/box">결재 요청</a>
-        <a href="${pageContext.request.contextPath}/sanction/document">결재 문서함</a>
-    </h2> <br/><br/>
+    <div class="content-container">
 
-    <ul id="sanctionStatus">
-        <li>
-            <button id="request">기안 문서</button>
-        </li>
-        <li>
-            <button id="approve">결재 문서</button>
-        </li>
-        <li>
-            <button id="reference">참조 문서</button>
-        </li>
-    </ul>
+        <h2>
+            <a href="${pageContext.request.contextPath}/sanction/box">결재 요청</a>
+            <a href="${pageContext.request.contextPath}/sanction/document">결재 문서함</a>
+        </h2> <br/><br/>
 
-    <div id="inProgress">
-    </div>
-    <div id="finished">
+        <ul id="sanctionStatus">
+            <li>
+                <button id="request">기안 문서</button>
+            </li>
+            <li>
+                <button id="approve">결재 문서</button>
+            </li>
+            <li>
+                <button id="reference">참조 문서</button>
+            </li>
+        </ul>
+
+        <div id="inProgress">
+        </div>
+        <div id="finished">
+        </div>
     </div>
     <script>
         $(document).ready(function () {

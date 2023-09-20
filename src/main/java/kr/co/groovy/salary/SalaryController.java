@@ -1,10 +1,8 @@
 package kr.co.groovy.salary;
 
 import kr.co.groovy.security.CustomUser;
-import kr.co.groovy.vo.AnnualSalaryVO;
-import kr.co.groovy.vo.EmployeeVO;
-import kr.co.groovy.vo.SalaryVO;
-import kr.co.groovy.vo.TariffVO;
+import kr.co.groovy.utils.ParamMap;
+import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,20 @@ public class SalaryController {
         return "admin/hrt/employee/salary";
     }
 
+    // 인사팀의 세율 기준 수정
+    @PostMapping("/modify/taxes")
+    @ResponseBody
+    public void modifyIncmtax( String code,  double value){
+        service.modifyIncmtax(code, value);
+    }
+
+    @PostMapping("/modify/salary")
+    @ResponseBody
+    public void modifySalary( String code,  int value){
+        service.modifySalary(code, value);
+    }
+
+
     // 회계팀의 급여 상세
     @GetMapping("/list")
     public String loadEmpList(Model model) {
@@ -70,7 +83,14 @@ public class SalaryController {
     }
 
     @GetMapping("/paystub")
-    public String loadPaystub() {
+    public String loadPaystub(Principal principal, Model model) {
+        String emplId = principal.getName();
+        PaystubVO recentPaystub = service.loadRecentPaystub(emplId);
+        List<Integer> years = service.loadYearsForSortPaystub(emplId);
+        model.addAttribute("recentPaystub", recentPaystub);
+        model.addAttribute("years", years);
+        log.info("recentPaystub:{}",recentPaystub);
+        log.info("years:{}",years);
         return "employee/mySalary";
     }
 
@@ -89,5 +109,13 @@ public class SalaryController {
         } else {
             return "fail";
         }
+    }
+
+    @GetMapping("/paystub/{year}")
+    @ResponseBody
+    public List<PaystubVO> loadPaystubList(Principal principal, @PathVariable String year) {
+        log.info("year : {}", year);
+        String emplId = principal.getName();
+        return service.loadPaystubList(emplId, year);
     }
 }

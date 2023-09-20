@@ -5,10 +5,31 @@ body {
     font-family: var(--font-reg);
 }
 * {
+    color: var(--color-font-high);
     transition: 0.35s;
+}
+.wrapper {
+    display: flex;
+}
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: calc((93/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
+    background-color: var(--color-bg-grey);
+}
+.content-container {
+    margin-left: calc((344 / var(--vw)) * 100vw);
+}
+.main-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vh-64);
 }
 /* aside */
 #sideBar{
+    position: fixed;
+    left: 0;
+    top: 0;
     display: flex;
     flex-direction: column;
     gap: var(--vh-48);
@@ -68,6 +89,11 @@ i.icon {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows:  repeat(2, 1fr);
     gap: 4px;
+}
+.btn-wrapper{
+    display: flex;
+    justify-content: center;
+    gap: var(--vw-12);
 }
 .btn-wrap #logout{
     grid-column: 1 / -1;
@@ -156,18 +182,46 @@ i.icon {
     align-items: center;
 }
 
-input[type="text"], input[type="submit"], input[type="password"] {
+/*  input   */
+.label-df {
+    font-size: var(--font-size-24);
+    color: var(--color-font-md);
+    margin-left: var(--vw-12);
+    font-family: var(--font-md);
+}
+.input {
+    padding: 0 var(--vh-24);
+    border-radius: var(--vw-32);
+    border:1px solid var(--color-stroke);
+    outline: none;
+}
+.input-max {
+    width: 100%;
+    background: var(--color-bg-sky);
+    height: var(--vh-64);
+}
+.input-l {
+    width: calc((516 / var(--vw)) * 100vw);
+    height: var(--vh-64);
+    background: var(--color-bg-sky);
+}
+/*input[type="text"], input[type="submit"], input[type="password"] {
     width: calc((516 / var(--vw)) * 100vw);
     height: var(--vh-64);
     border-radius: var(--vw-32);
-}
-input[type="text"],  input[type="password"]{
-    padding: var(--vw-24) var(--vh-24);
-}
-input[type="text"]::placeholder,  input[type="password"]::placeholder {
+}*/
+.input-l::placeholder {
     font-size: var(--font-size-14);
     font-weight: 500;
 }
+
+.input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vh-8);
+    justify-content: center;
+}
+
 .userId {
     margin-bottom: 24px;
 }
@@ -194,7 +248,37 @@ input[type="text"]::placeholder,  input[type="password"]::placeholder {
     width: 100%;
 }
 
+/*  검색  */
+.search {
+    width: calc((560/1920)*100vw);
+    height: var(--vh-64);
+    display: flex;
+    align-items: center;
+    padding: var(--vh-12) var(--vh-12) var(--vh-12) var(--vw-24);
+}
+.box-sort-search {
+    margin-top: var(--vh-16);
+}
+.box-sort-search > form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--vw-24);
+}
+.search input {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+}
+.btn-search {
+    width: calc((88/1920)*100vw);
+    display: flex;
+    align-items: center;
+    padding: var(--vh-12) var(--vw-24);
+    font-size: var(--font-size-11);
 
+}
 /*  더보기 */
 .more {
     font-size: var(--font-size-14);
@@ -203,4 +287,62 @@ input[type="text"]::placeholder,  input[type="password"]::placeholder {
 }
 .more:hover {
     font-weight: bold;
+}
+
+
+.badge {
+    border-radius: var(--size-32);
+}
+
+
+/*  모달  */
+.modal-dim {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+.modal-dim .dim-bg {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: #6B7684;
+    opacity: .28;
+}
+.modal-layer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    display: none;
+    padding: var(--vw-32);
+    flex-direction: column;
+    gap: var(--vh-64);
+}
+.modal-layer.sm {
+    width: calc((764/1920)*100vw);
+}
+.modal-layer.on {
+    display: flex;
+}
+.modal-top {
+    display: flex;
+    align-items: center;
+}
+.modal-top .modal-title {
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-b);
+    font-size: var(--font-size-24);
+}
+.modal-top .modal-close {
+    background: none;
+    border: none;
+    padding: 8px;
 }

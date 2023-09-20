@@ -1,16 +1,79 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: seojukang
-  Date: 2023/09/18
-  Time: 19:16
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-</body>
-</html>
+<h1>연차 관리</h1>
+
+<div>
+    <table border="1">
+        <tr>
+            <th>사번</th>
+            <th>이름</th>
+            <th>부서</th>
+            <th>직급</th>
+            <th>입사일</th>
+            <th>보유 연차</th>
+        </tr>
+        <c:forEach items="${allEmplVacation}" var="vacation">
+            <fmt:formatDate var= "emplEncpn" value="${vacation.emplEncpn}" type="date" pattern="yyyy-MM-dd" />
+        <tr>
+            <td class="yrycEmpId">${vacation.yrycEmpId}</td>
+            <td>${vacation.emplNm}</td>
+            <td>${vacation.deptNm}</td>
+            <td>${vacation.clsfNm}</td>
+            <td>${emplEncpn}</td>
+            <td>
+                <button class="minusBtn">-</button>
+                <input type="number" class="yrycNowCo" value="${vacation.yrycNowCo}">
+                <button class="plusBtn">+</button>
+                <button class="saveBtn">저장</button>
+            </td>
+        </tr>
+        </c:forEach>
+    </table>
+</div>
+
+<script>
+    $(".minusBtn").on("click", function () {
+        let inputElement = $(this).next("input[type='number']");
+        let currentValue = parseFloat(inputElement.val());
+        if (!isNaN(currentValue)) {
+            inputElement.val(currentValue - 1);
+        }
+    });
+
+    $(".plusBtn").on("click", function () {
+        let inputElement = $(this).prev("input[type='number']");
+        let currentValue = parseFloat(inputElement.val());
+        if (!isNaN(currentValue)) {
+            inputElement.val(currentValue + 1);
+        }
+    });
+
+    $(".saveBtn").on("click", function() {
+        let inputElement = $(this).siblings(".yrycNowCo");
+        let currentValue = parseFloat(inputElement.val());
+        let emplId = $(this).closest("tr").find(".yrycEmpId").text();
+
+        let data = {
+            yrycEmpId : emplId,
+            yrycNowCo : currentValue
+        }
+
+        console.log(data);
+        $.ajax({
+            url : "/vacation/manage",
+            type : "post",
+            data: JSON.stringify(data),
+            contentType: "application/json;charset:utf-8",
+            success : function (result) {
+                if(result == 1) {
+                    location.href = "/vacation/manage";
+                }
+            },
+            error : function (xhr) {
+                alert("오류로 인하여 연차 개수 수정을 실패했습니다.")
+            }
+        })
+    })
+</script>

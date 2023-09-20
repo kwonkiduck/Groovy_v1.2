@@ -23,6 +23,9 @@
     <definition name="sanction/template/*" extends="tiles-layout-normal">
         <put-attribute name="body" value="/WEB-INF/views/sanction/template/{1}.jsp"/>
     </definition>
+    <definition name="sanction/line/*" extends="tiles-layout-normal">
+        <put-attribute name="body" value="/WEB-INF/views/sanction/line/{1}.jsp"/>
+    </definition>
     <definition name="*/*" extends="tiles-layout">
         <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp"/>
     </definition>

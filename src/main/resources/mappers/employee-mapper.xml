@@ -286,4 +286,10 @@
         WHERE C.EMPL_ID = E.EMPL_ID
           AND TO_CHAR(CONECT_LOG_DATE, 'yyyy-MM-dd') = #{today}
     </select>
+
+    <select id="findTelNoByEmplId" resultType="String" parameterType="String">
+        SELECT EMPL_TELNO
+        FROM EMPL
+        WHERE EMPL_ID = #{emplId}
+    </select>
 </mapper>

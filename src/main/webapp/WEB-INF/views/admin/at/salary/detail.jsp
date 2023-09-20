@@ -1,27 +1,29 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<h2>급여 상세</h2>
-<div>
-    <table border=" 1">
-        <c:forEach var="emplVO" items="${empList}" varStatus="stat">
-            <tr>
-                <td><a href="#" onclick="getPaymentList(${emplVO.emplId})"> ${emplVO.emplId}</a></td>
-                <td>${emplVO.emplNm}</td>
-                <td>${emplVO.commonCodeDept}팀</td>
-                <td>${emplVO.commonCodeClsf}</td>
-            </tr>
-        </c:forEach>
-    </table>
-    <select id="salaryYear">
-        <option value="2023">2023</option>
-        <option value="2022">2022</option>
-        <option value="2021">2021</option>
-    </select>
-</div>
-<div id="paymentList">
-</div>
-<div id="paymentDetail">
+<div class="content-container">
+    <h2>급여 상세</h2>
+    <div>
+        <table border=" 1">
+            <c:forEach var="emplVO" items="${empList}" varStatus="stat">
+                <tr>
+                    <td><a href="#" onclick="getPaymentList(${emplVO.emplId})"> ${emplVO.emplId}</a></td>
+                    <td>${emplVO.emplNm}</td>
+                    <td>${emplVO.commonCodeDept}팀</td>
+                    <td>${emplVO.commonCodeClsf}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        <select id="salaryYear">
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+        </select>
+    </div>
+    <div id="paymentList">
+    </div>
+    <div id="paymentDetail">
+    </div>
 </div>
 <script>
     let year;
@@ -65,10 +67,10 @@
 
     $("#paymentList").on("click", ".getDetail", function (event) {
         event.preventDefault();
-        const emplNm  = $(this).data("emplNm");
-        const month   = $(this).data("month");
-        const bslry   = parseInt($(this).data("bslry"));
-        const allwnc  = parseInt($(this).data("allwnc"));
+        const emplNm = $(this).data("emplNm");
+        const month = $(this).data("month");
+        const bslry = parseInt($(this).data("bslry"));
+        const allwnc = parseInt($(this).data("allwnc"));
         const payment = parseInt(bslry) + parseInt(allwnc); // 총 지급액
         let deduction = 0; // 총 공제액
         let taxes = {};

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -75,14 +77,6 @@ public class EmailController {
     @PutMapping("/{code}/{emailEtprCode}")
     @ResponseBody
     public String modifyEmailRedngAt(@PathVariable String code, @PathVariable String emailEtprCode, @RequestBody String at) {
-        log.info(code);
-        log.info(emailEtprCode);
-        log.info(at);
-        /**
-         * INFO : kr.co.groovy.email.EmailController - redng
-         * INFO : kr.co.groovy.email.EmailController - EMAIL-524-20230918
-         * INFO : kr.co.groovy.email.EmailController - N
-         */
         Map<String, String> map = emailService.getEmailAtMap(code, emailEtprCode, at);
         return map.get("at");
     }
@@ -106,10 +100,10 @@ public class EmailController {
         return emailService.sentMail(emailVO, emailFiles, employeeVO);
     }
 
+    @GetMapping("/unreadCount")
+    @ResponseBody
     public String getUnreadMailCount(Principal principal, Model model) {
-        int unreadMailCount = emailService.getUnreadMailCount(principal.getName());
-        model.addAttribute("unreadMailCount", unreadMailCount);
-        return "tiles/aside";
+        return String.valueOf(emailService.getUnreadMailCount(principal.getName()));
     }
 
     @GetMapping("/sendMine")
@@ -117,14 +111,27 @@ public class EmailController {
         return "email/sendMine";
     }
 
-    @PostMapping("/sendMine")
-    @ResponseBody
-    public String inputMineEmail() {
-        return null;
-    }
-
     @GetMapping("/{emailEtprCode}")
-    public EmailVO getEmail(@PathVariable String emailEtprCode) {
-        return null;
+    public String getEmail(@PathVariable String emailEtprCode, Model model, Principal principal) {
+        EmployeeVO employeeVO = employeeService.loadEmp(principal.getName());
+
+        Map<String, String> map = new HashMap<>();
+        map.put("emailAtKind", "EMAIL_REDNG_AT");
+        map.put("at", "Y");
+        map.put("emailEtprCode", emailEtprCode);
+        emailService.modifyEmailRedngAt(map);
+
+        EmailVO emailVO = emailService.getEmail(emailEtprCode, employeeVO.getEmplEmail());
+        List<EmailVO> toList = emailService.getToPerEmail(emailEtprCode, emailVO.getEmailToAddr());
+        List<EmailVO> ccList = emailService.getCcPerEmail(emailEtprCode, emailVO.getEmailCcAddr());
+        int unreadMailCount = emailService.getUnreadMailCount(principal.getName());
+        int allMailCount = emailService.getAllMailCount(employeeVO.getEmplEmail());
+
+        model.addAttribute("unreadMailCount", unreadMailCount);
+        model.addAttribute("allMailCount", allMailCount);
+        model.addAttribute("emailVO", emailVO);
+        model.addAttribute("toList", toList);
+        model.addAttribute("ccList", ccList);
+        return "email/read";
     }
 }

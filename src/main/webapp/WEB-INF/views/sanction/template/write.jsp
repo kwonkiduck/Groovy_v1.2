@@ -17,9 +17,6 @@
         <div class="formHeader">
             <div class="btnWrap">
                 <button id="getLine">결재선 지정</button>
-                <div id="approvalLine">
-                    <%@include file="../line/line.jsp" %>
-                </div>
             </div>
             <br/>
             <div class="formTitle">
@@ -51,10 +48,11 @@
         let month = String(before.getMonth() + 1).padStart(2, '0');
         let day = String(before.getDate()).padStart(2, '0');
 
-
         let approver;
         let receiver;
         let referrer;
+
+        const dept = "${dept}" // 문서 구분용
 
         const etprCode = "${etprCode}";
         const formatCode = "${format.commonCodeSanctnFormat}";
@@ -63,16 +61,47 @@
         const title = "${format.formatSj}";
         let content;
         let file = $('#sanctionFile')[0].files[0];
-        let vacationId = opener.$("#vacationId").text();
+        let num = opener.$("#sanctionNum").text();
+
+        /*  팝업  */
+        const getLineBtn = document.querySelector("#getLine");
 
         $(document).ready(function () {
-            console.log(vacationId)
             $("#sanctionNo").html(etprCode);
             $("#writeDate").html(today);
             $("#writer").html("${CustomUser.employeeVO.emplNm}")
+            $("#requestDate").html(`\${year}년 \${month}월 \${day}일`);
 
+            console.log(dept)
+
+            if (dept == 'DEPT011') {
+                loadCardData()
+            } else {
+                loadVacationData()
+            }
+
+            /*  팝업  */
+            const url = "/sanction/line";
+            const option = "width = 1024, height = 768, top = 100, left = 200, location = no";
+            let popupWindow;
+            getLineBtn.addEventListener("click",()=>{
+                popupWindow = window.open(url, 'line', option);
+
+            })
+            /*  팝업에서 값 받아오기 */
+            window.addEventListener('message', function(event) {
+                const data = event.data;
+                console.log('부모 창에서 받은 데이터:', data);
+                popupWindow.close();
+
+                document.querySelector(".approval").innerHTML = data;
+
+            });
+        });
+
+        function loadVacationData() {
             $.ajax({
-                url: `/vacation/loadData/\${vacationId}`,
+                url: `/vacation/loadData/\${num}`,
                 type: "GET",
                 success: function (data) {
                     console.log(data)
@@ -87,7 +116,29 @@
                     }
                 }
             })
-        });
+        }
+
+        function loadCardData() {
+            $.ajax({
+                url: `/card/data/\${num}`,
+                type: "GET",
+                success: function (data) {
+                    console.log(data)
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let value = data[key];
+                            let element = document.getElementById(key);
+                            if (element) {
+                                if (key === "cprCardUseExpectAmount") {
+                                    value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "원";
+                                }
+                                element.textContent = value;
+                            }
+                        }
+                    }
+                }
+            })
+        }
 
         $(".submitLine").on("click", function () {
             approver = $("#sanctionLine input[type=hidden]").map(function () {
@@ -96,7 +147,6 @@
             referrer = $("#refrnLine input[type=hidden]").map(function () {
                 return $(this).val();
             }).get();
-            console.log(file);
             if (approver.length > 0) {
                 $("#sanctionSubmit").prop("disabled", false);
             } else {
@@ -106,15 +156,6 @@
         $("#sanctionSubmit").on("click", function () {
             updateStatus()
             content = $(".formContent").html();
-            const param = {
-                vacationId: vacationId
-            }
-            const afterProcess = {
-                className: "kr.co.groovy.commute.CommuteService",
-                methodName: "insertCommuteByVacation",
-                parameters: param
-            }
-            const afterProcessData = JSON.stringify(afterProcess)
             const jsonData = {
                 approver: approver,
                 receiver: receiver,
@@ -125,10 +166,31 @@
                 today: today,
                 title: title,
                 content: content,
-                vacationId: vacationId,
-                afterProcess: afterProcessData
+                vacationId: num,
             };
-            console.log(jsonData)
+
+            if (dept === 'DEPT010') {
+                const param = {
+                    vacationId: num
+                };
+                const afterProcess = {
+                    className: "kr.co.groovy.commute.CommuteService",
+                    methodName: "insertCommuteByVacation",
+                    parameters: param
+                };
+                jsonData.afterProcess = JSON.stringify(afterProcess);
+            } else {
+                const param = {
+                    approveId: num,
+                    state: 'YRYC032'
+                };
+                const afterProcess = {
+                    className: "kr.co.groovy.card.CardService",
+                    methodName: "modifyStatus",
+                    parameters: param
+                };
+                jsonData.afterProcess = JSON.stringify(afterProcess);
+            }
             $.ajax({
                 url: "/sanction/api/sanction",
                 type: "POST",
@@ -172,14 +234,20 @@
             });
         }
 
-        // 연차 문서의 결재 상태 변경
+        // 문서의 결재 상태 변경
         function updateStatus() {
+            let className;
+            if (dept === 'DEPT011') {
+                className = 'kr.co.groovy.card.CardService'
+            } else {
+                className = 'kr.co.groovy.vacation.VacationService'
+            }
             let data = {
-                className: 'kr.co.groovy.vacation.VacationService',
+                className: className,
                 methodName: 'modifyStatus',
                 parameters: {
-                    approveId: vacationId,
-                    state: 'Y'
+                    approveId: num,
+                    state: 'YRYC031'
                 }
             };
             $.ajax({
@@ -188,10 +256,10 @@
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (data) {
-                    alert("연차 테이블 업데이트 성공");
+                    alert("결재 상태 업데이트 성공");
                 },
                 error: function (xhr) {
-                    alert("연차 테이블 업데이트 실패");
+                    alert("결재 상태 업데이트 실패");
                 }
             });
         }

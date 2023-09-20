@@ -19,27 +19,28 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
-<div class="wrap">
-    <ul>
-        <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>
-        <li><a href="/reserve/loadVehicle" class="tab">예약 현황</a></li>
-    </ul>
-</div>
-<br/>
-<div class="serviceWrap">
-    <!--<select name="filter" id="filter">
-        <option value="vhcleNo">차량번호</option>
-        <option value="vhcleVhcty">차종</option>
-    </select>-->
-    <input type="text" oninput="onQuickFilterChanged()" id="quickFilter" placeholder="검색어를 입력하세요"/>
-</div>
-<br/><br/>
-<div class="cardWrap">
-    <div class="card">
-        <div id="myGrid" class="ag-theme-alpine"></div>
+<div class="content-container">
+    <div class="wrap">
+        <ul>
+            <li><a href="/reserve/manageVehicle" class="tab">차량 관리</a></li>
+            <li><a href="/reserve/loadVehicle" class="tab">예약 현황</a></li>
+        </ul>
+    </div>
+    <br/>
+    <div class="serviceWrap">
+        <!--<select name="filter" id="filter">
+            <option value="vhcleNo">차량번호</option>
+            <option value="vhcleVhcty">차종</option>
+        </select>-->
+        <input type="text" oninput="onQuickFilterChanged()" id="quickFilter" placeholder="검색어를 입력하세요"/>
+    </div>
+    <br/><br/>
+    <div class="cardWrap">
+        <div class="card">
+            <div id="myGrid" class="ag-theme-alpine"></div>
+        </div>
     </div>
 </div>
-
 <script>
     /*예시*/
     const returnCar = (params) => params.value;
@@ -47,13 +48,34 @@
     class ClassComp {
         init(params) {
             this.eGui = document.createElement('div');
-            this.eGui.innerHTML = `
-                    <button class="returnCarBtn" id="\${params.value}">반납 확인</button>
+            if (rowData.pop().vhcleResveReturnAt == 'Y') {
+                this.eGui.innerHTML = `
+                    <p class="returnStatus">반납완료</p>
                 `;
+
+            } else if (rowData.pop().vhcleResveReturnAt == 'N') {
+                this.eGui.innerHTML = `
+                    <button class="returnCarBtn" id="\${params.value}">반납 확인</button>
+                    <p class="returnStatus" style="display: none;">반납완료</p>
+                `;
+            }
             this.id = params.value;
             this.btnReturn = this.eGui.querySelector(".returnCarBtn");
-            /*ajax 추가 하기~*/
-            this.btnReturn.onclick = () => alert(this.id + "ddd 반납 완료");
+            this.returnStatus = this.eGui.querySelector(".returnStatus");
+            this.btnReturn.onclick = () => {
+                let vhcleResveNo = rowData.pop().chk;
+                let xhr = new XMLHttpRequest();
+                xhr.open("put", "/reserve/return", true);
+                xhr.onreadystatechange = () => {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        if (xhr.responseText == 1) {
+                            this.btnReturn.style.display = 'none';
+                            this.returnStatus.style.display = 'block';
+                        }
+                    }
+                }
+                xhr.send(vhcleResveNo);
+            }
         }
 
         getGui() {
@@ -90,19 +112,20 @@
         {field: "chk", headerName: " ", cellRenderer: ClassComp},
     ];
     const rowData = [];
-    <c:forEach var="vehicleVO" items="${todayReservedVehicles}" varStatus="status"> <!-- 12: 공지사항 개수(length) -->
+    <c:forEach var="vehicleVO" items="${allReservation}" varStatus="status"> <!-- 12: 공지사항 개수(length) -->
     <c:set var="beginTimeStr" value="${vehicleVO.vhcleResveBeginTime}"/>
     <fmt:formatDate var="beginTime" value="${beginTimeStr}" pattern="HH:mm"/>
     <c:set var="endTimeStr" value="${vehicleVO.vhcleResveEndTime}"/>
     <fmt:formatDate var="endTime" value="${endTimeStr}" pattern="HH:mm"/>
     rowData.push({
-        vhcleResveNo: "${vehicleVO.vhcleResveNo}",
+        vhcleResveNo: "${vehicleVO.vhcleResveNoRedefine}",
         vhcleNo: "${vehicleVO.vhcleNo}",
         vhcleResveBeginTime: "${beginTime}",
         vhcleResveEndTime: "${endTime}",
         vhcleResveEmpNm: "${vehicleVO.vhcleResveEmplNm}",
         vhcleResveEmplId: "${vehicleVO.vhcleResveEmplId}",
-        chk: "${vehicleVO.vhcleResveNo}"
+        chk: "${vehicleVO.vhcleResveNo}",
+        vhcleResveReturnAt: "${vehicleVO.vhcleResveReturnAt}"
     })
     </c:forEach>
     const gridOptions = {

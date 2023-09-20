@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%-- 동작 위한 스타일 외엔(예: display:none 등) 전부 제가 작업하면서 편하게 보려고 임시로 먹인겁니다 ! --%>
 
@@ -10,73 +10,75 @@
         display: none;
     }
 </style>
-<header>
-    <ul>
-        <li><a href="${pageContext.request.contextPath}/card/manage">회사 카드 관리</a></li>
-        <li><a href="${pageContext.request.contextPath}/card/reservationRecords">대여 내역 관리</a></li>
-    </ul>
-</header>
-<main>
-    <h1>카드 등록</h1>
-    <div id="registerCard">
-        <form id="registerCardForm" method="post">
-            <label for="cardName">카드 이름</label>
-            <input type="text" id="cardName" name="cprCardNm" required><br/>
-            <label for="cardNo">카드 번호</label>
-            <input type="text" id="cardNo" name="cprCardNo" placeholder="0000-0000-0000-0000" required><br/>
-            <labek for="cardCom">카드사</labek>
-            <select name="cprCardChrgCmpny" id="cardCom">
-                <option value="IBK기업은행">IBK기업은행</option>
-                <option value="KB국민카드">KB국민카드</option>
-                <option value="NH농협은행">NH농협은행</option>
-                <option value="롯데카드">롯데카드</option>
-                <option value="비씨카드">비씨카드</option>
-                <option value="삼성카드">삼성카드</option>
-                <option value="신한카드">신한카드</option>
-                <option value="우리카드">우리카드</option>
-                <option value="하나카드">하나카드</option>
-                <option value="한국씨티은행">한국씨티은행</option>
-                <option value="현대카드">현대카드</option>
-            </select>
-            <button id="registerCardBtn">등록</button>
-        </form>
-    </div>
-    <hr/>
-    <h1>카드 목록</h1>
-    <div id="cardList"></div>
-    <hr/>
-    <h1>카드 기본 정보</h1>
-    <div id="cardInfo">
-        <button id="modifyCardInfoBtn">수정</button>
-        <button id="saveCardInfoBtn">저장</button>
-        <button id="cancelModifyCardInfoBtn">취소</button>
-        <button id="disabledCardBtn">사용불가 처리</button>
-        <form id="cardInfoForm" method="post">
-            <table border="1">
-                <tr>
-                    <td>카드 이름</td>
-                    <td id="selectedCardName"></td>
-                </tr>
-                <tr>
-                    <td>카드 번호</td>
-                    <td id="selectedCardNo"></td>
-                </tr>
-                <tr>
-                    <td>카드 회사</td>
-                    <td id="selectedCardCom"></td>
-                </tr>
-            </table>
-        </form>
-    </div>
-    <hr/>
-    <h1>카드 신청 미처리건 <span id="waitingListCnt" style="color: dodgerblue; font-weight: bolder">${waitingListCnt}</span></h1>
-    <div id="cardWaitingList">
-        <div id="waitingListGrid" class="ag-theme-alpine"></div>
-    </div>
-    <hr/>
+<div class="content-container">
+    <header>
+        <ul>
+            <li><a href="${pageContext.request.contextPath}/card/manage">회사 카드 관리</a></li>
+            <li><a href="${pageContext.request.contextPath}/card/reservationRecords">대여 내역 관리</a></li>
+        </ul>
+    </header>
+    <main>
+        <h1>카드 등록</h1>
+        <div id="registerCard">
+            <form id="registerCardForm" method="post">
+                <label for="cardName">카드 이름</label>
+                <input type="text" id="cardName" name="cprCardNm" required><br/>
+                <label for="cardNo">카드 번호</label>
+                <input type="text" id="cardNo" name="cprCardNo" placeholder="0000-0000-0000-0000" required><br/>
+                <labek for="cardCom">카드사</labek>
+                <select name="cprCardChrgCmpny" id="cardCom">
+                    <option value="IBK기업은행">IBK기업은행</option>
+                    <option value="KB국민카드">KB국민카드</option>
+                    <option value="NH농협은행">NH농협은행</option>
+                    <option value="롯데카드">롯데카드</option>
+                    <option value="비씨카드">비씨카드</option>
+                    <option value="삼성카드">삼성카드</option>
+                    <option value="신한카드">신한카드</option>
+                    <option value="우리카드">우리카드</option>
+                    <option value="하나카드">하나카드</option>
+                    <option value="한국씨티은행">한국씨티은행</option>
+                    <option value="현대카드">현대카드</option>
+                </select>
+                <button id="registerCardBtn">등록</button>
+            </form>
+        </div>
+        <hr/>
+        <h1>카드 목록</h1>
+        <div id="cardList"></div>
+        <hr/>
+        <h1>카드 기본 정보</h1>
+        <div id="cardInfo">
+            <button id="modifyCardInfoBtn">수정</button>
+            <button id="saveCardInfoBtn">저장</button>
+            <button id="cancelModifyCardInfoBtn">취소</button>
+            <button id="disabledCardBtn">사용불가 처리</button>
+            <form id="cardInfoForm" method="post">
+                <table border="1">
+                    <tr>
+                        <td>카드 이름</td>
+                        <td id="selectedCardName"></td>
+                    </tr>
+                    <tr>
+                        <td>카드 번호</td>
+                        <td id="selectedCardNo"></td>
+                    </tr>
+                    <tr>
+                        <td>카드 회사</td>
+                        <td id="selectedCardCom"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <hr/>
+        <h1>카드 신청 미처리건 <span id="waitingListCnt" style="color: dodgerblue; font-weight: bolder">${waitingListCnt}</span>
+        </h1>
+        <div id="cardWaitingList">
+            <div id="waitingListGrid" class="ag-theme-alpine"></div>
+        </div>
+        <hr/>
 
-</main>
-
+    </main>
+</div>
 <script>
     const cardListDiv = $("#cardList");
     const registerCardBtn = $("#registerCardBtn");
@@ -115,19 +117,19 @@
                 this.selectedOptionValue = event.target.value;
                 selectedCardNo = this.selectedOptionValue;
                 assignData = {
-                    cprCardResveSn : cprCardResveSn,
-                    cprCardNo : selectedCardNo,
+                    cprCardResveSn: cprCardResveSn,
+                    cprCardNo: selectedCardNo,
                 }
             });
 
             this.btn.onclick = () => {
                 console.log(assignData);
                 $.ajax({
-                    url : "/card/assignCard",
-                    type : "post",
+                    url: "/card/assignCard",
+                    type: "post",
                     data: JSON.stringify(assignData),
                     contentType: "application/json;charset:utf-8",
-                    success : function (result) {
+                    success: function (result) {
                         loadAllCard();
                         const newData = rowData.filter(item => item.cprCardResveSn !== assignData.cprCardResveSn);
                         gridOptions.api.setRowData(newData);
@@ -136,7 +138,7 @@
                         $("#waitingListCnt").text(cnt - 1);
                         alert("카드 지정 완료")
                     },
-                    error : function (xhr) {
+                    error: function (xhr) {
                         alert("실패")
                         console.log(xhr.responseText);
                     }
@@ -163,32 +165,43 @@
     const MedalRenderer = function (params) {
         return getMedalString(params.value);
     };
+
     function onQuickFilterChanged() {
         gridOptions.api.setQuickFilter(document.getElementById('quickFilter').value);
     }
+
     const columnDefs = [
         {
             headerName: "순번",
             valueGetter: "node.rowIndex + 1",
         },
-        { field: "cprCardResveSn", headerName:"예약 순번", hide: true, getQuickFilterText: (params) => {
+        {
+            field: "cprCardResveSn", headerName: "예약 순번", hide: true, getQuickFilterText: (params) => {
                 return getMedalString(params.value);
-            }},
-        { field: "cprCardResveEmplIdAndName",  headerName:"사원명(사번)"},
-        { field: "cprCardResveBeginDate", headerName:"사용 시작 일자"},
-        { field: "cprCardResveClosDate", headerName:"사용 마감 일자"},
-        { field: "assign", headerName: "카드 지정", cellRenderer: ClassComp},
+            }
+        },
+        {field: "cprCardResveBeginDate", headerName: "사용 시작 일자"},
+        {field: "cprCardResveClosDate", headerName: "사용 마감 일자"},
+        {field: "cprCardUseLoca", headerName: "사용처"},
+        {field: "cprCardUsePurps", headerName: "사용 목적"},
+        {field: "cprCardUseExpectAmount", headerName: "사용 예상 금액"},
+        {field: "cprCardResveEmplIdAndName", headerName: "사원명(사번)"},
+        {field: "assign", headerName: "카드 지정", cellRenderer: ClassComp},
     ];
 
     const rowData = [];
     <c:forEach items="${loadCardWaitingList}" var="resve">
     <fmt:formatDate var= "cprCardResveBeginDate" value="${resve.cprCardResveBeginDate}" type="date" pattern="yyyy-MM-dd" />
     <fmt:formatDate var= "cprCardResveClosDate" value="${resve.cprCardResveClosDate}" type="date" pattern="yyyy-MM-dd" />
+    <fmt:formatNumber var= "cprCardUseExpectAmount" value="${resve.cprCardUseExpectAmount}" type="number" maxFractionDigits="3" />
     rowData.push({
-        cprCardResveSn : "${resve.cprCardResveSn}",
-        cprCardResveEmplIdAndName : "${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})",
-        cprCardResveBeginDate : "${cprCardResveBeginDate}",
-        cprCardResveClosDate : "${cprCardResveClosDate}",
+        cprCardResveSn: "${resve.cprCardResveSn}",
+        cprCardResveBeginDate: "${cprCardResveBeginDate}",
+        cprCardResveClosDate: "${cprCardResveClosDate}",
+        cprCardUseLoca: "${resve.cprCardUseLoca}",
+        cprCardUsePurps: "${resve.cprCardUsePurps}",
+        cprCardUseExpectAmount: "${cprCardUseExpectAmount}원",
+        cprCardResveEmplIdAndName: "${resve.cprCardResveEmplNm}(${resve.cprCardResveEmplId})",
     })
     </c:forEach>
 
@@ -249,7 +262,7 @@
 
                     let cprCardSttus = obj.cprCardSttus
 
-                    if(cprCardSttus == 0) {
+                    if (cprCardSttus == 0) {
                         optionCode += `<option value="\${obj.cprCardNo}">\${obj.cprCardNm}</option>`;
                     }
 
@@ -276,7 +289,7 @@
         saveCardInfoBtn.hide();
         cancelModifyCardInfoBtn.hide();
         modifyCardInfoBtn.show();
-        if(cardStatus != 2) {
+        if (cardStatus != 2) {
             disabledCardBtn.show();
         } else {
             disabledCardBtn.hide();
@@ -373,7 +386,6 @@
         let cardNumberPattern = /^\d{4}-\d{4}-\d{4}-\d{4}$/;
         return cardNumberPattern.test(cardNumber);
     }
-
 
 
 </script>

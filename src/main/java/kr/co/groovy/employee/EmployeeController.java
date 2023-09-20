@@ -36,6 +36,36 @@ public class EmployeeController {
         mav.setViewName("signIn");
         return mav;
     }
+
+    @GetMapping("/findPassword")
+    public String findPasswordForm() {
+        return "findPassword";
+    }
+
+    @PostMapping("/findTelNo")
+    @ResponseBody
+    public String findTelNoByEmplId(@RequestBody String emplId) {
+        return service.findTelNoByEmplId(emplId.substring(emplId.indexOf('=') + 1));
+    }
+
+    @PostMapping("/findPassword")
+    @ResponseBody
+    public String findPassword(@RequestBody String emplId) {
+        emplId = emplId.substring(emplId.indexOf('=') + 1);
+        String findTelNoResponse = service.findTelNoByEmplId(emplId);
+        if (findTelNoResponse.equals("exists")) {
+            // 문자보내기
+            EmployeeVO employeeVO = service.loadEmp(emplId);
+            String password = "welcomegroovy";
+            String[] splitTelNo = employeeVO.getEmplTelno().split("-");
+            String emplTelno = splitTelNo[0] + splitTelNo[1] + splitTelNo[2];
+            service.sendMessage(emplTelno, password);
+            service.modifyPassword(emplId, password);
+            return "success";
+        }
+        return "fail";
+    }
+
     /* 사원 - 비밀번호 수정*/
     @GetMapping("/initPassword")
     public String initPasswordForm() {

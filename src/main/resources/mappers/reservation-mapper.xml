@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.groovy.reservation.ReservationMapper">
-
     <select id="getTodayReservedVehicles" resultType="vehicleVO">
-        select v.vhcle_no,
-               v.vhcle_vhcty,
-               v.vhcle_psncpa,
-               v.common_code_hipass_asn_at,
-               vr.vhcle_resve_no,
-               vr.vhcle_resve_begin_time,
-               vr.vhcle_resve_end_time,
-               vr.vhcle_no,
-               vr.vhcle_resve_empl_id,
-               (select e.empl_nm from empl e where e.empl_id = vr.vhcle_resve_empl_id) as vhcle_resve_empl_nm,
-               vr.common_code_resve_at
-        from vhcle v
-                 full outer join vhcle_resve vr on v.vhcle_no = vr.vhcle_no
-        where trunc(vr.vhcle_resve_begin_time) = trunc(sysdate)
-        order by vr.vhcle_resve_begin_time
+        SELECT V.VHCLE_NO
+             , V.VHCLE_VHCTY
+             , V.VHCLE_PSNCPA
+             , V.COMMON_CODE_HIPASS_ASN_AT
+             , VR.VHCLE_RESVE_NO
+             , VR.VHCLE_RESVE_BEGIN_TIME
+             , VR.VHCLE_RESVE_END_TIME
+             , VR.VHCLE_NO
+             , VR.VHCLE_RESVE_EMPL_ID
+             , (SELECT E.EMPL_NM FROM EMPL E WHERE E.EMPL_ID = VR.VHCLE_RESVE_EMPL_ID) AS VHCLE_RESVE_EMPL_NM
+             , VR.COMMON_CODE_RESVE_AT
+             , VR.VHCLE_RESVE_RETURN_AT
+        FROM VHCLE V
+                 FULL OUTER JOIN VHCLE_RESVE VR ON V.VHCLE_NO = VR.VHCLE_NO
+        WHERE TRUNC(VR.VHCLE_RESVE_BEGIN_TIME) = TRUNC(SYSDATE)
+        ORDER BY VR.VHCLE_RESVE_BEGIN_TIME
     </select>
 
     <select id="getAllVehicles" resultType="vehicleVO">
-        select *
-        from VHCLE
+        SELECT *
+        FROM VHCLE
     </select>
 
     <insert id="inputVehicle" parameterType="vehicleVO">
-        insert into VHCLE
-        values (#{vhcleNo}, #{vhcleVhcty}, #{vhclePsncpa}, #{commonCodeHipassAsnAt})
+        INSERT INTO VHCLE
+        VALUES (#{vhcleNo}, #{vhcleVhcty}, #{vhclePsncpa}, #{commonCodeHipassAsnAt})
     </insert>
 
     <insert id="inputCard" parameterType="cardVO">
@@ -60,16 +60,36 @@
         WHERE CPR_CARD_NO = #{cprCardNo}
     </update>
 
+    <update id="modifyReturnAt" parameterType="String">
+        UPDATE VHCLE_RESVE
+        SET VHCLE_RESVE_RETURN_AT = 'Y'
+        WHERE VHCLE_RESVE_NO = #{vhcleResveNo}
+    </update>
+
     <select id="loadCardWaitingList" resultType="cardReservationVO">
         SELECT C.CPR_CARD_RESVE_SN,
                C.CPR_CARD_RESVE_BEGIN_DATE,
                C.CPR_CARD_RESVE_CLOS_DATE,
                C.CPR_CARD_RESVE_EMPL_ID,
                E.EMPL_NM AS CPR_CARD_RESVE_EMPL_NM
-        FROM CPR_CARD_RESVE C, EMPL E
+        FROM CPR_CARD_RESVE C,
+             EMPL E
         WHERE COMMON_CODE_RESVE_AT = 'RESVE010'
-        AND C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
+          AND C.CPR_CARD_RESVE_EMPL_ID = E.EMPL_ID
         ORDER BY CPR_CARD_RESVE_SN
+    </select>
+
+    <select id="getAllReservation" resultType="vehicleVO">
+        SELECT VHCLE_RESVE_NO
+             , VHCLE_RESVE_BEGIN_TIME
+             , VHCLE_RESVE_END_TIME
+             , VHCLE_NO
+             , VHCLE_RESVE_EMPL_ID
+             , (SELECT E.EMPL_NM FROM EMPL E WHERE E.EMPL_ID = VR.VHCLE_RESVE_EMPL_ID) AS VHCLE_RESVE_EMPL_NM
+             , COMMON_CODE_RESVE_AT
+             , VHCLE_RESVE_RETURN_AT
+        FROM VHCLE_RESVE VR
+        ORDER BY VHCLE_RESVE_BEGIN_TIME DESC
     </select>
 
 </mapper>

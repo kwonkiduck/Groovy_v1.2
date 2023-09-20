@@ -1,7 +1,5 @@
 package kr.co.groovy.reservation;
 
-import kr.co.groovy.vo.CardReservationVO;
-import kr.co.groovy.vo.CardVO;
 import kr.co.groovy.vo.VehicleVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,5 +13,9 @@ public interface ReservationMapper {
     List<VehicleVO> getAllVehicles();
 
     int inputVehicle(VehicleVO vo);
+
+    List<VehicleVO> getAllReservation();
+
+    int modifyReturnAt(String vhcleResveNo);
 
 }

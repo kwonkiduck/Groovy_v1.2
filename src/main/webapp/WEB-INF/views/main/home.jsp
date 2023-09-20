@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/index.css">
 <link href="/resources/css/schedule/calendar.css" rel="stylesheet"/>
 <script src="/resources/fullcalendar/main.js"></script>
 <script src="/resources/fullcalendar/ko.js"></script>
@@ -17,206 +18,141 @@
 
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
-    <div class="content">
-        <div class="content-header">
-            <h2 class="font-24 font-md hello"><strong class="strong">안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
-                오늘 업무도 힘차게 파이팅! &#x1F64C;</h2>
-        </div>
-        <div class="content-body">
-            <div class="inner">
-                <section class="left">
-                    <div class="section-inner flex-inner">
-                        <div class="commute">
-                            <div class="commute-area commute-work card-df card">
-                                <button type="button" id="work" data-io="0" class="btn-commute icon-area pd-32">
-                                    <h3 class="content-title font-b">출근</h3>
-                                    <p id="workTime">00:00</p>
-                                </button>
-                            </div>
-                            <div class="commute-area commute-leave card-df card">
-                                <button type="button" id="leave" data-io="1" class="btn-commute icon-area pd-32">
-                                    <h3 class="content-title font-b">퇴근</h3>
-                                    <p id="leaveTime">00:00</p>
-                                </button>
+    <div class="content-container">
+        <div class="content">
+            <div class="content-header">
+                <h2 class="font-24 font-md hello"><strong
+                        class="strong">안녕하세요, ${CustomUser.employeeVO.emplNm}님</strong><br>
+                    오늘 업무도 힘차게 파이팅! &#x1F64C;</h2>
+            </div>
+            <div class="content-body">
+                <div class="inner">
+                    <section class="left">
+                        <div class="section-inner flex-inner">
+                            <div class="commute">
+                                <div class="commute-area commute-work card-df card">
+                                    <button type="button" id="work" data-io="0" class="btn-commute btn-3d icon-area pd-32">
+                                        <h3 class="content-title font-b">출근</h3>
+                                        <p id="workTime">00:00</p>
+                                    </button>
+                                </div>
+                                <div class="commute-area commute-leave card-df card">
+                                    <button type="button" id="leave" data-io="1" class="btn-commute btn-3d icon-area pd-32">
+                                        <h3 class="content-title font-b">퇴근</h3>
+                                        <p id="leaveTime">00:00</p>
+                                    </button>
 
-                            </div>
-                        </div>
-                        <div class="job">
-                            <div class="job-area scroll-area card card-df pd-32">
-                                <div class="area-header">
-                                    <h3 class="content-title font-b">해야할 일</h3>
-                                    <a href="#" class="more">
-                                        모두 보기 <i class="icon i-arr-rt"></i>
-                                    </a>
-                                </div>
-                                <div class="area-body">
-                                    <ul class="content-list job-list">
-                                        <li><a href="#" class="list-item">
-                                            <span class="badge ongoing">진행중</span>
-                                            <p class="list-context">할 일 백엔드</p>
-                                            <span class="list-date">2023-07-30</span>
-                                        </a></li>
-                                        <li><a href="#" class="list-item">
-                                            <span class="badge waiting">진행전</span>
-                                            <p class="list-context">할 일 백엔드</p>
-                                            <span class="list-date">2023-07-30</span>
-                                        </a></li>
-                                        <li><a href="#" class="list-item">
-                                            <span class="badge waiting">진행전</span>
-                                            <p class="list-context">할 일 백엔드</p>
-                                            <span class="list-date">2023-07-30</span>
-                                        </a></li>
-                                        <li><a href="#" class="list-item">
-                                            <span class="badge waiting">진행전</span>
-                                            <p class="list-context">할 일 백엔드</p>
-                                            <span class="list-date">2023-07-30</span>
-                                        </a></li>
-                                    </ul>
                                 </div>
                             </div>
-                        </div>
-                        <div class="notice">
-                            <div class="notice-area card card-df pd-32">
-                                <div class="area-header">
-                                    <h3 class="content-title font-b">공지사항</h3>
-                                    <a href="#" class="more">
-                                        모두 보기 <i class="icon i-arr-rt"></i>
-                                    </a>
-                                </div>
-                                <div class="area-body">
-                                    <ul class="content-list notice-list">
-                                    </ul>
+                            <div class="job">
+                                <div class="job-area scroll-area card card-df pd-32">
+                                    <div class="area-header">
+                                        <h3 class="content-title font-b">해야할 일</h3>
+                                        <a href="#" class="more">
+                                            모두 보기 <i class="icon i-arr-rt"></i>
+                                        </a>
+                                    </div>
+                                    <div class="area-body">
+                                        <ul class="content-list job-list">
+                                            <li><a href="#" class="list-item">
+                                                <span class="badge ongoing">진행중</span>
+                                                <p class="list-context">할 일 백엔드</p>
+                                                <span class="list-date">2023-07-30</span>
+                                            </a></li>
+                                            <li><a href="#" class="list-item">
+                                                <span class="badge waiting">진행전</span>
+                                                <p class="list-context">할 일 백엔드</p>
+                                                <span class="list-date">2023-07-30</span>
+                                            </a></li>
+                                            <li><a href="#" class="list-item">
+                                                <span class="badge waiting">진행전</span>
+                                                <p class="list-context">할 일 백엔드</p>
+                                                <span class="list-date">2023-07-30</span>
+                                            </a></li>
+                                            <li><a href="#" class="list-item">
+                                                <span class="badge waiting">진행전</span>
+                                                <p class="list-context">할 일 백엔드</p>
+                                                <span class="list-date">2023-07-30</span>
+                                            </a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="right">
-                    <div class="section-inner grid-inner">
-                        <div class="saction">
-                            <div class="saction-area scroll-area card card-df pd-32">
-                                <div class="area-header">
-                                    <h3 class="content-title font-b">진행중인 결재</h3>
-                                    <a href="#" class="more">
-                                        모두 보기 <i class="icon i-arr-rt"></i>
-                                    </a>
-                                </div>
-                                <div class="area-body">
-                                    <ul class="content-list saction-list">
-                                    </ul>
+                            <div class="notice">
+                                <div class="notice-area card card-df pd-32">
+                                    <div class="area-header">
+                                        <h3 class="content-title font-b">공지사항</h3>
+                                        <a href="#" class="more">
+                                            모두 보기 <i class="icon i-arr-rt"></i>
+                                        </a>
+                                    </div>
+                                    <div class="area-body">
+                                        <ul class="content-list notice-list">
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="calendar">
-                            <div class="calendar-area card card-df pd-32">
+                    </section>
+                    <section class="right">
+                        <div class="section-inner grid-inner">
+                            <div class="saction">
+                                <div class="saction-area scroll-area card card-df pd-32">
+                                    <div class="area-header">
+                                        <h3 class="content-title font-b">진행중인 결재</h3>
+                                        <a href="#" class="more">
+                                            모두 보기 <i class="icon i-arr-rt"></i>
+                                        </a>
+                                    </div>
+                                    <div class="area-body">
+                                        <ul class="content-list saction-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="calendar">
+                                <div class="calendar-area card card-df pd-32">
 
-                            </div>
-                        </div>
-                        <div class="diet">
-                            <div class="diet-area card card-df pd-32 icon-area">
-                                <div class="area-header">
-                                    <h3 class="content-title font-b">오늘의 식단</h3>
-                                </div>
-                                <div class="area-body">
-                                    <ul class="content-list diet-list">
-                                    </ul>
                                 </div>
                             </div>
-                        </div>
-                        <div class="birthday">
-                            <div class="birthday-area card card-df pd-32">
-                                <div class="area-header">
-                                    <h3 class="content-title font-b">이달의 생일</h3>
+                            <div class="diet">
+                                <div class="diet-area card card-df pd-32 icon-area">
+                                    <div class="area-header">
+                                        <h3 class="content-title font-b">오늘의 식단</h3>
+                                    </div>
+                                    <div class="area-body">
+                                        <ul class="content-list diet-list">
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div class="area-body">
-                                    <ul class="content-list birthday-list">
-                                    </ul>
+                            </div>
+                            <div class="birthday">
+                                <div class="birthday-area card card-df pd-32">
+                                    <div class="area-header">
+                                        <h3 class="content-title font-b">이달의 생일</h3>
+                                    </div>
+                                    <div class="area-body">
+                                        <ul class="content-list birthday-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weather">
+                                <div class="weather-area card card-df">
+                                    <img id="weatherImg"></img>
+                                    <div id="weather">
+                                        <div class="sky"></div>
+                                        <div class="temperature"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="weather">
-                            <div class="weather-area card card-df">
-                                <img id="weatherImg"></img>
-                                <div id="weather">
-                                    <div class="sky"></div>
-                                    <div class="temperature"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
         </div>
-
-       <%-- <h3>해야 할 일</h3>
-        <table border="1" style="width: 50%;">
-            <thead>
-            <tr>
-                <th>업무결과</th>
-                <th>업무제목</th>
-                <th>마감날짜</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>진행전</td>
-                <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-                <td>2023-07-30</td>
-            </tr>
-            <tr>
-                <td>진행중</td>
-                <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-                <td>2023-07-30</td>
-            </tr>
-            <tr>
-                <td>완료</td>
-                <td>마인드풀니스:현대인의 스트레스 해소 비법</td>
-                <td>2023-07-30</td>
-            </tr>
-            </tbody>
-        </table>
-        <br/>
-        <hr/>
-
-        <h3>공지사항</h3>
-        <div id="mainNotice"></div>
-        <br/>
-        <hr/>
-
-        <h3>진행 중인 결재</h3>
-        <div id="sanctionBox">
-        </div>
-
-        <br/>
-        <hr/>
-        <h3>오늘의 식단</h3>
-        <div id="dietWrap">
-        </div>
-
-        <br/>
-        <hr/>
-        <h3>이번달 생일</h3>
-        <div id="birthdayWrap">
-        </div>
-
-        <br/>
-        <hr/>
-        <h3>일정</h3>
-        <div id="calendar">
-        </div>
-
-        <br/>
-        <hr/>
-        <h3>날씨</h3>
-        <div id="weather"></div>
-        <img id="weatherImg" src="">
-        <form action="/main/uploadFile" method="post" enctype="multipart/form-data">
-            <input type="file" name="defaultFile">
-            <button type="submit">저장</button>
-        </form>
-        <p>파일 업로드 확인용</p>
-        <img src="/uploads/test/test.png"/>--%>
     </div>
+</div>
 
 </sec:authorize>
 <script>
@@ -253,8 +189,8 @@
                 $.each(data, function (index, item) {
                     code += `
                            <li><a href="#" class="list-item">
-                                    <span class="badge badge-default">공지사항</span>
-                                    <p class="list-context">\${item.notiCtgryIconFileStreNm} \${item.notiTitle}</p>
+                                    <span class="badge badge-default">\${item.notiCtgryIconFileStreNm} </span>
+                                    <p class="list-context">\${item.notiTitle}</p>
                                     <span class="list-date">\${item.notiDate}</span>
                                 </a></li>`
                 })
@@ -417,7 +353,7 @@
         $(document).ready(function () {
             $(function () {
                 var request = $.ajax({
-                    url: "/calendar/schedule",
+                    url: "/schedule/schedule",
                     method: "GET",
                     dataType: "json"
                 });
@@ -434,11 +370,10 @@
                             right: false
                         },
                         initialView: 'dayGridMonth',
-                        navLinks: true,
                         selectable: true,
                         events: data,
                         locale: 'ko',
-                        dayCellContent: function(e) {
+                        dayCellContent: function (e) {
                             e.dayNumberText = e.dayNumberText.replace('일', '');
                         }
                     });
@@ -519,7 +454,7 @@
                         }
                     }
                     if (category === 'TMP') {
-                        temperature = '' + fcstValue + '℃';
+                        temperature = '' + fcstValue + '°';
                     }
                 }
                 $('.sky').html(sky);

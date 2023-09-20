@@ -4,12 +4,13 @@
            uri="http://www.springframework.org/security/tags" %>
 
 <sec:authorize access="isAuthenticated()">
-    <sec:authentication property="principal" var="CustomUser" />
+    <sec:authentication property="principal" var="CustomUser"/>
 
     <style>
         table, td, tr, th {
             border: 1px solid #333;
         }
+
         #progress-container {
             width: 100%;
             background-color: #DDDDDD;
@@ -23,59 +24,60 @@
             text-align: center;
         }
     </style>
-    <h1>수정수정 - 8</h1>
-    <h1>${CustomUser.employeeVO.emplId}</h1>
-    <h1>${commuteVO}</h1>
-    <div>
-        <button type="button" id="goBtn">출근 <span id="attend">00:00</span></button>
-    </div>
-    <div>
-        <button type="button" id="leaveBtn">퇴근 <span id="leave">00:00</span></button>
-    </div>
-    <div>
-        <p>오늘 근무 시간</p>
-        <p id="todayTime">00시간 00분</p>
-    </div>
-    <div>
-        <p>이번주 총 근무 시간</p>
-        <p id="weeklyTotal">00시간 00분</p>
-    </div>
-
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-    </div>
-
-    <div>
-        <p>주간 출 • 퇴근 시간 확인</p>
-        <table border="1">
-            <tr>
-                <th>월</th>
-                <th>화</th>
-                <th>수</th>
-                <th>목</th>
-                <th>금</th>
-            </tr>
-            <tr id="weeklyAttendTime"></tr>
-            <tr id="weeklyLeaveTime"></tr>
-        </table>
-    </div>
-
-    <div>
-        <p>근태 현황</p>
-        <select name="sortOptions" id="yearSelect" class="stroke"></select>
-        <div id="monthDiv"></div>
-    </div>
-
-    <div class="modal">
+<div class="content-container">
+        <h1>수정수정 - 8</h1>
+        <h1>${CustomUser.employeeVO.emplId}</h1>
+        <h1>${commuteVO}</h1>
         <div>
-            <p>근태 현황</p>
-            <i></i>
+            <button type="button" id="goBtn">출근 <span id="attend">00:00</span></button>
+        </div>
+        <div>
+            <button type="button" id="leaveBtn">퇴근 <span id="leave">00:00</span></button>
+        </div>
+        <div>
+            <p>오늘 근무 시간</p>
+            <p id="todayTime">00시간 00분</p>
+        </div>
+        <div>
+            <p>이번주 총 근무 시간</p>
+            <p id="weeklyTotal">00시간 00분</p>
         </div>
 
-        <div id="commuteTable"></div>
-        <button type="button">확인</button>
-    </div>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
 
+        <div>
+            <p>주간 출 • 퇴근 시간 확인</p>
+            <table border="1">
+                <tr>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                </tr>
+                <tr id="weeklyAttendTime"></tr>
+                <tr id="weeklyLeaveTime"></tr>
+            </table>
+        </div>
+
+        <div>
+            <p>근태 현황</p>
+            <select name="sortOptions" id="yearSelect" class="stroke"></select>
+            <div id="monthDiv"></div>
+        </div>
+
+        <div class="modal">
+            <div>
+                <p>근태 현황</p>
+                <i></i>
+            </div>
+
+            <div id="commuteTable"></div>
+            <button type="button">확인</button>
+        </div>
+    </div>
     <script>
         let dclzEmplId = `${CustomUser.employeeVO.emplId}`;
         let goBtn = document.querySelector("#goBtn");
@@ -117,7 +119,7 @@
                         url: `/commute/insertAttend`,
                         data: commuteVO,
                         dataType: 'text',
-                        success: function(rslt) {
+                        success: function (rslt) {
                             refreshCommute();
                             getWeeklyAttendTime();
                         },
@@ -136,7 +138,7 @@
         //퇴근버튼 눌렀을 때
         leaveBtn.addEventListener("click", function () {
             $.ajax({
-                type:'put',
+                type: 'put',
                 url: `/commute/updateCommute/\${dclzEmplId}`,
                 dataType: 'text',
                 success: function (rslt) {
@@ -152,6 +154,7 @@
         });
 
         let intervalId = null;
+
         function refreshCommute() {
             $.ajax({
                 type: 'get',
@@ -217,7 +220,7 @@
         function getMaxWeeklyWorkTime() {
             $.ajax({
                 type: 'get',
-                url:`/commute/getMaxWeeklyWorkTime/\${dclzEmplId}`,
+                url: `/commute/getMaxWeeklyWorkTime/\${dclzEmplId}`,
                 dataType: 'text',
                 success: function (rslt) {
                     weeklyTime = parseInt(rslt);
@@ -278,7 +281,7 @@
             return code;
         }
 
-        function getAllYear () {
+        function getAllYear() {
             $.ajax({
                 type: 'get',
                 url: `/commute/getAllYear/\${dclzEmplId}`,
@@ -298,9 +301,9 @@
             });
         }
 
-        function getAllMonth () {
+        function getAllMonth() {
             data = {
-                "year" : selectedYear,
+                "year": selectedYear,
                 "dclzEmplId": dclzEmplId
             }
 
@@ -355,9 +358,9 @@
                         let beforeDate = new Date(rslt[i].dclzWorkDe);
                         let year = beforeDate.getFullYear();
                         let month = beforeDate.getMonth() + 1;
-                        month = month<10?month=`0\${month}`: month;
+                        month = month < 10 ? month = `0\${month}` : month;
                         let date = beforeDate.getDate();
-                        date = date<10?date=`0\${date}`: date;
+                        date = date < 10 ? date = `0\${date}` : date;
                         let afterDate = `\${year}-\${month}-\${date}`;
 
                         let time = changeMinuteToTime(rslt[i].dclzDailWorkTime);
@@ -365,13 +368,13 @@
                         let status = rslt[i].commonCodeLaborSttus;
                         if (status == "LABOR_STTUS010") {
                             status = "정상출근";
-                        } else if(status == "LABOR_STTUS012") {
+                        } else if (status == "LABOR_STTUS012") {
                             status = "지각";
-                        } else if(status == "LABOR_STTUS015") {
+                        } else if (status == "LABOR_STTUS015") {
                             status = "무단결근";
-                        } else if(status == "LABOR_STTUS011") {
+                        } else if (status == "LABOR_STTUS011") {
                             status = "연차";
-                        } else if(status == "LABOR_STTUS014") {
+                        } else if (status == "LABOR_STTUS014") {
                             status = "공가";
                         }
 
@@ -389,7 +392,9 @@
                 }
             });
         }
+
         let i = 0;
+
         function start(weeklybar) {
             if (i == 0) {
                 i = 1;
@@ -397,6 +402,7 @@
                 let width = 0;
                 let id = setInterval(frame, 30);
                 let wb = weeklybar / (52 * 60) * 100;
+
                 function frame() {
                     if (width >= wb) {
                         clearInterval(id);

@@ -42,8 +42,8 @@ $(document).ready(function(){
 	$("#eventModal").modal("hide");
 	
 	$(function(){
-		var request = $.ajax({
-			url : "/calendar/schedule",
+		let request = $.ajax({
+			url : "/schedule/schedule",
 			method : "GET",
 			dataType : "json"
 		});
@@ -92,7 +92,7 @@ $(document).ready(function(){
 				    
 				    $(function saveData(jsonData){
 				    	$.ajax({
-				    		url : "/calendar/schedule",
+				    		url : "/schedule/schedule",
 				    		method : "POST",
 				    		dataType : "json",
 				    		data : JSON.stringify(events),
@@ -111,7 +111,7 @@ $(document).ready(function(){
 					let schdulSn = info.event.id;
 					
 					$.ajax({
-						url: `/calendar/schedule/\${schdulSn}`,
+						url: `/schedule/schedule/\${schdulSn}`,
 				        method: "GET",
 				        dataType: "json",
 				        success: function (response) {
@@ -148,7 +148,7 @@ $(document).ready(function(){
 								events.push(obj);
 
 								$.ajax({
-									url : `/calendar/schedule/\${schdulSn}`,
+									url : `/schedule/schedule/\${schdulSn}`,
 									method : "PUT",
 									dataType : "text",
 									data : JSON.stringify(events),
@@ -181,7 +181,7 @@ $(document).ready(function(){
 								events.push(obj);
 								
 								$.ajax({
-									url : "/calendar/schedule",
+									url : "/schedule/schedule",
 									method : "DELETE",
 									dataType : "text",
 									data : JSON.stringify(events),

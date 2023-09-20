@@ -3,10 +3,12 @@ package kr.co.groovy.card;
 import kr.co.groovy.vo.CardReservationVO;
 import kr.co.groovy.vo.CardVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -28,6 +30,7 @@ public class CardController {
         model.addAttribute("waitingListCnt", loadCardWaitingList.size());
         return "admin/at/card/manage";
     }
+
 
     @PostMapping("/inputCard")
     @ResponseBody
@@ -73,4 +76,42 @@ public class CardController {
         return service.returnChecked(cardReservationVO);
     }
 
+    /* 신청 및 결재 */
+    @GetMapping("/request")
+    public String requestCard(Principal principal, Model model) {
+        List<CardReservationVO> list = service.loadCardRecord(principal.getName());
+        model.addAttribute("cardRecord", list);
+        return "employee/card/request";
+    }
+
+    @PostMapping("/request")
+    public String inputRequest(CardReservationVO cardReservationVO) {
+        log.info(cardReservationVO.toString());
+        service.inputRequest(cardReservationVO);
+        int generatedKey = cardReservationVO.getCprCardResveSn();
+        return "redirect:/card/detail/" + generatedKey;
+    }
+
+    @GetMapping("/detail/{cprCardResveSn}")
+    public String loadRequestDetail(@PathVariable int cprCardResveSn, Model model) {
+        CardReservationVO vo = service.loadRequestDetail(cprCardResveSn);
+        model.addAttribute("detailVO", vo);
+        return "employee/card/detail";
+    }
+
+    @GetMapping("/data/{cprCardResveSn}")
+    @ResponseBody
+    public ResponseEntity<CardReservationVO> loadData(@PathVariable int cprCardResveSn) {
+        CardReservationVO vo = service.loadRequestDetail(cprCardResveSn);
+        log.info(vo.toString());
+        return ResponseEntity.ok(vo);
+    }
+
+    // 결재 관리 페이지
+    @GetMapping("/sanction")
+    public String loadSanction(Model model) {
+        List<CardReservationVO> sanctionList = service.loadSanctionList();
+        model.addAttribute("sanctionList", sanctionList);
+        return "admin/at/card/sanction";
+    }
 }

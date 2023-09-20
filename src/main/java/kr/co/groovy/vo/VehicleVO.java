@@ -15,9 +15,11 @@ public class VehicleVO {
     private int vhclePsncpa;
     private String commonCodeHipassAsnAt;
     private int vhcleResveNo;
+    private int vhcleResveNoRedefine;
     private Date vhcleResveBeginTime;
     private Date vhcleResveEndTime;
     private String vhcleResveEmplId;
     private String vhcleResveEmplNm;
     private String commonCodeResveAt;
+    private String vhcleResveReturnAt;
 }

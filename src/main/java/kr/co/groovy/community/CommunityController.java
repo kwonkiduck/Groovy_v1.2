@@ -1,4 +1,4 @@
-package kr.co.groovy.teamcommunity;
+package kr.co.groovy.community;
 
 import kr.co.groovy.common.CommonService;
 import kr.co.groovy.vo.*;
