@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Service
 public class SalaryService {
@@ -65,12 +66,8 @@ public class SalaryService {
         return mapper.loadPaystubList(emplId, year);
     }
 
-    public void modifyIncmtax(ParamMap map){
-        ParamMap taxMap = ParamMap.init();
-        taxMap.put("code", map.getString("code"));
-        taxMap.put("value", map.getInt("value"));
-        log.info(taxMap +"");
-        mapper.modifyIncmtax(taxMap);
+    public void modifyIncmtax(String code, double value) {
+        mapper.modifyIncmtax(code, value);
     }
 
 }
