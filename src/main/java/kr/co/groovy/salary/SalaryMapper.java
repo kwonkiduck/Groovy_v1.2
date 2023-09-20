@@ -1,5 +1,6 @@
 package kr.co.groovy.salary;
 
+import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +24,7 @@ public interface SalaryMapper {
     List<Integer> loadYearsForSortPaystub(String emplId);
 
     List<PaystubVO> loadPaystubList(@Param("emplId") String emplId, @Param("year") String year);
+
+
+    void modifyIncmtax(ParamMap map);
 }

@@ -49,7 +49,7 @@
                 <tr>
                     <th>${tariffVO.taratStdrNm}</th>
                     <td>
-                        <input type="text" name="${tariffVO.taratStdrCode}" value="${tariffVO.taratStdrValue}">%
+                        <input type="text" class="taxes" name="${tariffVO.taratStdrCode}" value="${tariffVO.taratStdrValue}">%
                     </td>
                 </tr>
             </c:if>
@@ -68,9 +68,9 @@
                     <th>${tariffVO.taratStdrNm}</th>
                     <td>
                         개인부담분 :
-                        <input type="text" name="${tariffVO.taratStdrCode}" value="${tariffVO.taratStdrValue}">%
+                        <input type="text" class="taxes" name="${tariffVO.taratStdrCode}" value="${tariffVO.taratStdrValue}">%
                         회사부담분 :
-                        <input type="text" name="${tariffVO.taratStdrCode}" value="${tariffVO.taratStdrValue}">%
+                        <input type="text" class="taxes" name="${tariffVO.taratStdrCode}" value="${tariffVO.taratStdrValue}">%
                     </td>
                 </tr>
             </c:if>
@@ -156,20 +156,30 @@
     // TODO
     // 소득세 수정 ajax
     $("#saveIncmtax").on("click", function () {
-        let form = ("#incmtaxForm")[0];
-        let formData = new FormData(form);
+        $("input[class^='taxes']").each(function() {
+            var code = $(this).attr("name");
+            var value = $(this).val();
+            saveData(code, value);
+        });
+    })
+
+    function saveData(code, value) {
+        // let form = ("#incmtaxForm")[0];
+        // let formData = new FormData(form);
         $.ajax({
-            url:,
+            url:'/salary/modify/taxes',
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                code: code,
+                value: value
+            },
             success(data) {
-                console.log("소득세 업데이트 성공")
+                alert("소득세 업데이트 성공")
             },
             error(xhr) {
-
+                alert("소득세 업데이트 실패")
             }
         })
-    })
+    }
+
 </script>

@@ -1,5 +1,6 @@
 package kr.co.groovy.sanction;
 
+import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -54,6 +55,8 @@ public interface SanctionMapper {
     List<SanctionBookmarkVO> loadBookmark(String emplId);
 
     void deleteBookmark(String elctrnSanctnBookmarkName);
+
+
 
 
 

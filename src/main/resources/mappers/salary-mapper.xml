@@ -146,7 +146,7 @@
         ORDER BY SALARY_DTSMT_ISSU_DATE DESC
     </select>
 
-    <update id="modifyIncmtax">
+    <update id="modifyIncmtax" parameterType="map">
         /* 세율 기준 수정 */
         UPDATE TARAT_STDR
         SET TARAT_STDR_VALUE = #{value}

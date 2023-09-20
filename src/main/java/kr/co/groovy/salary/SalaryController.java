@@ -1,6 +1,7 @@
 package kr.co.groovy.salary;
 
 import kr.co.groovy.security.CustomUser;
+import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,15 @@ public class SalaryController {
         model.addAttribute("tariffList", tariffVOList);
         return "admin/hrt/employee/salary";
     }
+
+    // 인사팀의 세율 기준 수정
+    @PostMapping("/modify/taxes")
+    @ResponseBody
+    public void modifyIncmtax(ParamMap map){
+        log.info(map + "");
+        service.modifyIncmtax(map);
+    }
+
 
     // 회계팀의 급여 상세
     @GetMapping("/list")
