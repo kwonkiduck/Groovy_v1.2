@@ -46,9 +46,8 @@ public class SalaryController {
     // 인사팀의 세율 기준 수정
     @PostMapping("/modify/taxes")
     @ResponseBody
-    public void modifyIncmtax(ParamMap map){
-        log.info(map + "");
-        service.modifyIncmtax(map);
+    public void modifyIncmtax( String code,  double value){
+        service.modifyIncmtax(code, value);
     }
 
 

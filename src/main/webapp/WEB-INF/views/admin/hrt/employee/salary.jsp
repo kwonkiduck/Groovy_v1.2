@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script defer src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
     #myGrid {
@@ -42,7 +41,7 @@
 
 
     <h2>소득세 설정</h2>
-    <form action="" id="incmtaxForm">
+    <form action="#">
         <button id="saveIncmtax" type="button">저장하기</button>
         <table border=" 1">
             <c:forEach var="tariffVO" items="${tariffList}" varStatus="stat">
@@ -60,8 +59,8 @@
     </form>
 
     <h2>공제 기본 설정</h2>
-    <form action="">
-        <button id="saveSis">저장하기</button>
+    <form action="#">
+        <button id="saveSis" type="button">저장하기</button>
         <table border=" 1">
             <%--        </c:forEach>--%>
             <c:forEach var="tariffVO" items="${tariffList}" varStatus="stat">
@@ -73,8 +72,8 @@
                             <input type="text" class="taxes" name="${tariffVO.taratStdrCode}"
                                    value="${tariffVO.taratStdrValue}">%
                             회사부담분 :
-                            <input type="text" class="taxes" name="${tariffVO.taratStdrCode}"
-                                   value="${tariffVO.taratStdrValue}">%
+                            <input type="text" name="${tariffVO.taratStdrCode}"
+                                   value="${tariffVO.taratStdrValue}" readonly>%
                         </td>
                     </tr>
                 </c:if>
@@ -83,107 +82,49 @@
     </form>
 </div>
 <script>
-    let saveList = [];
 
-    function getAllData() {
-        const rowData = gridOptions.api.forEachNode((obj, idx) => {
-            saveList.push(obj.data);
+    $(document).ready(function () {
+
+
+
+
+
+
+        /* 세율 기준 수정 */
+        let previousValues = {};
+        $("input.taxes").each(function () {
+            let code = $(this).attr("name");
+            let value = $(this).val();
+            previousValues[code] = value;
         });
-    }
 
-    function saveDataToServer() {
-        getAllData();
-        const url = undefined;/* 매핑 url 쓰셈*/
-        const requestData = JSON.stringify({saveList});
-        ajaxFn(url, requestData);
-    }
+        $("#saveIncmtax, #saveSis").on("click", function () {
+            $("input.taxes").each(function () {
+                let code = $(this).attr("name");
+                let currentValue = $(this).val();
 
-    function ajaxFn(url, item) {
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: requestData = item,
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to save data');
+                if (previousValues[code] !== currentValue) {
+                    saveData(code, currentValue);
+                    previousValues[code] = currentValue;
                 }
-            })
-            .then((data) => {
-                console.log('Server response:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
             });
-    }
-
-    const saveSalary = document.getElementById('saveSalary');
-    saveSalary.addEventListener('click', () => {
-        saveDataToServer();
-    });
-
-
-    /*그냥 확인하라고 넣음*/
-    const columnDefs = [
-        {headerName: '(만원)', field: 'category'},
-        {field: "DEPT010", headerName: "인사팀", editable: true},
-        {field: "DEPT011", headerName: "회계팀", editable: true},
-        {field: "DEPT012", headerName: "영업팀", editable: true},
-        {field: "DEPT013", headerName: "홍보팀", editable: true},
-        {field: "DEPT014", headerName: "총무팀", editable: true}
-    ];
-    let rowData = [
-        {DEPT010: 5, DEPT011: 1, DEPT012: 10, DEPT013: 50, DEPT014: 100, category: "사원"},
-        {DEPT010: 5, DEPT011: 1, DEPT012: 10, DEPT013: 50, DEPT014: 100, category: "대리"},
-        {DEPT010: 5, DEPT011: 1, DEPT012: 10, DEPT013: 50, DEPT014: 100, category: "과장"},
-        {DEPT010: 5, DEPT011: 1, DEPT012: 10, DEPT013: 50, DEPT014: 100, category: "차장"},
-        {DEPT010: 5, DEPT011: 1, DEPT012: 10, DEPT013: 50, DEPT014: 100, category: "팀장"},
-        {DEPT010: 5, DEPT011: 1, DEPT012: 10, DEPT013: 50, DEPT014: 100, category: "부장"}
-    ];
-
-    const gridOptions = {
-        columnDefs: columnDefs,
-        rowData: rowData,
-    };
-    /* 실제 불러올 때 -> ajax가 있고 foreach로 불러오는거 있음 선택하셈 */
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const gridDiv = document.querySelector('#myGrid');
-        new agGrid.Grid(gridDiv, gridOptions);
-    });
-
-
-    // TODO
-    // 소득세 수정 ajax
-    $("#saveIncmtax").on("click", function () {
-        $("input[class^='taxes']").each(function () {
-            var code = $(this).attr("name");
-            var value = $(this).val();
-            saveData(code, value);
         });
-    })
 
-    function saveData(code, value) {
-        // let form = ("#incmtaxForm")[0];
-        // let formData = new FormData(form);
-        $.ajax({
-            url: '/salary/modify/taxes',
-            type: 'POST',
-            data: {
-                code: code,
-                value: value
-            },
-            success(data) {
-                alert("소득세 업데이트 성공")
-            },
-            error(xhr) {
-                alert("소득세 업데이트 실패")
-            }
-        })
-    }
-
+        function saveData(code, value) {
+            $.ajax({
+                url: '/salary/modify/taxes',
+                type: 'POST',
+                data: {
+                    code: code,
+                    value: value
+                },
+                success: function (data) {
+                    console.log("소득세 업데이트 성공");
+                },
+                error: function (request, status, error) {
+                    console.log("소득세 업데이트 실패: " + error);
+                }
+            });
+        }
+    });
 </script>
