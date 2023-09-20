@@ -164,7 +164,7 @@
         let bookmarkName;
         let bookmarkLine = {};
         const accordians = document.querySelectorAll(".dept");
-        const close = document.querySelector(".close");
+        const windowCloseBtn = document.querySelector(".close");
 
         document.addEventListener("DOMContentLoaded",()=>{
             accordians.forEach(item=> {
@@ -182,7 +182,7 @@
                     }
                 });
             });
-            close.addEventListener("click",()=>{
+            windowCloseBtn.addEventListener("click",()=>{
                 window.close();
             })
         })
@@ -399,7 +399,7 @@
             window.close();
 
         })
-        document.querySelector("#sideBar").style.display = "none";
+        /*document.querySelector("#sideBar").style.display = "none";*/
 
     </script>
     </body>
