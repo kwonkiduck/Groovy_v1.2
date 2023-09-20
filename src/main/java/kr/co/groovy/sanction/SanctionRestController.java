@@ -113,9 +113,9 @@ public class SanctionRestController {
         return service.loadBookmark(emplId);
     }
 
-    @DeleteMapping("/bookmark/{name}")
-    public void deleteBookmark(@PathVariable String name) {
-        service.deleteBookmark(name);
+    @DeleteMapping("/bookmark/{sn}")
+    public void deleteBookmark(@PathVariable String sn) {
+        service.deleteBookmark(sn);
     }
 
 }

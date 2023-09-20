@@ -54,7 +54,7 @@ public interface SanctionMapper {
 
     List<SanctionBookmarkVO> loadBookmark(String emplId);
 
-    void deleteBookmark(String elctrnSanctnBookmarkName);
+    void deleteBookmark(String sanctionLineBookmarkSn);
 
 
 

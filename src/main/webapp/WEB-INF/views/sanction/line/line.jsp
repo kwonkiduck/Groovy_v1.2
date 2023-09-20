@@ -104,7 +104,9 @@
             <div class="line-service">
                 <div class="line-btn-wrapper">
                     <button type="button" class="btn btn-out-sm btn-modal" data-name="bookmarkName">개인 결재선으로 저장</button>
-                    <button type="button" class="btn btn-out-sm btn-modal" data-name="loadLine" onclick="loadLine()">결재선 불러오기</button>
+                    <button type="button" class="btn btn-out-sm btn-modal" data-name="loadLine" onclick="loadLine()">결재선
+                        불러오기
+                    </button>
                 </div>
             </div>
             <div class="modal-footer btn-wrapper">
@@ -113,7 +115,7 @@
             </div>
         </div>
     </div>
-    <!--  모달창 -->
+    <!-- 모달창 -->
     <div id="modal" class="modal-dim">
         <div class="dim-bg"></div>
         <div class="modal-layer card-df sm bookmarkName">
@@ -166,12 +168,12 @@
         const accordians = document.querySelectorAll(".dept");
         const windowCloseBtn = document.querySelector(".close");
 
-        document.addEventListener("DOMContentLoaded",()=>{
-            accordians.forEach(item=> {
+        document.addEventListener("DOMContentLoaded", () => {
+            accordians.forEach(item => {
                 const depth = item.querySelector(".depth");
                 const header = item.querySelector(".department");
 
-                header.addEventListener("click", e=> {
+                header.addEventListener("click", e => {
                     e.preventDefault();
                     if (item.classList.contains("active")) {
                         item.classList.remove("active");
@@ -182,10 +184,12 @@
                     }
                 });
             });
-            windowCloseBtn.addEventListener("click",()=>{
+            windowCloseBtn.addEventListener("click", () => {
                 window.close();
             })
         })
+
+        // 저장된 결재선 불러오기
         function loadLine() {
             $.ajax({
                 url: `/sanction/api/bookmark/\${emplId}`,
@@ -218,6 +222,24 @@
             });
         }
 
+        // 결제선 삭제
+        $("#bookmarkLine").on("click", ".removeBtn", function () {
+            let pLabel = $(this).closest("label");
+            let sn = pLabel.find("input[type='hidden']").val();
+            console.log(sn)
+
+            $.ajax({
+                url: `/sanction/api/bookmark/\${sn}`,
+                type: "DELETE",
+                success: function (res) {
+                    pLabel.remove();
+                },
+                error: function (xhr) {
+                }
+            });
+        });
+
+        // 결재선 저장
         function saveLine() {
             bookmarkName = $("#bookmarkName").val()
             $("#sanctionLine .lineList li label").each(function () {
@@ -320,13 +342,13 @@
         })
 
         /*  결재선 값 받아오기  */
-        lineSave.addEventListener("click",()=>{
+        lineSave.addEventListener("click", () => {
             const selected = document.querySelector(".savedlineChk:checked");
             const selectedLabel = selected.closest(".line-label");
             const selectedLine = selectedLabel.querySelector(".line-block");
             const lineItem = selectedLine.querySelectorAll(".line-detail")
 
-            lineInner.forEach(item=>{
+            lineInner.forEach(item => {
                 const lineList = item.querySelector('.lineList');
                 lineList.innerHTML = "";
             })
@@ -368,7 +390,7 @@
         })
         /*  데이터 보내기 */
 
-        submitLineBtn.addEventListener("click",e=>{
+        submitLineBtn.addEventListener("click", e => {
             e.preventDefault();
             const sanctionLineItems = document.querySelectorAll('#sanctionLine .lineList label');
             const refrnLineItems = document.querySelectorAll('#refrnLine .lineList label');
@@ -377,17 +399,17 @@
                 refrnLine: {}
             };
 
-            if(sanctionLineItems.length != 0){
-                sanctionLineItems.forEach(item=>{
+            if (sanctionLineItems.length != 0) {
+                sanctionLineItems.forEach(item => {
                     const id = item.querySelector("input").value;
                     const name = item.querySelector(".name").innerText;
                     data.sanctionLine[id] = name;
                 })
-            }else {
+            } else {
                 alert("결재선을 선택해야합니다.");
                 return;
             }
-            refrnLineItems.forEach(item=>{
+            refrnLineItems.forEach(item => {
                 const id = item.querySelector("input").value;
                 const name = item.querySelector(".name").innerText;
                 data.refrnLine[id] = name;

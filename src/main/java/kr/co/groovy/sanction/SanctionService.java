@@ -232,8 +232,8 @@ public class SanctionService {
         return resultList;
     }
 
-    public void deleteBookmark(String elctrnSanctnBookmarkName) {
-        mapper.deleteBookmark(elctrnSanctnBookmarkName);
+    public void deleteBookmark(String sanctionLineBookmarkSn) {
+        mapper.deleteBookmark(sanctionLineBookmarkSn);
     }
 }
 
