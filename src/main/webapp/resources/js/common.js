@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded",()=>{
     const navList = document.querySelectorAll(".nav-list > a");
-
+    const tabHeader = document.querySelector("#tab-header");
+    const tabList = tabHeader.querySelectorAll("a");
 
     /*  aside   */
     navList.forEach((item, index) => {
@@ -16,4 +17,15 @@ document.addEventListener("DOMContentLoaded",()=>{
             item.classList.add("active");
         }
     });
+
+    /*  tab */
+    tabList.forEach(item=>{
+        item.addEventListener("click",()=>{
+            tabList.forEach(list=>{
+                list.classList.remove("on");
+            })
+            item.classList.add("on");
+        })
+    })
+
 })

@@ -164,6 +164,7 @@
         let bookmarkName;
         let bookmarkLine = {};
         const accordians = document.querySelectorAll(".dept");
+        const close = document.querySelector(".close");
 
         document.addEventListener("DOMContentLoaded",()=>{
             accordians.forEach(item=> {
@@ -181,6 +182,9 @@
                     }
                 });
             });
+            close.addEventListener("click",()=>{
+                window.close();
+            })
         })
         function loadLine() {
             $.ajax({
