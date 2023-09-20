@@ -219,5 +219,9 @@ public class EmployeeService {
         today = String.valueOf(LocalDate.now());
         return mapper.loadConnectionLog(today);
     }
+
+    String findTelNoByEmplId(String emplId) {
+        return mapper.findTelNoByEmplId(emplId);
+    }
 }
 

@@ -36,6 +36,25 @@ public class EmployeeController {
         mav.setViewName("signIn");
         return mav;
     }
+
+    @GetMapping("/findPassword")
+    public String goFindPassword() {
+        return "findPassword";
+    }
+
+    @PostMapping("/findPassword")
+    @ResponseBody
+    public String findTelNoByEmplId(String emplId) {
+        String telNo = service.findTelNoByEmplId(emplId);
+        if (telNo == null) {
+            return "존재하는 사번이 없습니다.";
+        }
+
+        // 문자보내기
+        service.modifyPassword(emplId, "welcomegroovy");
+        return "findPassword";
+    }
+
     /* 사원 - 비밀번호 수정*/
     @GetMapping("/initPassword")
     public String initPasswordForm() {
