@@ -73,12 +73,12 @@ public class FacilityManageService {
 	        return commonCodeFcltyKind;
 	    }
 	}
-
+	
 	// 예약 취소 매퍼 연결
 	public void delResved(int fcltyResveSn) {
 		mapper.delReserve(fcltyResveSn);
 	}
-
+	
 	// 시설 코드 vo에 전달
 	public FacilityVO addFacility(FacilityVO facilityVO) {
 		String meetingRoom = facilityVO.getCommonCodeFcltyKind();

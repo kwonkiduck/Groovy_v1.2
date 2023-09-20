@@ -8,10 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css">
-<link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css">
+<link rel="stylesheet"
+	href="https://unpkg.com/ag-grid-community/styles/ag-grid.css">
+<link rel="stylesheet"
+	href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css">
 
-<script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+<script
+	src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
 <style>
 ul {
 	list-style: none;
@@ -48,6 +51,13 @@ table tr td, table tr th {
 	flex-direction: column;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vh-64);
+    padding: calc((10/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
+}
+
 .roomInfo {
 	display: grid;
 	grid-template-rows: repeat(2, 1fr);
@@ -56,6 +66,64 @@ table tr td, table tr th {
 
 #fcltyResveSn, .fcltyResveSn {
 	display: none;
+}
+
+.fxrpsList {
+	border: 3px solid black;
+	border-radius: 30px;
+	margin: 10px;
+}
+
+.roomInfoList {
+	margin-left: 50px;
+}
+
+.roomInfoList, .fxrpsList {
+	display: inline-flex;
+	text-align: center;
+	gap: 30px;
+}
+
+.roomId, .roomType, .equip {
+	display: flex;
+	width: 100px;
+	height: 150px;
+	align-items: center;
+}
+
+.fxrps {
+	display: flex;
+	width: 300px;
+	height: 150px;
+	align-items: center;
+}
+
+.wrap{
+	padding: calc((50/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
+}
+
+.header{
+padding: calc((10/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
+}
+
+.header, .titleWrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.titleWrap h1{
+	font-weight: bold;
+	margin-left: 45px;
+}
+
+.facility{
+	display: inline-flex;
+    width: 150px;
+    height: 50px;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
 }
 </style>
 <div class="wrap">
@@ -69,60 +137,59 @@ table tr td, table tr th {
 <div class="cardWrap">
 	<div class="card">
 		<div class="header">
-			<h3>오늘 예약 현황</h3>
+			<h2>오늘 예약 현황</h2>
 			<p>
 				<a href="list" class="totalResve"><span id="countValue"></span>건</a>
 			</p>
 			<a href="list">더보기</a>
 		</div>
 		<br />
-<div class="content">
-    <div id="myGrid" style="height: 500px;" class="ag-theme-alpine"></div>
-</div>
-	</div>
-	<br /> <br />
-	<hr>
-	<br /> <br />
+		<div class="content">
+			<div id="myGrid" style="height: 500px;" class="ag-theme-alpine"></div>
+		</div>
+	</div>	
+	<br />
 	<div class="card">
 		<div class="header">
 			<div class="titleWrap" style="display: block">
-				<h3>시설 관리</h3>
-				<br />
-				<table border=1 style="width: 100%">
+				<h1>시설 관리</h1>
+				<table>
 					<tbody>
-						<tr>
+						<tr class="facility">
 							<td>회의실 | ${meetingCount}개</td>
 						</tr>
-						<tr>
+						<tr class="facility">
 							<td>휴게실 | ${retiringCount}개</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<br /> <br />
 		<div class="content">
 			<div class="roomInfo">
-				<ul id="conference">
-					<li class="roomInfoList">
-						<c:forEach items="${meetingCode}" var="meeting">
-						<c:if test="${meeting.fcltyName == '회의실'}">
-								<h4 class="roomId">${meeting.fcltyCode}</h4> <span class="roomType">${meeting.fcltyName}</span>	
-								<h5>비품</h5>
-							<ul class="fxrpsList">
-									<li>${meeting.equipName}</li>
-							</ul>
-						</c:if>
-						</c:forEach>
-					</li>
-					<li class="roomInfoList">
-						<c:forEach items="${retiringCode}" var="retiring">
-						<c:if test="${retiring.fcltyName == '휴게실'}">
-								<h4 class="roomId">${retiring.fcltyCode}</h4> <span class="roomType">${retiring.fcltyName}</span>
-						</c:if>
-						</c:forEach>
-					</li>
-				</ul>
+				<c:forEach items="${meetingCode}" var="meeting">
+					<ul class="fxrpsList">
+						<li class="roomInfoList">
+							<c:if test="${meeting.fcltyName == '회의실'}">
+								<h4 class="roomId">${meeting.fcltyCode}</h4>
+								<span class="roomType">${meeting.fcltyName}</span>
+								<h5 class="equip">비품</h5>
+								<li class="fxrps">${meeting.equipName}</li>
+							</c:if>
+						</li>
+					</ul>
+				</c:forEach>
+				<c:forEach items="${retiringCode}" var="retiring">
+					<ul class="fxrpsList">
+						<li class="roomInfoList">
+							<c:if test="${retiring.fcltyName == '휴게실'}">
+								<h4 class="roomId">${retiring.fcltyCode}</h4>
+								<span class="roomType">${retiring.fcltyName}</span>
+								<h5 class="equip">비품</h5>
+							</c:if>
+						</li>
+					</ul>
+				</c:forEach>
 			</div>
 		</div>
 	</div>
@@ -201,12 +268,13 @@ const columnDefs = [
     {field: "chk", headerName: " ", cellRenderer: ClassBtn},
 ];
 const rowData = [];
-    <c:forEach items="${toDayList}" var="room" varStatus="state">
-     <c:set var="beginTime" value="${room.fcltyResveBeginTime}"/>
-     <fmt:formatDate var="fBeginTime" value="${beginTime}" pattern="HH:mm"/>
-     <c:set var="endTime" value="${room.fcltyResveEndTime}"/>
-     <fmt:formatDate var="fEndTime" value="${endTime}" pattern="HH:mm"/>
-    rowData.push({
+    <c:forEach items="${toDayList}" var="room">
+    <c:set var="beginTime" value="${room.fcltyResveBeginTime}"/>
+    <fmt:formatDate var="fBeginTime" value="${beginTime}" pattern="HH:mm"/>
+    <c:set var="endTime" value="${room.fcltyResveEndTime}"/>
+    <fmt:formatDate var="fEndTime" value="${endTime}" pattern="HH:mm"/>
+    <c:if test="${not empty room.fcltyResveRequstMatter || fcltyResveRequstMatter.indexOf('n')==-1}">
+     rowData.push({
         fcltyResveSn: "${room.fcltyResveSn}",
         commonCodeFcltyKindParent: "${room.fcltyCode}",
         commonCodeFcltyKind: "${room.fcltyName}",
@@ -217,6 +285,7 @@ const rowData = [];
         fcltyResveRequstMatter : "${room.fcltyResveRequstMatter}",
         chk:"${room.fcltyResveSn}"
     })
+    </c:if>
     </c:forEach>
     
  // ag-Grid 초기화
@@ -242,6 +311,4 @@ const rowData = [];
         // 개수 업데이트
         countElement.textContent = rowCount;
     }
-    
-   
 </script>

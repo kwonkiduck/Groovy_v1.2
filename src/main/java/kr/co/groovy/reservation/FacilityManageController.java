@@ -21,7 +21,7 @@ public class FacilityManageController {
 	@Autowired
 	private FacilityManageService service;
 	
-	//시설 예약현황 정보을 담은 메소드, 회의실, 휴게실 갯수를 
+	//당일 예약 리스트
 	@GetMapping(value = "/room")
 	public String getAllReservedRooms (Model model) {
 		
@@ -77,7 +77,7 @@ public class FacilityManageController {
 	    }
 	}
 	
-	//당일 예약 리스트
+	//시설 예약현황 정보을 담은 메소드
 	@GetMapping("/list")
 	public String loadTodayReseve(Model model) {
 	
@@ -90,7 +90,7 @@ public class FacilityManageController {
 		
 		model.addAttribute("reservedRooms",reservedRooms);
 		
-		log.info("(컨트롤러)값이 들어가니?" + reservedRooms);
+		log.info("전체 예약 현황이 나오니?" + reservedRooms);
 
 		return"admin/gat/room/list";
 	}
