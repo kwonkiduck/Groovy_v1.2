@@ -2,6 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <style>
     .border {
         border: 1px solid #333333;
@@ -573,7 +575,13 @@
                 <button type="button" id="confirm" style="display: none">확인</button>
             </div>
         </div>
-    </div>
+    </div>\
 </div>
 <script src="/resources/js/orgChart.js"></script>
 <script src="/resources/js/job.js"></script>
+<script>
+    <sec:authorize access="isAuthenticated()">
+    <sec:authentication property="principal" var="CustomUser" />
+        let emplNm = `${CustomUser.employeeVO.emplNm}`;
+    </sec:authorize>
+</script>
